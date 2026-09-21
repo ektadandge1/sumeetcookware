@@ -53,7 +53,7 @@ export function HomeBusinessBuyers() {
       className="home-business"
       aria-labelledby="business-title"
       style={{
-        backgroundImage: `linear-gradient(rgba(211, 0, 0, 0.82), rgba(211, 0, 0, 0.82)), url("${FIGMA_ASSETS.businessBackground}")`,
+        backgroundImage: `url("${FIGMA_ASSETS.businessBackground}")`,
       }}
     >
       <div className="home-business-inner">
@@ -64,7 +64,7 @@ export function HomeBusinessBuyers() {
             <br />
             On Your Bulk Order!
           </p>
-          <small>With GST Benefits</small>
+          <small>When GST Benefits</small>
         </div>
 
         <div className="home-business-form-panel">

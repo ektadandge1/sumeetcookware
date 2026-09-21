@@ -7,5 +7,15 @@ export function FigmaImage({
   className?: string;
   src: string;
 }) {
-  return <img alt={alt} className={className} loading="lazy" src={src} />;
+  return (
+    <img
+      alt={alt}
+      className={className}
+      loading="lazy"
+      onError={(event) => {
+        event.currentTarget.hidden = true;
+      }}
+      src={src}
+    />
+  );
 }

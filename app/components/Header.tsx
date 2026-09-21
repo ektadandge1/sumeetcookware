@@ -199,7 +199,6 @@ function HeaderSearch() {
 }
 
 export function HeaderMenu({
-  menu,
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
@@ -211,9 +210,7 @@ export function HeaderMenu({
 }) {
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
-  const activeMenu = menu?.items?.length ? menu : FALLBACK_HEADER_MENU;
-  const menuItems =
-    viewport === 'mobile' ? FALLBACK_HEADER_MENU.items : activeMenu.items;
+  const menuItems = DESKTOP_HEADER_MENU_ITEMS;
 
   return (
     <nav className={className} role="navigation">
@@ -227,6 +224,60 @@ export function HeaderMenu({
           item.url.includes(primaryDomainUrl)
             ? new URL(item.url).pathname
             : item.url;
+        const submenu = HEADER_SUBMENUS[item.title];
+
+        if (viewport === 'mobile' && submenu) {
+          return (
+            <details className="header-mobile-menu-group" key={item.id}>
+              <summary>{item.title}</summary>
+              <div className="header-mobile-submenu">
+                {submenu.map((submenuItem) => (
+                  <NavLink
+                    key={submenuItem.title}
+                    onClick={close}
+                    prefetch="intent"
+                    to={submenuItem.url}
+                  >
+                    {submenuItem.title}
+                  </NavLink>
+                ))}
+              </div>
+            </details>
+          );
+        }
+
+        if (submenu) {
+          return (
+            <div className="header-menu-group" key={item.id}>
+              <NavLink
+                aria-haspopup="true"
+                className="header-menu-item"
+                end
+                prefetch="intent"
+                style={activeLinkStyle}
+                to={url}
+              >
+                {item.title}
+                {item.title === 'More' && (
+                  <span className="header-menu-caret" aria-hidden="true" />
+                )}
+              </NavLink>
+              <div className="header-submenu">
+                {submenu.map((submenuItem) => (
+                  <NavLink
+                    key={submenuItem.title}
+                    onClick={close}
+                    prefetch="intent"
+                    to={submenuItem.url}
+                  >
+                    {submenuItem.title}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
         return (
           <NavLink
             className="header-menu-item"
@@ -505,6 +556,68 @@ const FALLBACK_HEADER_MENU = {
       url: '/pages/about-us',
       items: [],
     },
+  ],
+};
+
+const DESKTOP_HEADER_MENU_ITEMS = [
+  ...FALLBACK_HEADER_MENU.items.slice(0, 6),
+  {
+    id: 'fallback-menu-more',
+    resourceId: null,
+    tags: [],
+    title: 'More',
+    type: 'HTTP',
+    url: '/collections',
+    items: [],
+  },
+];
+
+const HEADER_SUBMENUS: Record<
+  string,
+  ReadonlyArray<{title: string; url: string}>
+> = {
+  'Kitchen Cookwares': [
+    {title: 'Kadhai', url: '/collections/kadhai'},
+    {title: 'Appachatty', url: '/collections/appachatty'},
+    {title: 'Appam Patra', url: '/collections/appam-patra'},
+    {title: 'Handi', url: '/collections/handi'},
+    {title: 'Saucepan', url: '/collections/saucepan'},
+    {title: 'Grater', url: '/collections/grater'},
+  ],
+  'Storage & Container': [
+    {title: 'Spice Box', url: '/collections/spice-box'},
+    {title: 'Lunch Box', url: '/collections/lunch-box'},
+    {title: 'Stainless Steel Mug', url: '/collections/stainless-steel-mug'},
+    {title: 'Ghee And Oil Pots', url: '/collections/ghee-and-oil-pots'},
+    {title: 'Tope', url: '/collections/tope'},
+    {title: 'Tasra', url: '/collections/tasra'},
+    {title: 'Water Bottle', url: '/collections/water-bottle'},
+    {title: 'Dabba and Canister', url: '/collections/dabba-and-canister'},
+    {title: 'Tumbler', url: '/collections/tumbler'},
+  ],
+  Tableware: [
+    {title: 'Fork and Spoon', url: '/collections/fork-and-spoon'},
+    {title: 'Wati', url: '/collections/wati'},
+    {title: 'Plates', url: '/collections/plates'},
+    {title: 'Dinner Set', url: '/collections/dinner-set'},
+  ],
+  'Non-Stick': [
+    {title: 'Non-Stick Appachatty', url: '/collections/non-stick-appachatty'},
+    {title: 'Non-Stick Appam Patra', url: '/collections/non-stick-appam-patra'},
+    {title: 'Non-Stick Casserole', url: '/collections/non-stick-casserole'},
+    {title: 'Non-Stick Cookware', url: '/collections/non-stick-cookware'},
+    {title: 'Tope', url: '/collections/non-stick-tope'},
+    {title: 'Non-Stick Dosa Tawa', url: '/collections/non-stick-dosa-tawa'},
+    {title: 'Non-Stick Fry Pan', url: '/collections/non-stick-fry-pan'},
+    {title: 'Non-Stick Grill Pan', url: '/collections/non-stick-grill-pan'},
+    {title: 'Non-Stick Kadhai', url: '/collections/non-stick-kadhai'},
+    {title: 'Non-Stick Pizza Pan', url: '/collections/non-stick-pizza-pan'},
+  ],
+  More: [
+    {title: 'Gifting', url: '/pages/gifting'},
+    {title: 'Blogs', url: '/blogs'},
+    {title: 'Contact Us', url: '/pages/contact-us'},
+    {title: 'About Us', url: '/pages/about-us'},
   ],
 };
 

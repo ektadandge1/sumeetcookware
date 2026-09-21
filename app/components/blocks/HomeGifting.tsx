@@ -20,7 +20,7 @@ export function HomeGifting() {
       </span>
       <SectionHeading
         id="gifting-title"
-        title="Perfect gift for every occasion"
+        title="Perfect gift for every occassion"
       />
       <p className="home-section-intro">
         Thoughtfully curated cookware gifts for weddings, housewarmings,

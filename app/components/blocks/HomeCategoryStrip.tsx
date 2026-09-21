@@ -10,7 +10,9 @@ export function HomeCategoryStrip() {
       <div className="home-category-grid">
         {categories.map((category) => (
           <Link className="home-category-card" key={category.label} to="/collections">
-            <FigmaImage alt={category.label} src={category.image} />
+            <div className="home-category-image">
+              <FigmaImage alt={category.label} src={category.image} />
+            </div>
             <span>{category.label}</span>
           </Link>
         ))}
