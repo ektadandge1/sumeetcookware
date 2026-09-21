@@ -12,6 +12,7 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {WishlistButton} from '~/components/WishlistButton';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -101,7 +102,21 @@ export default function Product() {
     <div className="product">
       <ProductImage image={selectedVariant?.image} />
       <div className="product-main">
-        <h1>{title}</h1>
+        <div className="product-title-row">
+          <h1>{title}</h1>
+          <WishlistButton
+            className="product-page-wishlist"
+            item={{
+              id: product.id,
+              handle: product.handle,
+              title,
+              imageAlt: title,
+              imageUrl: selectedVariant?.image?.url,
+              price: selectedVariant?.price.amount,
+              currencyCode: selectedVariant?.price.currencyCode,
+            }}
+          />
+        </div>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}

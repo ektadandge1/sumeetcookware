@@ -19,6 +19,22 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    connectSrc: ['https://hcaptcha.com', 'https://*.hcaptcha.com'],
+    frameSrc: ['https://hcaptcha.com', 'https://*.hcaptcha.com'],
+    imgSrc: [
+      "'self'",
+      'data:',
+      'https://cdn.shopify.com',
+      'https://hcaptcha.com',
+      'https://*.hcaptcha.com',
+    ],
+    scriptSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
+      'https://hcaptcha.com',
+      'https://*.hcaptcha.com',
+    ],
+    styleSrc: ['https://hcaptcha.com', 'https://*.hcaptcha.com'],
   });
 
   const body = await renderToReadableStream(

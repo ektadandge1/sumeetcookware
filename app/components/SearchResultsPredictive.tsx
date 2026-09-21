@@ -33,6 +33,7 @@ type PartialPredictiveSearchResult<
   Pick<SearchResultsPredictiveArgs, ExtraProps>;
 
 type SearchResultsPredictiveProps = {
+  inputRef?: React.MutableRefObject<HTMLInputElement | null>;
   children: (args: SearchResultsPredictiveArgs) => React.ReactNode;
 };
 
@@ -40,10 +41,12 @@ type SearchResultsPredictiveProps = {
  * Component that renders predictive search results
  */
 export function SearchResultsPredictive({
+  inputRef: externalInputRef,
   children,
 }: SearchResultsPredictiveProps) {
   const aside = useAside();
-  const {term, inputRef, fetcher, total, items} = usePredictiveSearch();
+  const {term, inputRef, fetcher, total, items} =
+    usePredictiveSearch(externalInputRef);
 
   /*
    * Utility that resets the search input
@@ -281,10 +284,13 @@ function SearchResultsPredictiveEmpty({
  * const { items, total, inputRef, term, fetcher } = usePredictiveSearch();
  * '''
  **/
-function usePredictiveSearch(): UsePredictiveSearchReturn {
+function usePredictiveSearch(
+  externalInputRef?: React.MutableRefObject<HTMLInputElement | null>,
+): UsePredictiveSearchReturn {
   const fetcher = useFetcher<PredictiveSearchReturn>({key: 'search'});
   const term = useRef<string>('');
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const internalInputRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = externalInputRef ?? internalInputRef;
 
   if (fetcher?.state === 'loading') {
     term.current = String(fetcher.formData?.get('q') || '');
@@ -295,7 +301,7 @@ function usePredictiveSearch(): UsePredictiveSearchReturn {
     if (!inputRef.current) {
       inputRef.current = document.querySelector('input[type="search"]');
     }
-  }, []);
+  }, [inputRef]);
 
   const {items, total} =
     fetcher?.data?.result ?? getEmptyPredictiveSearchResult();
