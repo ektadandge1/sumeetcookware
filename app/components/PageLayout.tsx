@@ -13,6 +13,7 @@ import {SearchFormPredictive} from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import {AnnouncementBar} from '~/components/AnnouncementBar';
 import {WishlistProvider} from '~/components/WishlistContext';
+import {MobileBottomNav} from '~/components/MobileBottomNav';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -36,7 +37,10 @@ export function PageLayout({
       <WishlistProvider>
         <CartAside cart={cart} />
         <SearchAside />
-        <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
+        <MobileMenuAside
+          header={header}
+          publicStoreDomain={publicStoreDomain}
+        />
         <AnnouncementBar />
         {header && (
           <Header
@@ -52,6 +56,7 @@ export function PageLayout({
           header={header}
           publicStoreDomain={publicStoreDomain}
         />
+        <MobileBottomNav />
       </WishlistProvider>
     </Aside.Provider>
   );

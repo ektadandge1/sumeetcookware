@@ -99,13 +99,13 @@ export function Footer(_props: FooterProps) {
           <Link to="/">Home</Link>
           <Link to="/pages/about-us">About Us</Link>
           <Link to="/pages/contact-us">Contact Us</Link>
-          <Link to="/blogs/news">Blogs</Link>
+          <Link to="/blogs/kitchen">Blogs</Link>
           <a href="https://wa.me/918976047019">Chat on whatsapp</a>
-          <Link to="/pages/affiliate-register">Affiliate Register</Link>
+          <Link to="/pages/register-affiliate-account">Affiliate Register</Link>
           <Link to="/pages">Page</Link>
-          <Link to="/pages/faq">FAQ About</Link>
+          <Link to="/pages/faq-about-cookware">FAQ About</Link>
           <Link to="/collections/all">Cookware</Link>
-          <Link to="/pages/influencer-collab">Influencer Collab</Link>
+          <Link to="/pages/collab">Influencer Collab</Link>
         </nav>
 
         <div className="footer-policies-column">
@@ -119,7 +119,7 @@ export function Footer(_props: FooterProps) {
             <Link to="/policies/shipping-policy">Shipping Policy</Link>
             <Link to="/policies/terms-of-service">Terms of Service</Link>
             <Link to="/pages/warranty-registration">Warranty</Link>
-            <Link to="/pages/registration">Registration</Link>
+            <Link to="/pages/warranty-registration">Registration</Link>
           </nav>
 
           <section

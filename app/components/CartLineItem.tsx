@@ -41,6 +41,7 @@ export function CartLineItem({
           <Image
             alt={title}
             aspectRatio="1/1"
+            className="cart-line-image"
             data={image}
             height={100}
             loading="lazy"
@@ -48,8 +49,9 @@ export function CartLineItem({
           />
         )}
 
-        <div>
+        <div className="cart-line-details">
           <Link
+            className="cart-line-title"
             prefetch="intent"
             to={lineItemUrl}
             onClick={() => {
@@ -58,12 +60,10 @@ export function CartLineItem({
               }
             }}
           >
-            <p>
-              <strong>{product.title}</strong>
-            </p>
+            <h4>{product.title}</h4>
           </Link>
           <ProductPrice price={line?.cost?.totalAmount} />
-          <ul>
+          <ul className="cart-line-options">
             {selectedOptions.map((option) => (
               <li key={option.name}>
                 <small>
@@ -110,29 +110,30 @@ function CartLineQuantity({line}: {line: CartLine}) {
 
   return (
     <div className="cart-line-quantity">
-      <small>Quantity: {quantity} &nbsp;&nbsp;</small>
-      <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
-        <button
-          aria-label="Decrease quantity"
-          disabled={quantity <= 1 || !!isOptimistic}
-          name="decrease-quantity"
-          value={prevQuantity}
-        >
-          <span>&#8722; </span>
-        </button>
-      </CartLineUpdateButton>
-      &nbsp;
-      <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
-        <button
-          aria-label="Increase quantity"
-          name="increase-quantity"
-          value={nextQuantity}
-          disabled={!!isOptimistic}
-        >
-          <span>&#43;</span>
-        </button>
-      </CartLineUpdateButton>
-      &nbsp;
+      <span className="cart-line-quantity-label">Quantity</span>
+      <div className="cart-line-stepper">
+        <CartLineUpdateButton lines={[{id: lineId, quantity: prevQuantity}]}>
+          <button
+            aria-label="Decrease quantity"
+            disabled={quantity <= 1 || !!isOptimistic}
+            name="decrease-quantity"
+            value={prevQuantity}
+          >
+            <span>&#8722; </span>
+          </button>
+        </CartLineUpdateButton>
+        <output aria-label={`Quantity: ${quantity}`}>{quantity}</output>
+        <CartLineUpdateButton lines={[{id: lineId, quantity: nextQuantity}]}>
+          <button
+            aria-label="Increase quantity"
+            name="increase-quantity"
+            value={nextQuantity}
+            disabled={!!isOptimistic}
+          >
+            <span>&#43;</span>
+          </button>
+        </CartLineUpdateButton>
+      </div>
       <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
     </div>
   );

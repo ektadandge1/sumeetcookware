@@ -32,23 +32,29 @@ export function HomeGifting() {
           aria-label="Gift occasions"
         >
           {leftGifts.map((gift) => (
-            <Link className="home-outline-button" key={gift} to="/collections">
-              {gift}
+            <Link className="home-outline-button" key={gift.label} to={gift.to}>
+              {gift.label}
             </Link>
           ))}
         </nav>
-        <FigmaImage
-          alt="Sumeet cookware gift"
-          className="home-gifting-image"
-          src={FIGMA_ASSETS.giftBanner}
-        />
+        <Link
+          aria-label="Shop Sumeet gifts"
+          className="home-gifting-image-link"
+          to="/collections/gifts"
+        >
+          <FigmaImage
+            alt="Sumeet cookware gift"
+            className="home-gifting-image"
+            src={FIGMA_ASSETS.giftBanner}
+          />
+        </Link>
         <nav
           className="home-gifting-links home-gifting-links-right"
           aria-label="More gift occasions"
         >
           {rightGifts.map((gift) => (
-            <Link className="home-outline-button" key={gift} to="/collections">
-              {gift}
+            <Link className="home-outline-button" key={gift.label} to={gift.to}>
+              {gift.label}
             </Link>
           ))}
         </nav>

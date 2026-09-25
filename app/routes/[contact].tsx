@@ -19,9 +19,7 @@ export async function action({context, request}: Route.ActionArgs) {
   );
 
   if (typeof email !== 'string' || !email.trim() || !hasCaptcha) {
-    return redirect('/?business_enquiry=verification_error#business-enquiry-status', {
-      status: 303,
-    });
+    return Response.json({status: 'verification_error'}, {status: 400});
   }
 
   const body = new URLSearchParams();
@@ -51,18 +49,17 @@ export async function action({context, request}: Route.ActionArgs) {
         'User-Agent': request.headers.get('User-Agent') || 'Mozilla/5.0',
       },
       body,
-      redirect: 'follow',
+      redirect: 'manual',
+      signal: AbortSignal.timeout(8000),
     });
-    const responseHtml = await shopifyResponse.text();
+    const location = shopifyResponse.headers.get('location') || '';
     const submitted =
-      shopifyResponse.ok &&
-      (shopifyResponse.url.includes('contact_posted=true') ||
-        /Thanks for contacting us|form-status[^>]*success/i.test(responseHtml));
+      shopifyResponse.status >= 300 &&
+      shopifyResponse.status < 400 &&
+      location.includes('contact_posted=true');
 
     if (submitted) {
-      return redirect('/?business_enquiry=success#business-enquiry-status', {
-        status: 303,
-      });
+      return Response.json({status: 'success'});
     }
 
     console.error('Shopify rejected the business enquiry', {
@@ -73,5 +70,5 @@ export async function action({context, request}: Route.ActionArgs) {
     console.error('Unable to submit the business enquiry', error);
   }
 
-  return redirect('/?business_enquiry=error#business-enquiry-status', {status: 303});
+  return Response.json({status: 'error'}, {status: 502});
 }

@@ -11,7 +11,11 @@ export function HomeCustomerStories() {
   ];
   return (
     <section className="home-stories" aria-labelledby="stories-title">
-      <SectionHeading id="stories-title" title="Our Happy Customer" />
+      <SectionHeading
+        id="stories-title"
+        mobileTitle="Shop By Video"
+        title="Our Happy Customer"
+      />
       <div className="home-story-grid">
         {stories.map((image) => (
           <div className="home-story-card" key={image}>

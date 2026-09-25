@@ -7,7 +7,11 @@ export function HomeHero() {
       <h1 className="sr-only" id="home-hero-title">
         Sumeet Cookware
       </h1>
-      <div className="home-hero-media">
+      <Link
+        aria-label="Shop the latest Sumeet offers"
+        className="home-hero-media"
+        to="/collections/best-offer"
+      >
         <video
           aria-label="Sumeet cookware hero video"
           autoPlay
@@ -17,7 +21,7 @@ export function HomeHero() {
           preload="metadata"
           src={HERO_VIDEO_URL}
         />
-      </div>
+      </Link>
       <div className="home-hero-dots" aria-hidden="true">
         <i />
         <i />
@@ -26,3 +30,4 @@ export function HomeHero() {
     </section>
   );
 }
+import {Link} from 'react-router';

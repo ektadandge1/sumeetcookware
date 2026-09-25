@@ -20,6 +20,20 @@ Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dov
 
 ## Getting started
 
+## Instagram Feed
+
+The homepage Instagram gallery uses the official Instagram Graph API. Configure
+these server-only variables in `.env` and in the production deployment:
+
+```text
+INSTAGRAM_ACCOUNT_ID=your_instagram_professional_account_id
+INSTAGRAM_ACCESS_TOKEN=your_server_side_graph_api_token
+```
+
+The Instagram account must be a Professional account connected to a Facebook
+Page. The access token is never sent to the browser. Without both variables,
+the gallery remains hidden.
+
 **Requirements:**
 
 - Node.js version 22.x or 24.x

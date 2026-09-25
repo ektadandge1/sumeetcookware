@@ -29,14 +29,24 @@ const benefits: Benefit[] = [
 export function HomeServiceBenefits() {
   return (
     <section className="home-service-benefits" aria-label="Shopping benefits">
-      {benefits.map(({image, label}) => (
-        <article className="home-service-benefit" key={label}>
-          <span className="home-service-icon">
-            <img alt="" height="170" src={image} width="170" />
-          </span>
-          <span className="home-service-label">{label}</span>
-        </article>
-      ))}
+      <div className="home-service-benefits-track">
+        {[false, true].map((duplicate) => (
+          <div
+            aria-hidden={duplicate || undefined}
+            className={`home-service-benefits-group${duplicate ? ' home-service-benefits-copy' : ''}`}
+            key={duplicate ? 'copy' : 'primary'}
+          >
+            {benefits.map(({image, label}) => (
+              <article className="home-service-benefit" key={label}>
+                <span className="home-service-icon">
+                  <img alt="" height="170" src={image} width="170" />
+                </span>
+                <span className="home-service-label">{label}</span>
+              </article>
+            ))}
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

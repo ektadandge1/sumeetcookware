@@ -1,4 +1,3 @@
-import {useSearchParams} from 'react-router';
 import {FIGMA_ASSETS} from './homeAssets';
 
 const QUANTITIES = ['10 - 49', '50 - 99', '100 - 249', '250 - 499', '500+'];
@@ -43,10 +42,6 @@ const STATES = [
 ];
 
 export function HomeBusinessBuyers() {
-  const [searchParams] = useSearchParams();
-  const submissionStatus = searchParams.get('business_enquiry');
-  const submitted = submissionStatus === 'success';
-
   return (
     <section
       id="business-enquiry"
@@ -78,7 +73,7 @@ export function HomeBusinessBuyers() {
 
           <form
             acceptCharset="UTF-8"
-            action="/contact#BusinessEnquiryForm"
+            action="https://sumeetcookware.in/contact"
             className="home-business-form"
             data-shopify-captcha="true"
             id="BusinessEnquiryForm"
@@ -193,30 +188,6 @@ export function HomeBusinessBuyers() {
             <button type="submit">
               Submit <span aria-hidden="true">→</span>
             </button>
-
-            {submissionStatus ? (
-              <div
-                className={`home-business-form-message ${submitted ? 'is-success' : 'is-error'}`}
-                id="business-enquiry-status"
-                role={submitted ? 'status' : 'alert'}
-              >
-                <span aria-hidden="true">{submitted ? '✓' : '!'}</span>
-                <p>
-                  <strong>
-                    {submitted
-                      ? 'Enquiry submitted successfully!'
-                      : 'Submission was not completed.'}
-                  </strong>
-                  <small>
-                    {submitted
-                      ? 'Thank you. Our business team will contact you shortly.'
-                      : submissionStatus === 'verification_error'
-                        ? 'Please complete the security verification and submit again.'
-                        : 'Please try again in a moment.'}
-                  </small>
-                </p>
-              </div>
-            ) : null}
           </form>
         </div>
       </div>
