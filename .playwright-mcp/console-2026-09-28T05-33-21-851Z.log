@@ -1,0 +1,576 @@
+[  539081ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  540098ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  541200ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  542419ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  543728ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  543918ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543919ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543920ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543920ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543920ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543920ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543920ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  543920ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:12
+[  547024ms] [LOG] recaptchacompat disabled @ https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off&onload=__shopify_hcap_load_v3wt2rzn:3
+[  552648ms] [ERROR] Warning: Did not expect server HTML to contain a <%s> in <%s>.%s div form 
+    at form
+    at div
+    at div
+    at section
+    at HomeBusinessBuyers
+    at div
+    at Homepage (http://localhost:3000/app/routes/_index.tsx:28:16)
+    at WithComponentProps2 (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4932:17)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4124:26)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4751:25)
+    at main
+    at WishlistProvider (http://localhost:3000/app/components/WishlistContext.tsx:9:3)
+    at AsideProvider (http://localhost:3000/app/components/Aside.tsx:104:3)
+    at PageLayout (http://localhost:3000/app/components/PageLayout.tsx?t=1790574139750:16:3)
+    at AnalyticsProvider (http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3606:40)
+    at App (http://localhost:3000/app/root.tsx:161:16)
+    at WithComponentProps2 (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4932:17)
+    at body
+    at html
+    at Layout (http://localhost:3000/app/root.tsx:69:3)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4124:26)
+    at RenderErrorBoundary (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4058:3)
+    at DataRoutes2 (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4691:24)
+    at Router (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4756:29)
+    at RouterProvider (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4501:27)
+    at RouterProvider2
+    at RemixErrorBoundary (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:7055:3)
+    at HydratedRouter (http://localhost:3000/node_modules/.vite/deps/react-router_dom.js?v=b986ecad:115:51) @ http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:441
+[  552732ms] [ERROR] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33) @ http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:7082
+[  552747ms] [ERROR] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33) @ http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:7082
+[  552749ms] [ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document @ http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:441
+[  554354ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at popHydrationState (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8164:7)
+    at completeWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13350:11)
+    at completeUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15580:14)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15565:23)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+    at flushWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:158:17)
+[  554373ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554374ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554374ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554375ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554375ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554376ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554376ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554377ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554377ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554377ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554378ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554378ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554378ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554379ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554379ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554380ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  554380ms] Error: There was an error while hydrating. Because the error happened outside of a Suspense boundary, the entire root will switch to client rendering.
+    at updateHostRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12245:183)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13096:27)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15509:36)
+    at renderRootSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15492:6)
+    at recoverFromConcurrentError (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15185:21)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15138:20)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+    at flushWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:158:17)
+[  552985ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552985ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552986ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552986ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552986ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552986ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552987ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  552987ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  553857ms] [ERROR] Error: [h2:error:Analytics.Provider] - consent.checkoutDomain is required. Make sure PUBLIC_CHECKOUT_DOMAIN is defined in your environment variables. See https://h2o.fyi/analytics/consent to learn how to setup environment variables in the Shopify admin.
+    at errorOnce (http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3542:17)
+    at AnalyticsProvider (http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3618:33)
+    at renderWithHooks (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:9623:19)
+    at updateFunctionComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12117:19)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13091:13)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15509:36)
+    at renderRootSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15492:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:146) @ http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3541
+[  559184ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  607763ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  607927ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607928ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607929ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607929ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607931ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607931ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607932ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  607932ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  610137ms] [LOG] recaptchacompat disabled @ https://js.hcaptcha.com/1/api.js?render=explicit&recaptchacompat=off&onload=__shopify_hcap_load_v180w6st:3
+[  615159ms] [ERROR] Warning: Did not expect server HTML to contain a <%s> in <%s>.%s div form 
+    at form
+    at div
+    at div
+    at section
+    at HomeBusinessBuyers
+    at div
+    at Homepage (http://localhost:3000/app/routes/_index.tsx:28:16)
+    at WithComponentProps2 (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4932:17)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4124:26)
+    at Outlet (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4751:25)
+    at main
+    at WishlistProvider (http://localhost:3000/app/components/WishlistContext.tsx:9:3)
+    at AsideProvider (http://localhost:3000/app/components/Aside.tsx:104:3)
+    at PageLayout (http://localhost:3000/app/components/PageLayout.tsx?t=1790574139750:16:3)
+    at AnalyticsProvider (http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3606:40)
+    at App (http://localhost:3000/app/root.tsx:161:16)
+    at WithComponentProps2 (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4932:17)
+    at body
+    at html
+    at Layout (http://localhost:3000/app/root.tsx:69:3)
+    at RenderedRoute (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4124:26)
+    at RenderErrorBoundary (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4058:3)
+    at DataRoutes2 (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4691:24)
+    at Router (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4756:29)
+    at RouterProvider (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:4501:27)
+    at RouterProvider2
+    at RemixErrorBoundary (http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:7055:3)
+    at HydratedRouter (http://localhost:3000/node_modules/.vite/deps/react-router_dom.js?v=b986ecad:115:51) @ http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:441
+[  615197ms] [ERROR] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33) @ http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:7082
+[  615198ms] [ERROR] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33) @ http://localhost:3000/node_modules/.vite/deps/chunk-S54KXAEJ-DkPASkOw.js?v=b986ecad:7082
+[  615201ms] [ERROR] Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. #document @ http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:441
+[  620461ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at popHydrationState (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8164:7)
+    at completeWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13350:11)
+    at completeUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15580:14)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15565:23)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+    at flushWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:158:17)
+[  620463ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620464ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620482ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620483ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620483ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620484ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620485ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620485ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620485ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620486ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620486ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620487ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620487ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620488ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620488ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620488ms] Error: Hydration failed because the initial UI does not match what was rendered on the server.
+    at throwOnHydrationMismatch (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8075:10)
+    at tryToClaimNextHydratableInstance (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:8094:6)
+    at updateHostComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12273:26)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13097:32)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15552:54)
+    at renderRootConcurrent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15531:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:110)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+[  620489ms] Error: There was an error while hydrating. Because the error happened outside of a Suspense boundary, the entire root will switch to client rendering.
+    at updateHostRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12245:183)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13096:27)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15509:36)
+    at renderRootSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15492:6)
+    at recoverFromConcurrentError (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15185:21)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15138:20)
+    at workLoop (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:175:33)
+    at flushWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:158:17)
+[  615980ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615981ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615981ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615982ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615982ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615983ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615983ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  615983ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  618171ms] [ERROR] Error: [h2:error:Analytics.Provider] - consent.checkoutDomain is required. Make sure PUBLIC_CHECKOUT_DOMAIN is defined in your environment variables. See https://h2o.fyi/analytics/consent to learn how to setup environment variables in the Shopify admin.
+    at errorOnce (http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3542:17)
+    at AnalyticsProvider (http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3618:33)
+    at renderWithHooks (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:9623:19)
+    at updateFunctionComponent (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:12117:19)
+    at beginWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:13091:13)
+    at beginWork$1 (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15977:12)
+    at performUnitOfWork (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15560:12)
+    at workLoopSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15509:36)
+    at renderRootSync (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15492:6)
+    at performConcurrentWorkOnRoot (http://localhost:3000/node_modules/.vite/deps/react-dom-Ci198gni.js?v=b986ecad:15132:146) @ http://localhost:3000/node_modules/.vite/deps/@shopify_hydrogen.js?v=b986ecad:3541
+[  622395ms] [ERROR] Loading the stylesheet 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600;700&display=swap' violates the following Content Security Policy directive: "style-src https://hcaptcha.com https://*.hcaptcha.com 'self' 'unsafe-inline' https://cdn.shopify.com http://localhost:*". Note that 'style-src-elem' was not explicitly set, so 'style-src' is used as a fallback. The action has been blocked. @ http://localhost:3000/:0
+[  656548ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656548ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656549ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656549ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656549ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656550ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656550ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656550ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656654ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f059ef3-1317-4191-84f5-de4b50b69369.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656655ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/cab50cb7-ae43-482a-8d7e-9966e1a4eb3b.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656656ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/fe1f04c0-6d56-4e56-bb75-d4cfd0034e3f.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
+[  656656ms] [ERROR] Loading the image 'https://www.figma.com/api/mcp/asset/8f18f9c9-f7ab-429b-8911-f7a95b1d7b0c.png' violates the following Content Security Policy directive: "img-src 'self' data: https://cdn.shopify.com https://hcaptcha.com https://*.hcaptcha.com". The action has been blocked. @ http://localhost:3000/:0
