@@ -1,9 +1,14 @@
 import {useOptimisticCart} from '@shopify/hydrogen';
+import {useState} from 'react';
 import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {CartLineItem, type CartLine} from '~/components/CartLineItem';
 import {CartSummary} from './CartSummary';
+import {
+  useCartCount,
+  type PendingCartLines,
+} from './CartCountContext';
 
 export type CartLayout = 'page' | 'aside';
 
@@ -37,9 +42,22 @@ function getLineItemChildrenMap(lines: CartLine[]): LineItemChildrenMap {
  * It is used by both the /cart route and the cart aside dialog.
  */
 export function CartMain({layout, cart: originalCart}: CartMainProps) {
+  const {latestCart, pendingLines, pendingRemovedLineIds} = useCartCount();
+  const [locallyRemovedLineIds, setLocallyRemovedLineIds] = useState<string[]>(
+    [],
+  );
+
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
-  const cart = useOptimisticCart(originalCart);
+  const confirmedCart = latestCart ?? originalCart;
+  const cart = applyPendingRemovals(
+    applySharedPendingLines(
+      useOptimisticCart(confirmedCart),
+      confirmedCart,
+      pendingLines,
+    ),
+    [...pendingRemovedLineIds, ...locallyRemovedLineIds],
+  );
 
   const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const withDiscount =
@@ -75,6 +93,11 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
                   line={line}
                   layout={layout}
                   childrenMap={childrenMap}
+                  onRemove={(lineIds) =>
+                    setLocallyRemovedLineIds((current) =>
+                      Array.from(new Set([...current, ...lineIds])),
+                    )
+                  }
                 />
               );
             })}
@@ -86,6 +109,102 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
   );
 }
 
+function applyPendingRemovals(
+  cart: ReturnType<typeof useOptimisticCart<CartApiQueryFragment | null>>,
+  lineIds: string[],
+) {
+  if (!cart?.lines || !lineIds.length) return cart;
+
+  const removedIds = new Set(lineIds);
+  const optimisticCart = structuredClone(cart);
+  optimisticCart.lines.nodes = optimisticCart.lines.nodes.filter(
+    (line) => !removedIds.has(line.id),
+  );
+  optimisticCart.totalQuantity = optimisticCart.lines.nodes.reduce(
+    (total, line) => total + line.quantity,
+    0,
+  );
+  optimisticCart.isOptimistic = true;
+  return optimisticCart;
+}
+
+function applySharedPendingLines(
+  cart: ReturnType<typeof useOptimisticCart<CartApiQueryFragment | null>>,
+  confirmedCart: CartApiQueryFragment | null,
+  pendingLines: PendingCartLines,
+) {
+  if (!pendingLines.length) return cart;
+
+  const optimisticCart = cart?.lines
+    ? structuredClone(cart)
+    : ({lines: {nodes: []}, totalQuantity: 0} as NonNullable<typeof cart>);
+  const displayedLines = optimisticCart.lines.nodes as unknown as CartLine[];
+  const quantitiesByVariant = new Map<string, number>();
+  const variantsById = new Map(
+    pendingLines
+      .filter((line) => line.selectedVariant)
+      .map((line) => [line.merchandiseId, line.selectedVariant!]),
+  );
+
+  for (const line of pendingLines) {
+    quantitiesByVariant.set(
+      line.merchandiseId,
+      (quantitiesByVariant.get(line.merchandiseId) ?? 0) +
+        (line.quantity ?? 1),
+    );
+  }
+
+  for (const [variantId, pendingQuantity] of quantitiesByVariant) {
+    const confirmedQuantity =
+      confirmedCart?.lines.nodes.find(
+        (line) => line.merchandise.id === variantId,
+      )?.quantity ?? 0;
+    const expectedQuantity = confirmedQuantity + pendingQuantity;
+    const displayedLine = displayedLines.find(
+      (line) => line.merchandise.id === variantId,
+    );
+
+    if (displayedLine) {
+      if (displayedLine.quantity < expectedQuantity) {
+        displayedLine.quantity = expectedQuantity;
+        displayedLine.isOptimistic = true;
+      }
+      continue;
+    }
+
+    const selectedVariant = variantsById.get(variantId) as
+      | CartLine['merchandise']
+      | undefined;
+    if (!selectedVariant) continue;
+    const totalAmount = {
+      ...selectedVariant.price,
+      amount: (
+        Number(selectedVariant.price.amount) * expectedQuantity
+      ).toString(),
+    };
+    displayedLines.unshift(
+      {
+        cost: {
+          amountPerQuantity: selectedVariant.price,
+          subtotalAmount: totalAmount,
+          totalAmount,
+        },
+        id: `optimistic-${variantId}`,
+        isOptimistic: true,
+        merchandise: selectedVariant,
+        quantity: expectedQuantity,
+      } as unknown as CartLine,
+    );
+  }
+
+  optimisticCart.totalQuantity = displayedLines.reduce(
+    (total, line) => total + line.quantity,
+    0,
+  );
+  optimisticCart.isOptimistic = true;
+  return optimisticCart;
+}
+
 function CartEmpty({
   hidden = false,
 }: {
@@ -94,7 +213,19 @@ function CartEmpty({
 }) {
   const {close} = useAside();
   return (
-    <div hidden={hidden}>
+    <div
+      aria-labelledby="empty-cart-title"
+      className="cart-empty"
+      hidden={hidden}
+    >
+      <span className="cart-empty-icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" focusable="false">
+          <path d="M6 8h5l4.2 21h20.2l4.6-15H12.2" />
+          <circle cx="19" cy="38" r="2.5" />
+          <circle cx="34" cy="38" r="2.5" />
+        </svg>
+      </span>
+      <h4 id="empty-cart-title">Your cart is waiting</h4>
       <p className="cart-empty-message">
         Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you
         started!
@@ -103,9 +234,10 @@ function CartEmpty({
         className="cart-empty-link"
         to="/collections/all"
         onClick={close}
-        prefetch="viewport"
+        prefetch="intent"
       >
-        Continue shopping →
+        <span>Continue shopping</span>
+        <span aria-hidden="true">→</span>
       </Link>
     </div>
   );

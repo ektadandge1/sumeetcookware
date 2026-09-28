@@ -2,7 +2,6 @@ import {Await} from 'react-router';
 import {Suspense, useId} from 'react';
 import type {
   CartApiQueryFragment,
-  FooterQuery,
   HeaderQuery,
 } from 'storefrontapi.generated';
 import {Aside} from '~/components/Aside';
@@ -14,10 +13,10 @@ import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import {AnnouncementBar} from '~/components/AnnouncementBar';
 import {WishlistProvider} from '~/components/WishlistContext';
 import {MobileBottomNav} from '~/components/MobileBottomNav';
+import {CartCountProvider} from '~/components/CartCountContext';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
-  footer: Promise<FooterQuery | null>;
   header: HeaderQuery;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
@@ -27,14 +26,14 @@ interface PageLayoutProps {
 export function PageLayout({
   cart,
   children = null,
-  footer,
   header,
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
   return (
     <Aside.Provider>
-      <WishlistProvider>
+      <CartCountProvider>
+        <WishlistProvider>
         <CartAside cart={cart} />
         <SearchAside />
         <MobileMenuAside
@@ -51,13 +50,10 @@ export function PageLayout({
           />
         )}
         <main>{children}</main>
-        <Footer
-          footer={footer}
-          header={header}
-          publicStoreDomain={publicStoreDomain}
-        />
+        <Footer />
         <MobileBottomNav />
-      </WishlistProvider>
+        </WishlistProvider>
+      </CartCountProvider>
     </Aside.Provider>
   );
 }

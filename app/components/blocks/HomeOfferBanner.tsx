@@ -89,7 +89,7 @@ export function HomeOfferBanner() {
               alt={banner.alt}
               decoding="async"
               height={banner.height}
-              loading="eager"
+              loading="lazy"
               src={banner.src}
               width={banner.width}
             />

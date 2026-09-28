@@ -1,4 +1,5 @@
-import {useLoaderData} from 'react-router';
+import {Await, useLoaderData} from 'react-router';
+import {Suspense} from 'react';
 import type {Route} from './+types/_index';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import {HomeHero} from '~/components/blocks/HomeHero';
@@ -27,22 +28,27 @@ import {
 
 export const meta: Route.MetaFunction = () => [{title: 'Sumeet Cookware'}];
 
-export async function loader(args: Route.LoaderArgs) {
-  const allReviews = await loadJudgeMeReviews(args.context.env);
-  const instagramPosts = await loadInstagramPosts(args.context.env);
+export function loader(args: Route.LoaderArgs) {
+  const deferredData = loadDeferredData(args);
+  const allReviews = loadJudgeMeReviews(
+    args.context.env,
+    args.context.waitUntil,
+  );
 
   return {
-    ...loadDeferredData(args),
+    ...deferredData,
     isShopLinked: Boolean(args.context.env.PUBLIC_STORE_DOMAIN),
-    productRatings: getProductRatings(allReviews),
-    reviews: allReviews.slice(0, 9),
-    instagramPosts,
+    productRatings: allReviews.then(getProductRatings),
+    reviews: allReviews.then((reviews) => reviews.slice(0, 9)),
+    instagramPosts: loadInstagramPosts(args.context.env),
   };
 }
 
 function loadDeferredData({context}: Route.LoaderArgs) {
   const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
+    .query(RECOMMENDED_PRODUCTS_QUERY, {
+      cache: context.storefront.CacheShort(),
+    })
     .catch((error: Error) => {
       console.error(error);
       return null;
@@ -72,10 +78,18 @@ export default function Homepage() {
       <HomeGifting />
       <HomeEssentials />
       <HomeCustomerStories />
-      <HomeReviews reviews={data.reviews} />
+      <Suspense fallback={null}>
+        <Await resolve={data.reviews}>
+          {(reviews) => <HomeReviews reviews={reviews} />}
+        </Await>
+      </Suspense>
       <HomeCustomerBanner />
       <HomeRecipes />
-      <HomeInstagram posts={data.instagramPosts} />
+      <Suspense fallback={null}>
+        <Await resolve={data.instagramPosts}>
+          {(posts) => <HomeInstagram posts={posts} />}
+        </Await>
+      </Suspense>
       <HomeDiscountPopup />
     </div>
   );
@@ -96,6 +110,10 @@ async function loadInstagramPosts(env: Env): Promise<InstagramPost[]> {
 
   if (!accountId || !accessToken) return [];
 
+  const cacheKey = `instagram-${accountId}-v1`;
+  const cachedPosts = await readHomepageCache<InstagramPost[]>(cacheKey);
+  if (cachedPosts) return cachedPosts;
+
   const url = new URL(`https://graph.facebook.com/v22.0/${accountId}/media`);
   url.searchParams.set(
     'fields',
@@ -112,7 +130,7 @@ async function loadInstagramPosts(env: Env): Promise<InstagramPost[]> {
     }
 
     const data = (await response.json()) as {data?: InstagramApiMedia[]};
-    return (data.data ?? [])
+    const posts: InstagramPost[] = (data.data ?? [])
       .filter(
         (post) =>
           typeof post.id === 'string' &&
@@ -128,6 +146,8 @@ async function loadInstagramPosts(env: Env): Promise<InstagramPost[]> {
         permalink: post.permalink as string,
         thumbnailUrl: post.thumbnail_url,
       }));
+    await writeHomepageCache(cacheKey, posts);
+    return posts;
   } catch (error) {
     console.error('Instagram Graph API request failed', error);
     return [];
@@ -152,67 +172,155 @@ type JudgeMeApiReview = {
   reviewer?: {name?: string};
 };
 
-async function loadJudgeMeReviews(env: Env): Promise<HomeReview[]> {
+async function loadJudgeMeReviews(
+  env: Env,
+  waitUntil?: (promise: Promise<unknown>) => void,
+): Promise<HomeReview[]> {
   const token = env.JUDGE_ME_PRIVATE_API_TOKEN;
   const shopDomain = env.PUBLIC_STORE_DOMAIN;
 
   if (!token || !shopDomain) return [];
 
+  const cacheKey = `reviews-${shopDomain}-v1`;
+  const cachedReviews = await readHomepageCache<HomeReview[]>(cacheKey);
+  if (cachedReviews) return cachedReviews;
+
   try {
-    const reviews: JudgeMeApiReview[] = [];
     const perPage = 100;
+    const firstPage = await loadJudgeMeReviewPage({
+      page: 1,
+      perPage,
+      shopDomain,
+      token,
+    });
+    const initialReviews = normalizeJudgeMeReviews(firstPage);
+    await writeHomepageCache(cacheKey, initialReviews);
 
-    for (let page = 1; page <= 20; page += 1) {
-      const url = new URL('https://api.judge.me/api/v1/reviews');
-      url.searchParams.set('api_token', token);
-      url.searchParams.set('page', String(page));
-      url.searchParams.set('per_page', String(perPage));
-      url.searchParams.set('shop_domain', shopDomain);
-
-      const response = await fetch(url, {
-        signal: AbortSignal.timeout(8000),
+    if (firstPage.length === perPage) {
+      const refresh = loadRemainingJudgeMeReviews({
+        cacheKey,
+        firstPage,
+        perPage,
+        shopDomain,
+        token,
+      }).catch((error) => {
+        console.error('Judge.me background refresh failed', error);
       });
-
-      if (!response.ok) {
-        console.error('Judge.me reviews request failed', response.status);
-        break;
-      }
-
-      const data = (await response.json()) as {
-        reviews?: JudgeMeApiReview[];
-      };
-      const pageReviews = data.reviews ?? [];
-      reviews.push(...pageReviews);
-
-      if (pageReviews.length < perPage) break;
+      if (waitUntil) waitUntil(refresh);
     }
 
-    return reviews
-      .filter(
-        (review) =>
-          review.curated === 'ok' &&
-          review.published === true &&
-          review.hidden !== true &&
-          typeof review.id === 'number' &&
-          typeof review.body === 'string' &&
-          typeof review.rating === 'number',
-      )
-      .map((review) => ({
-        body: review.body?.trim() ?? '',
-        id: review.id ?? 0,
-        name: review.reviewer?.name?.trim() || 'Verified customer',
-        productHandle:
-          review.product_handle?.trim() ?? review.product?.handle?.trim(),
-        productExternalId:
-          review.product_external_id?.toString() ??
-          review.product_id?.toString() ??
-          review.product?.external_id?.toString() ??
-          review.product?.id?.toString(),
-        rating: Math.min(5, Math.max(1, Math.round(review.rating ?? 1))),
-      }));
+    return initialReviews;
   } catch (error) {
     console.error('Judge.me reviews request failed', error);
     return [];
+  }
+}
+
+async function loadRemainingJudgeMeReviews({
+  cacheKey,
+  firstPage,
+  perPage,
+  shopDomain,
+  token,
+}: {
+  cacheKey: string;
+  firstPage: JudgeMeApiReview[];
+  perPage: number;
+  shopDomain: string;
+  token: string;
+}) {
+  const reviews = [...firstPage];
+
+  for (let page = 2; page <= 20; page += 1) {
+    const pageReviews = await loadJudgeMeReviewPage({
+      page,
+      perPage,
+      shopDomain,
+      token,
+    });
+    reviews.push(...pageReviews);
+    if (pageReviews.length < perPage) break;
+  }
+
+  await writeHomepageCache(cacheKey, normalizeJudgeMeReviews(reviews));
+}
+
+function normalizeJudgeMeReviews(reviews: JudgeMeApiReview[]) {
+  return reviews
+    .filter(
+      (review) =>
+        review.curated === 'ok' &&
+        review.published === true &&
+        review.hidden !== true &&
+        typeof review.id === 'number' &&
+        typeof review.body === 'string' &&
+        typeof review.rating === 'number',
+    )
+    .map((review) => ({
+      body: review.body?.trim() ?? '',
+      id: review.id ?? 0,
+      name: review.reviewer?.name?.trim() || 'Verified customer',
+      productHandle:
+        review.product_handle?.trim() ?? review.product?.handle?.trim(),
+      productExternalId:
+        review.product_external_id?.toString() ??
+        review.product_id?.toString() ??
+        review.product?.external_id?.toString() ??
+        review.product?.id?.toString(),
+      rating: Math.min(5, Math.max(1, Math.round(review.rating ?? 1))),
+    }));
+}
+
+async function loadJudgeMeReviewPage({
+  page,
+  perPage,
+  shopDomain,
+  token,
+}: {
+  page: number;
+  perPage: number;
+  shopDomain: string;
+  token: string;
+}) {
+  const url = new URL('https://api.judge.me/api/v1/reviews');
+  url.searchParams.set('api_token', token);
+  url.searchParams.set('page', String(page));
+  url.searchParams.set('per_page', String(perPage));
+  url.searchParams.set('shop_domain', shopDomain);
+
+  const response = await fetch(url, {signal: AbortSignal.timeout(8000)});
+  if (!response.ok) {
+    throw new Error(`Judge.me reviews request failed: ${response.status}`);
+  }
+
+  const data = (await response.json()) as {reviews?: JudgeMeApiReview[]};
+  return data.reviews ?? [];
+}
+
+async function readHomepageCache<T>(key: string): Promise<T | null> {
+  try {
+    const cache = await caches.open('hydrogen');
+    const response = await cache.match(`https://homepage-cache.local/${key}`);
+    return response ? ((await response.json()) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+async function writeHomepageCache(key: string, value: unknown) {
+  try {
+    const cache = await caches.open('hydrogen');
+    await cache.put(
+      `https://homepage-cache.local/${key}`,
+      new Response(JSON.stringify(value), {
+        headers: {
+          'Cache-Control': 'public, max-age=900',
+          'Content-Type': 'application/json',
+        },
+      }),
+    );
+  } catch {
+    // Data still renders normally when the runtime cache is unavailable.
   }
 }
 
@@ -236,6 +344,34 @@ function getProductRatings(reviews: HomeReview[]) {
 }
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+  fragment RecommendedVariant on ProductVariant {
+    availableForSale
+    id
+    title
+    compareAtPrice {
+      amount
+      currencyCode
+    }
+    price {
+      amount
+      currencyCode
+    }
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    product {
+      title
+      handle
+    }
+    selectedOptions {
+      name
+      value
+    }
+  }
   fragment RecommendedProduct on Product {
     availableForSale
     id
@@ -252,32 +388,12 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
       ignoreUnknownOptions: true
       caseInsensitiveMatch: true
     ) {
-      availableForSale
-      id
-      compareAtPrice {
-        amount
-        currencyCode
+      ...RecommendedVariant
+    }
+    variants(first: 50) {
+      nodes {
+        ...RecommendedVariant
       }
-      price {
-        amount
-        currencyCode
-      }
-      image {
-        id
-        url
-        altText
-        width
-        height
-      }
-      product {
-        title
-        handle
-      }
-      selectedOptions {
-        name
-        value
-      }
-      title
     }
     featuredImage {
       id

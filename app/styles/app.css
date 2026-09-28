@@ -1937,6 +1937,93 @@ aside.aside-cart .cart-details {
   margin: 0 1.25rem;
 }
 
+.cart-empty {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 25rem;
+  padding: 2rem 1.5rem 3rem;
+  text-align: center;
+  width: 100%;
+}
+
+.cart-empty[hidden] {
+  display: none;
+}
+
+.cart-empty-icon {
+  align-items: center;
+  background: radial-gradient(circle at 35% 30%, #3b1515, #191919 72%);
+  border: 1px solid #4e2929;
+  border-radius: 50%;
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.3);
+  color: #f01818;
+  display: flex;
+  height: 5.25rem;
+  justify-content: center;
+  margin-bottom: 1.35rem;
+  width: 5.25rem;
+}
+
+.cart-empty-icon svg {
+  fill: none;
+  height: 2.65rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  width: 2.65rem;
+}
+
+.cart-empty h4 {
+  color: #fff;
+  font-family: var(--font-body-family);
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.cart-empty .cart-empty-message {
+  color: #aaa;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+  max-width: 19rem;
+}
+
+.cart-empty .cart-empty-link {
+  background: linear-gradient(135deg, #ef1111, #c90000);
+  border: 1px solid #ff3434;
+  border-radius: 0.55rem;
+  box-shadow: 0 0.65rem 1.4rem rgba(190, 0, 0, 0.2);
+  gap: 0.65rem;
+  margin: 0;
+  max-width: 22rem;
+  transition:
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  width: 100%;
+}
+
+.cart-empty .cart-empty-link:hover,
+.cart-empty .cart-empty-link:focus-visible {
+  background: linear-gradient(135deg, #ff1c1c, #d60000);
+  box-shadow: 0 0.8rem 1.6rem rgba(190, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.cart-empty .cart-empty-link span:last-child {
+  font-size: 1.1rem;
+  transition: transform 180ms ease;
+}
+
+.cart-empty .cart-empty-link:hover span:last-child {
+  transform: translateX(0.2rem);
+}
+
 /* Cart drawer: match the storefront's dark, high-contrast visual language. */
 aside.aside-cart,
 aside.aside-cart .cart-summary-aside {
@@ -3685,14 +3772,16 @@ main:has(.home) {
 }
 
 .home-product-card > form,
-.home-product-cta {
+.home-product-cta,
+.home-product-variant-trigger {
   display: block;
   margin-top: auto;
   width: 100%;
 }
 
 .home-product-card > form button,
-.home-product-cta {
+.home-product-cta,
+.home-product-variant-trigger {
   background: var(--primary);
   border: 0;
   border-radius: 0.35rem;
@@ -3708,7 +3797,8 @@ main:has(.home) {
 }
 
 .home-product-card > form button:hover,
-.home-product-cta:hover {
+.home-product-cta:hover,
+.home-product-variant-trigger:hover {
   background: #a90303;
   color: #fff;
   text-decoration: none;
@@ -3717,6 +3807,271 @@ main:has(.home) {
 .home-product-card > form button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
+}
+
+.home-product-card-actions > button {
+  align-items: center;
+  background: var(--card);
+  border: 0;
+  border-radius: 999px;
+  color: var(--card-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  height: 2.4rem;
+  justify-content: center;
+  padding: 0;
+  width: 2.4rem;
+}
+
+.home-product-card-actions > button svg {
+  fill: none;
+  height: 1.35rem;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  width: 1.35rem;
+}
+
+.home-variant-backdrop {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.84);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 1.25rem;
+  position: fixed;
+  z-index: 1100;
+}
+
+.home-variant-dialog {
+  animation: home-variant-open 180ms ease-out;
+  background: #202020;
+  border: 1px solid #444;
+  border-radius: 1rem;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.65);
+  box-sizing: border-box;
+  color: #fff;
+  display: grid;
+  font-family: var(--font-body-family);
+  grid-template-columns: minmax(15rem, 0.85fr) minmax(20rem, 1.15fr);
+  max-height: calc(100dvh - 2.5rem);
+  max-width: 46rem;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.home-variant-close {
+  align-items: center;
+  background: #343434;
+  border: 1px solid #555;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font: 400 1.5rem/1 sans-serif;
+  height: 2.2rem;
+  justify-content: center;
+  position: absolute;
+  right: 0.9rem;
+  top: 0.9rem;
+  width: 2.2rem;
+  z-index: 2;
+}
+
+.home-variant-media {
+  align-items: center;
+  background: linear-gradient(145deg, #121212, #1b1b1b);
+  display: flex;
+  justify-content: center;
+  min-height: 25rem;
+  padding: 1.5rem;
+}
+
+.home-variant-media img {
+  background: #fff;
+  border-radius: 0.75rem;
+  display: block;
+  height: auto;
+  max-height: 23rem;
+  object-fit: contain;
+  width: 100%;
+}
+
+.home-variant-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2.5rem 2rem 2rem;
+}
+
+.home-variant-eyebrow {
+  color: #ff3333;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.45rem;
+  text-transform: uppercase;
+}
+
+.home-variant-content h2 {
+  color: #fff;
+  font-family: var(--font-body-family);
+  font-size: 1.45rem;
+  line-height: 1.2;
+  margin: 0 2rem 1.4rem 0;
+}
+
+.home-variant-options {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.home-variant-options button {
+  align-items: center;
+  background: #292929;
+  border: 1px solid #4b4b4b;
+  border-radius: 0.55rem;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font: 600 0.84rem/1.25 var(--font-body-family);
+  gap: 1rem;
+  justify-content: space-between;
+  min-height: 2.8rem;
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  width: 100%;
+}
+
+.home-variant-options button.is-selected {
+  background: rgba(219, 5, 5, 0.16);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.home-variant-options button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+  text-decoration: line-through;
+}
+
+.home-variant-footer {
+  border-top: 1px solid #444;
+  margin-top: 1.25rem;
+  padding-top: 1.15rem;
+}
+
+.home-variant-price {
+  align-items: baseline;
+  display: flex;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.home-variant-price > .money {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.home-variant-price s {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.home-variant-footer form button {
+  background: var(--primary);
+  border: 0;
+  border-radius: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  font: 700 0.95rem/1 var(--font-body-family);
+  min-height: 2.8rem;
+  width: 100%;
+}
+
+.home-variant-footer form button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.header-cart-count.is-flashing {
+  animation: header-cart-count-flash 520ms ease-out;
+}
+
+@keyframes header-cart-count-flash {
+  0% {
+    box-shadow: 0 0 0 0 rgba(219, 5, 5, 0.9);
+    transform: scale(1);
+  }
+
+  45% {
+    box-shadow: 0 0 0 0.45rem rgba(219, 5, 5, 0);
+    transform: scale(1.35);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(219, 5, 5, 0);
+    transform: scale(1);
+  }
+}
+
+@keyframes home-variant-open {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 48em) {
+  .home-variant-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .home-variant-dialog {
+    border-radius: 1rem 1rem 0 0;
+    grid-template-columns: 7.75rem minmax(0, 1fr);
+    max-height: 88dvh;
+    max-width: none;
+  }
+
+  .home-variant-media {
+    align-items: flex-start;
+    min-height: 0;
+    padding: 3.75rem 0.65rem 1rem;
+  }
+
+  .home-variant-content {
+    background: #202020;
+    padding: 1.5rem 1rem max(1.25rem, env(safe-area-inset-bottom));
+  }
+
+  .home-variant-content h2 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-variant-eyebrow {
+    font-size: 0.62rem;
+  }
+
+  .home-variant-options button {
+    font-size: 0.7rem;
+    min-height: 2.35rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .home-best-sellers .home-product-card-actions > button {
+    display: none;
+  }
 }
 
 .home-product-dots {
@@ -5648,7 +6003,8 @@ main:has(.home) {
   }
 
   .home-best-sellers .home-product-card > form button,
-  .home-best-sellers .home-product-cta {
+  .home-best-sellers .home-product-cta,
+  .home-best-sellers .home-product-variant-trigger {
     border-radius: 0.25rem;
     font-size: 0.52rem;
     min-height: 1.45rem;

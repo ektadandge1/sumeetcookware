@@ -45,12 +45,13 @@ export function HomeInstagram({posts}: {posts: InstagramPost[]}) {
                 muted
                 playsInline
                 poster={post.thumbnailUrl}
-                preload="metadata"
+                preload="none"
                 src={post.mediaUrl}
               />
             ) : (
               <img
                 alt={post.caption || 'Sumeet Cookware on Instagram'}
+                decoding="async"
                 loading="lazy"
                 src={post.mediaUrl}
               />

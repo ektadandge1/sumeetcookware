@@ -11,6 +11,7 @@ export function FigmaImage({
     <img
       alt={alt}
       className={className}
+      decoding="async"
       loading="lazy"
       onError={(event) => {
         event.currentTarget.hidden = true;

@@ -19,7 +19,9 @@ export function HomeCustomerBanner() {
           />
           <img
             alt="500000 happy customers, 30 years of market experience, and 4 out of 5 Amazon and Flipkart rating"
+            decoding="async"
             height={360}
+            loading="lazy"
             src={CUSTOMER_BANNER_URL}
             width={1519}
           />

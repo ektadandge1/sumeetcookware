@@ -22,13 +22,38 @@ export function HomeMobileExperience() {
   const [currentBanner, setCurrentBanner] = useState(0);
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const mobileQuery = window.matchMedia('(max-width: 48em)');
+    const reducedMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    );
+    let interval: number | undefined;
 
-    const interval = window.setInterval(() => {
-      setCurrentBanner((banner) => (banner + 1) % TRIPLY_BANNERS.length);
-    }, 3000);
+    const updateRotation = () => {
+      if (interval) window.clearInterval(interval);
+      interval = undefined;
 
-    return () => window.clearInterval(interval);
+      if (
+        mobileQuery.matches &&
+        !reducedMotionQuery.matches &&
+        document.visibilityState === 'visible'
+      ) {
+        interval = window.setInterval(() => {
+          setCurrentBanner((banner) => (banner + 1) % TRIPLY_BANNERS.length);
+        }, 3000);
+      }
+    };
+
+    updateRotation();
+    mobileQuery.addEventListener('change', updateRotation);
+    reducedMotionQuery.addEventListener('change', updateRotation);
+    document.addEventListener('visibilitychange', updateRotation);
+
+    return () => {
+      if (interval) window.clearInterval(interval);
+      mobileQuery.removeEventListener('change', updateRotation);
+      reducedMotionQuery.removeEventListener('change', updateRotation);
+      document.removeEventListener('visibilitychange', updateRotation);
+    };
   }, []);
 
   return (
@@ -51,7 +76,7 @@ export function HomeMobileExperience() {
                 <img
                   alt={banner.alt}
                   decoding="async"
-                  loading={index === 0 ? 'eager' : 'lazy'}
+                  loading="lazy"
                   src={banner.src}
                 />
               </div>

@@ -1,6 +1,6 @@
-import {CartForm, Money} from '@shopify/hydrogen';
+import {Money} from '@shopify/hydrogen';
 import {Suspense, useRef, useState} from 'react';
-import {Await, Link, NavLink, useFetchers} from 'react-router';
+import {Await, Link, NavLink} from 'react-router';
 import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import {CartIcon} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
@@ -8,6 +8,7 @@ import {SearchFormPredictive} from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import {HeartIcon} from '~/components/WishlistButton';
 import {useWishlist} from '~/components/WishlistContext';
+import {useCartCount} from '~/components/CartCountContext';
 
 const SUMEET_LOGO_URL =
   'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Sumeet_logo_PNG.png?v=1789986865';
@@ -335,36 +336,9 @@ function HeaderCtas({
 
 function HeaderCartToggle({cart}: {cart: CartApiQueryFragment | null}) {
   const {open} = useAside();
-  const fetchers = useFetchers();
-  const confirmedQuantity = cart?.totalQuantity ?? 0;
-  let pendingQuantity = 0;
-  let mutationQuantity = confirmedQuantity;
-
-  for (const fetcher of fetchers) {
-    if (!fetcher.formData) continue;
-
-    try {
-      const {action, inputs} = CartForm.getFormInput(fetcher.formData);
-      if (action !== CartForm.ACTIONS.LinesAdd) continue;
-
-      const returnedQuantity = (
-        fetcher.data as {cart?: {totalQuantity?: unknown}} | undefined
-      )?.cart?.totalQuantity;
-
-      if (typeof returnedQuantity === 'number') {
-        mutationQuantity = Math.max(mutationQuantity, returnedQuantity);
-      } else {
-        pendingQuantity += inputs.lines.reduce(
-          (total, line) => total + (line.quantity ?? 1),
-          0,
-        );
-      }
-    } catch {
-      // Ignore unrelated or malformed fetcher submissions.
-    }
-  }
-
-  const quantity = mutationQuantity + pendingQuantity;
+  const {cartPulse, totalQuantity: quantity} = useCartCount(
+    cart?.totalQuantity ?? 0,
+  );
 
   return (
     <button
@@ -376,7 +350,11 @@ function HeaderCartToggle({cart}: {cart: CartApiQueryFragment | null}) {
       <CartIcon />
       <span className="header-action-label">Cart</span>
       {quantity > 0 ? (
-        <span aria-live="polite" className="header-cart-count">
+        <span
+          aria-live="polite"
+          className="header-cart-count is-flashing"
+          key={cartPulse}
+        >
           {quantity}
         </span>
       ) : null}

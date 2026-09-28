@@ -28,6 +28,8 @@ export function HomeProductBand({
   const [isPaused, setIsPaused] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [variantProduct, setVariantProduct] =
+    useState<RecommendedProduct | null>(null);
   const dragStartX = useRef<number | null>(null);
   const suppressClick = useRef(false);
   const headingId = heading.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -140,6 +142,7 @@ export function HomeProductBand({
         <HomeProductCard
           isBestSeller={isBestSeller}
           product={product}
+          onSelectVariant={() => setVariantProduct(product)}
           rating={
             productRatings[product.handle] ??
             productRatings[product.id] ??
@@ -225,6 +228,12 @@ export function HomeProductBand({
       <Link className="home-text-link" to={collectionUrl ?? '/collections/all'}>
         {isBestSeller ? 'Shop best sellers →' : 'View all products →'}
       </Link>
+      {variantProduct ? (
+        <HomeVariantDialog
+          onClose={() => setVariantProduct(null)}
+          product={variantProduct}
+        />
+      ) : null}
     </section>
   );
 }
@@ -239,13 +248,16 @@ function HomeProductCard({
   product,
   isBestSeller,
   rating,
+  onSelectVariant,
 }: {
   product: RecommendedProduct;
   isBestSeller: boolean;
   rating?: {average: number; count: number};
+  onSelectVariant: () => void;
 }) {
   const image = product.featuredImage;
   const variant = product.selectedOrFirstAvailableVariant;
+  const hasMultipleVariants = product.variants.nodes.length > 1;
   const wishlistItem = {
     id: product.id,
     handle: product.handle,
@@ -264,7 +276,15 @@ function HomeProductCard({
         ) : null}
         <div className="home-product-card-actions">
           <WishlistButton item={wishlistItem} />
-          {variant?.id ? (
+          {variant?.id && hasMultipleVariants ? (
+            <button
+              aria-label={`Choose options for ${product.title}`}
+              onClick={onSelectVariant}
+              type="button"
+            >
+              <CartIcon />
+            </button>
+          ) : variant?.id ? (
             <AddToCartButton
               disabled={!variant.availableForSale}
               lines={[
@@ -342,7 +362,15 @@ function HomeProductCard({
           </s>
         ) : null}
       </div>
-      {variant?.id ? (
+      {variant?.id && hasMultipleVariants ? (
+        <button
+          className="home-product-variant-trigger"
+          onClick={onSelectVariant}
+          type="button"
+        >
+          Choose options
+        </button>
+      ) : variant?.id ? (
         <AddToCartButton
           disabled={!variant.availableForSale}
           lines={[
@@ -354,12 +382,14 @@ function HomeProductCard({
           ]}
           analytics={{productId: product.id}}
         >
-          {(isPending) =>
-            isPending
-              ? 'Adding...'
-              : variant.availableForSale
-                ? 'Add to cart'
-                : 'Sold out'
+          {(isPending, isAdded) =>
+            isAdded
+              ? 'Added to cart'
+              : isPending
+                ? 'Adding...'
+                : variant.availableForSale
+                  ? 'Add to cart'
+                  : 'Sold out'
           }
         </AddToCartButton>
       ) : (
@@ -368,5 +398,139 @@ function HomeProductCard({
         </Link>
       )}
     </>
+  );
+}
+
+function HomeVariantDialog({
+  onClose,
+  product,
+}: {
+  onClose: () => void;
+  product: RecommendedProduct;
+}) {
+  const availableVariants = product.variants.nodes.filter(
+    (variant) => variant.availableForSale,
+  );
+  const [selectedVariantId, setSelectedVariantId] = useState(
+    product.selectedOrFirstAvailableVariant?.id ?? availableVariants[0]?.id,
+  );
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  const selectedVariant =
+    product.variants.nodes.find(
+      (variant) => variant.id === selectedVariantId,
+    ) ?? availableVariants[0];
+  const image = selectedVariant?.image ?? product.featuredImage;
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onCloseRef.current();
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, []);
+
+  return (
+    <div
+      className="home-variant-backdrop"
+      onMouseDown={(event) => {
+        if (event.currentTarget === event.target) onClose();
+      }}
+      role="presentation"
+    >
+      <section
+        aria-labelledby="home-variant-title"
+        aria-modal="true"
+        className="home-variant-dialog"
+        role="dialog"
+      >
+        <button
+          aria-label="Close product options"
+          className="home-variant-close"
+          onClick={onClose}
+          ref={closeButtonRef}
+          type="button"
+        >
+          ×
+        </button>
+        <div className="home-variant-media">
+          {image ? (
+            <Image
+              alt={image.altText || product.title}
+              aspectRatio="1/1"
+              data={image}
+              loading="eager"
+              sizes="(max-width: 48em) 38vw, 300px"
+            />
+          ) : null}
+        </div>
+        <div className="home-variant-content">
+          <p className="home-variant-eyebrow">Choose your option</p>
+          <h2 id="home-variant-title">{product.title}</h2>
+          <div className="home-variant-options" role="radiogroup">
+            {product.variants.nodes.map((variant) => (
+              <button
+                aria-checked={variant.id === selectedVariant?.id}
+                className={
+                  variant.id === selectedVariant?.id ? 'is-selected' : undefined
+                }
+                disabled={!variant.availableForSale}
+                key={variant.id}
+                onClick={() => setSelectedVariantId(variant.id)}
+                role="radio"
+                type="button"
+              >
+                <span>
+                  {variant.selectedOptions
+                    .map((option) => option.value)
+                    .join(' / ') || variant.title}
+                </span>
+                <Money data={variant.price} />
+              </button>
+            ))}
+          </div>
+          {selectedVariant ? (
+            <div className="home-variant-footer">
+              <div className="home-variant-price">
+                <Money data={selectedVariant.price} />
+                {selectedVariant.compareAtPrice ? (
+                  <s>
+                    <Money data={selectedVariant.compareAtPrice} />
+                  </s>
+                ) : null}
+              </div>
+              <AddToCartButton
+                analytics={{productId: product.id}}
+                disabled={!selectedVariant.availableForSale}
+                lines={[
+                  {
+                    merchandiseId: selectedVariant.id,
+                    quantity: 1,
+                    selectedVariant,
+                  },
+                ]}
+                onSuccess={() => window.setTimeout(onClose, 1200)}
+              >
+                {(isPending, isAdded) =>
+                  isAdded
+                    ? 'Added to cart'
+                    : isPending
+                      ? 'Adding...'
+                      : 'Add to cart'
+                }
+              </AddToCartButton>
+            </div>
+          ) : null}
+        </div>
+      </section>
+    </div>
   );
 }

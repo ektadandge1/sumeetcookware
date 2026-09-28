@@ -9,6 +9,7 @@ import type {
   CartApiQueryFragment,
   CartLineFragment,
 } from 'storefrontapi.generated';
+import {useCartCount} from './CartCountContext';
 
 export type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 
@@ -22,10 +23,12 @@ export function CartLineItem({
   layout,
   line,
   childrenMap,
+  onRemove,
 }: {
   layout: CartLayout;
   line: CartLine;
   childrenMap: LineItemChildrenMap;
+  onRemove: (lineIds: string[]) => void;
 }) {
   const {id, merchandise} = line;
   const {product, title, image, selectedOptions} = merchandise;
@@ -72,7 +75,7 @@ export function CartLineItem({
               </li>
             ))}
           </ul>
-          <CartLineQuantity line={line} />
+          <CartLineQuantity line={line} onRemove={onRemove} />
         </div>
       </div>
 
@@ -88,6 +91,7 @@ export function CartLineItem({
                 key={childLine.id}
                 line={childLine}
                 layout={layout}
+                onRemove={onRemove}
               />
             ))}
           </ul>
@@ -102,7 +106,13 @@ export function CartLineItem({
  * These controls are disabled when the line item is new, and the server
  * hasn't yet responded that it was successfully added to the cart.
  */
-function CartLineQuantity({line}: {line: CartLine}) {
+function CartLineQuantity({
+  line,
+  onRemove,
+}: {
+  line: CartLine;
+  onRemove: (lineIds: string[]) => void;
+}) {
   if (!line || typeof line?.quantity === 'undefined') return null;
   const {id: lineId, quantity, isOptimistic} = line;
   const prevQuantity = Number(Math.max(0, quantity - 1).toFixed(0));
@@ -134,7 +144,12 @@ function CartLineQuantity({line}: {line: CartLine}) {
           </button>
         </CartLineUpdateButton>
       </div>
-      <CartLineRemoveButton lineIds={[lineId]} disabled={!!isOptimistic} />
+      <CartLineRemoveButton
+        disabled={!!isOptimistic}
+        lineIds={[lineId]}
+        onRemove={onRemove}
+        quantity={quantity}
+      />
     </div>
   );
 }
@@ -147,10 +162,16 @@ function CartLineQuantity({line}: {line: CartLine}) {
 function CartLineRemoveButton({
   lineIds,
   disabled,
+  onRemove,
+  quantity,
 }: {
   lineIds: string[];
   disabled: boolean;
+  onRemove: (lineIds: string[]) => void;
+  quantity: number;
 }) {
+  const {removePending} = useCartCount();
+
   return (
     <CartForm
       fetcherKey={getUpdateKey(lineIds)}
@@ -158,7 +179,14 @@ function CartLineRemoveButton({
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <button disabled={disabled} type="submit">
+      <button
+        disabled={disabled}
+        onClick={() => {
+          onRemove(lineIds);
+          removePending(lineIds.map((id) => ({id, quantity})));
+        }}
+        type="submit"
+      >
         Remove
       </button>
     </CartForm>

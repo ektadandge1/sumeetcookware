@@ -1,13 +1,6 @@
 import {Link} from 'react-router';
-import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 
-interface FooterProps {
-  footer: Promise<FooterQuery | null>;
-  header: HeaderQuery;
-  publicStoreDomain: string;
-}
-
-export function Footer(_props: FooterProps) {
+export function Footer() {
   return (
     <footer className="footer">
       <div className="footer-main">
