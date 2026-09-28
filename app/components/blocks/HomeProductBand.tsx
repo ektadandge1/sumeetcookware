@@ -1,10 +1,14 @@
 import {Image, Money} from '@shopify/hydrogen';
 import {Link} from 'react-router';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState, type PointerEvent} from 'react';
 import type {RecommendedProductsQuery} from 'storefrontapi.generated';
 import {AddToCartButton, CartIcon} from '~/components/AddToCartButton';
 import {WishlistButton} from '~/components/WishlistButton';
 import {SectionHeading} from './SectionHeading';
+
+type RecommendedProduct = NonNullable<
+  RecommendedProductsQuery['collection']
+>['products']['nodes'][number];
 
 export function HomeProductBand({
   heading,
@@ -14,7 +18,7 @@ export function HomeProductBand({
   productRatings = {},
 }: {
   heading: string;
-  products: RecommendedProductsQuery['products']['nodes'];
+  products: RecommendedProduct[];
   collectionUrl?: string;
   isBestSeller?: boolean;
   productRatings?: Record<string, {average: number; count: number}>;
@@ -22,18 +26,91 @@ export function HomeProductBand({
   const [cardsPerSlide, setCardsPerSlide] = useState(4);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartX = useRef<number | null>(null);
+  const suppressClick = useRef(false);
   const headingId = heading.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  const slides = chunkProducts(products, cardsPerSlide);
+  const availableProducts = products.filter(
+    (product) =>
+      product.availableForSale &&
+      product.selectedOrFirstAvailableVariant?.availableForSale,
+  );
+  const slides = chunkProducts(availableProducts, cardsPerSlide);
   const showCarousel = isBestSeller && slides.length > 1;
 
+  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (
+      !showCarousel ||
+      (event.pointerType === 'mouse' && event.button !== 0)
+    ) {
+      return;
+    }
+
+    dragStartX.current = event.clientX;
+    setDragOffset(0);
+    setIsDragging(true);
+    setIsPaused(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const moveDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStartX.current === null) return;
+    setDragOffset(event.clientX - dragStartX.current);
+  };
+
+  const finishDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStartX.current === null) return;
+
+    const distance = event.clientX - dragStartX.current;
+    const threshold = Math.min(70, event.currentTarget.clientWidth * 0.12);
+    const wasDragged = Math.abs(distance) >= 8;
+
+    if (Math.abs(distance) >= threshold) {
+      setCurrentSlide((slide) =>
+        distance < 0
+          ? (slide + 1) % slides.length
+          : (slide - 1 + slides.length) % slides.length,
+      );
+    }
+
+    dragStartX.current = null;
+    setDragOffset(0);
+    setIsDragging(false);
+    if (event.pointerType !== 'mouse') setIsPaused(false);
+    suppressClick.current = wasDragged;
+    window.setTimeout(() => {
+      suppressClick.current = false;
+    }, 0);
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  const cancelDrag = (event: PointerEvent<HTMLDivElement>) => {
+    dragStartX.current = null;
+    setDragOffset(0);
+    setIsDragging(false);
+    if (event.pointerType !== 'mouse') setIsPaused(false);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 64em)');
+    const mobileQuery = window.matchMedia('(max-width: 48em)');
+    const tabletQuery = window.matchMedia('(max-width: 64em)');
     const updateCardsPerSlide = () =>
-      setCardsPerSlide(mediaQuery.matches ? 2 : 4);
+      setCardsPerSlide(mobileQuery.matches ? 3 : tabletQuery.matches ? 2 : 4);
 
     updateCardsPerSlide();
-    mediaQuery.addEventListener('change', updateCardsPerSlide);
-    return () => mediaQuery.removeEventListener('change', updateCardsPerSlide);
+    mobileQuery.addEventListener('change', updateCardsPerSlide);
+    tabletQuery.addEventListener('change', updateCardsPerSlide);
+    return () => {
+      mobileQuery.removeEventListener('change', updateCardsPerSlide);
+      tabletQuery.removeEventListener('change', updateCardsPerSlide);
+    };
   }, []);
 
   useEffect(() => {
@@ -56,7 +133,7 @@ export function HomeProductBand({
     return () => window.clearInterval(interval);
   }, [isPaused, showCarousel, slides.length]);
 
-  const productCards = (slideProducts: typeof products) =>
+  const productCards = (slideProducts: RecommendedProduct[]) =>
     slideProducts.map((product) => (
       <div className="home-product-card" key={product.id}>
         <HomeProductCard
@@ -83,22 +160,35 @@ export function HomeProductBand({
       ) : (
         <SectionHeading id={headingId} title={heading} />
       )}
-      {products.length ? (
+      {availableProducts.length ? (
         showCarousel ? (
           <div
-            className="home-product-carousel"
+            className={`home-product-carousel${isDragging ? ' is-dragging' : ''}`}
             onBlur={(event) => {
               if (!event.currentTarget.contains(event.relatedTarget)) {
                 setIsPaused(false);
               }
             }}
+            onClickCapture={(event) => {
+              if (!suppressClick.current) return;
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+            onDragStart={(event) => event.preventDefault()}
             onFocus={() => setIsPaused(true)}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
+            onLostPointerCapture={cancelDrag}
+            onPointerCancel={cancelDrag}
+            onPointerDown={startDrag}
+            onPointerMove={moveDrag}
+            onPointerUp={finishDrag}
           >
             <div
               className="home-product-track"
-              style={{transform: `translateX(-${currentSlide * 100}%)`}}
+              style={{
+                transform: `translateX(calc(-${currentSlide * (cardsPerSlide === 3 ? 120 : 100)}% + ${dragOffset}px))`,
+              }}
             >
               {slides.map((slide) => (
                 <div className="home-product-grid" key={slide[0]?.id}>
@@ -108,7 +198,9 @@ export function HomeProductBand({
             </div>
           </div>
         ) : (
-          <div className="home-product-grid">{productCards(products)}</div>
+          <div className="home-product-grid">
+            {productCards(availableProducts)}
+          </div>
         )
       ) : (
         <p className="home-empty">
@@ -147,7 +239,7 @@ function HomeProductCard({
   isBestSeller,
   rating,
 }: {
-  product: RecommendedProductsQuery['products']['nodes'][number];
+  product: RecommendedProduct;
   isBestSeller: boolean;
   rating?: {average: number; count: number};
 }) {

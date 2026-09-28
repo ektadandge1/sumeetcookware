@@ -225,6 +225,7 @@ function getProductRatings(reviews: HomeReview[]) {
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   fragment RecommendedProduct on Product {
+    availableForSale
     id
     title
     handle
@@ -276,9 +277,11 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 12, sortKey: BEST_SELLING) {
-      nodes {
-        ...RecommendedProduct
+    collection(handle: "best-deal-of-the-day") {
+      products(first: 250) {
+        nodes {
+          ...RecommendedProduct
+        }
       }
     }
   }

@@ -24,7 +24,7 @@ export function HomeProductSections({
             collectionUrl="/collections/best-deal-of-the-day"
             heading="Best Seller"
             isBestSeller
-            products={response?.products.nodes ?? []}
+            products={response?.collection?.products.nodes ?? []}
             productRatings={productRatings}
           />
         )}

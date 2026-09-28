@@ -122,24 +122,6 @@ export function Footer(_props: FooterProps) {
             <Link to="/pages/warranty-registration">Registration</Link>
           </nav>
 
-          <section
-            className="footer-newsletter"
-            aria-labelledby="footer-newsletter-title"
-          >
-            <h2 id="footer-newsletter-title">Join Sumeet Kitchen</h2>
-            <form action="/pages/contact-us">
-              <label className="sr-only" htmlFor="footer-email-input">
-                Email address
-              </label>
-              <input
-                id="footer-email-input"
-                name="email"
-                placeholder="enter your mail id"
-                type="email"
-              />
-              <button type="submit">Subscribe</button>
-            </form>
-          </section>
         </div>
       </div>
 
