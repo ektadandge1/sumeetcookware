@@ -158,24 +158,36 @@ async function loadJudgeMeReviews(env: Env): Promise<HomeReview[]> {
 
   if (!token || !shopDomain) return [];
 
-  const url = new URL('https://api.judge.me/api/v1/reviews');
-  url.searchParams.set('api_token', token);
-  url.searchParams.set('per_page', '100');
-  url.searchParams.set('shop_domain', shopDomain);
-
   try {
-    const response = await fetch(url, {
-      signal: AbortSignal.timeout(4000),
-    });
+    const reviews: JudgeMeApiReview[] = [];
+    const perPage = 100;
 
-    if (!response.ok) {
-      console.error('Judge.me reviews request failed', response.status);
-      return [];
+    for (let page = 1; page <= 20; page += 1) {
+      const url = new URL('https://api.judge.me/api/v1/reviews');
+      url.searchParams.set('api_token', token);
+      url.searchParams.set('page', String(page));
+      url.searchParams.set('per_page', String(perPage));
+      url.searchParams.set('shop_domain', shopDomain);
+
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(8000),
+      });
+
+      if (!response.ok) {
+        console.error('Judge.me reviews request failed', response.status);
+        break;
+      }
+
+      const data = (await response.json()) as {
+        reviews?: JudgeMeApiReview[];
+      };
+      const pageReviews = data.reviews ?? [];
+      reviews.push(...pageReviews);
+
+      if (pageReviews.length < perPage) break;
     }
 
-    const data = (await response.json()) as {reviews?: JudgeMeApiReview[]};
-
-    return (data.reviews ?? [])
+    return reviews
       .filter(
         (review) =>
           review.curated === 'ok' &&

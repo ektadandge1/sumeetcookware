@@ -1,5 +1,7 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Link} from 'react-router';
+import {BusinessEnquiryForm} from './HomeBusinessBuyers';
+import {FIGMA_ASSETS} from './homeAssets';
 
 const TRIPLY_BANNERS = [
   {
@@ -86,10 +88,165 @@ export function HomeMobileExperience() {
 }
 
 export function HomeMobileActions() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isGiftOpen, setIsGiftOpen] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const giftDialogRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isGiftOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    giftDialogRef.current?.focus();
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsGiftOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isGiftOpen]);
+
   return (
-    <section className="home-mobile-actions" aria-label="Business and gifting">
-      <a href="https://sumeetcookware.in/contact">Bulk Inquiry</a>
-      <Link to="/collections/gifts">Order Gifts</Link>
-    </section>
+    <>
+      <section
+        className="home-mobile-actions"
+        aria-label="Business and gifting"
+      >
+        <div className="home-mobile-action">
+          <span className="home-mobile-action-arrow" aria-hidden="true">
+            <svg viewBox="0 0 20 14" focusable="false">
+              <path d="m2 2 8 8 8-8M2 8l8 8 8-8" />
+            </svg>
+          </span>
+          <button type="button" onClick={() => setIsOpen(true)}>
+            Bulk Inquiry
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M8 3h8M9 2h6v3H9zM6 4h12a2 2 0 0 1 2 2v15H4V6a2 2 0 0 1 2-2Z" />
+              <path d="M8 10h8M8 14h8M8 18h5" />
+            </svg>
+          </button>
+        </div>
+        <div className="home-mobile-action">
+          <span className="home-mobile-action-arrow" aria-hidden="true">
+            <svg viewBox="0 0 20 14" focusable="false">
+              <path d="m2 2 8 8 8-8M2 8l8 8 8-8" />
+            </svg>
+          </span>
+          <button type="button" onClick={() => setIsGiftOpen(true)}>
+            Order Gifts
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M3 9h18v12H3zM2 6h20v3H2zM12 6v15M12 6H7.5a2.5 2.5 0 1 1 2.4-3.2L12 6Zm0 0h4.5a2.5 2.5 0 1 0-2.4-3.2L12 6Z" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      {isOpen ? (
+        <div
+          className="home-mobile-enquiry-backdrop"
+          onMouseDown={(event) => {
+            if (event.currentTarget === event.target) setIsOpen(false);
+          }}
+          role="presentation"
+        >
+          <section
+            aria-labelledby="mobile-enquiry-title"
+            aria-modal="true"
+            className="home-mobile-enquiry-sheet"
+            role="dialog"
+            style={{
+              backgroundImage: `url("${FIGMA_ASSETS.businessBackground}")`,
+            }}
+          >
+            <button
+              aria-label="Close bulk inquiry form"
+              className="home-mobile-enquiry-close"
+              onClick={() => setIsOpen(false)}
+              ref={closeButtonRef}
+              type="button"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+            <header className="home-mobile-enquiry-header">
+              <h2 id="mobile-enquiry-title">Request A Quote</h2>
+              <p>
+                Fill In The Details To Get An Exclusive
+                <br />
+                Discount On Your Bulk Order!
+              </p>
+            </header>
+            <BusinessEnquiryForm
+              idPrefix="MobileBusinessEnquiry"
+              useCustomSelects
+            />
+          </section>
+        </div>
+      ) : null}
+
+      {isGiftOpen ? (
+        <div
+          className="home-mobile-enquiry-backdrop home-mobile-gift-backdrop"
+          onMouseDown={(event) => {
+            if (event.currentTarget === event.target) setIsGiftOpen(false);
+          }}
+          role="presentation"
+        >
+          <section
+            aria-labelledby="mobile-gift-title"
+            aria-modal="true"
+            className="home-mobile-gift-dialog"
+            ref={giftDialogRef}
+            role="dialog"
+            tabIndex={-1}
+          >
+            <header>
+              <h2 id="mobile-gift-title">
+                Gifts That Make Every
+                <br />
+                Meal Memorable
+              </h2>
+              <p>
+                Thoughtfully curated cookware gifts for weddings,
+                housewarmings, festivals, birthdays, and corporate gifting
+              </p>
+            </header>
+            <img
+              alt="Cookware gifts wrapped for a special occasion"
+              src={FIGMA_ASSETS.giftBanner}
+            />
+            <Link
+              className="home-mobile-gift-shop"
+              onClick={() => setIsGiftOpen(false)}
+              to="/collections/gifts"
+            >
+              Shop Gifts
+            </Link>
+          </section>
+        </div>
+      ) : null}
+    </>
   );
 }

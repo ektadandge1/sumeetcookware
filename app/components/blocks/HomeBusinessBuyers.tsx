@@ -1,3 +1,4 @@
+import {useEffect, useId, useRef, useState} from 'react';
 import {FIGMA_ASSETS} from './homeAssets';
 
 const QUANTITIES = ['10 - 49', '50 - 99', '100 - 249', '250 - 499', '500+'];
@@ -71,126 +72,270 @@ export function HomeBusinessBuyers() {
             </svg>
           </span>
 
-          <form
-            acceptCharset="UTF-8"
-            action="https://sumeetcookware.in/contact"
-            className="home-business-form"
-            data-shopify-captcha="true"
-            id="BusinessEnquiryForm"
-            method="post"
-          >
-            <input name="form_type" type="hidden" value="contact" />
-            <input name="utf8" type="hidden" value="✓" />
-            <input
-              name="contact[Inquiry type]"
-              type="hidden"
-              value="Business bulk enquiry"
-            />
-
-            <label htmlFor="BusinessEnquiryCompany">
-              Company Name
-              <input
-                autoComplete="organization"
-                id="BusinessEnquiryCompany"
-                name="contact[Company name]"
-                placeholder="Enter your company name"
-                required
-              />
-            </label>
-
-            <label htmlFor="BusinessEnquiryName">
-              Your Name
-              <input
-                autoComplete="name"
-                id="BusinessEnquiryName"
-                name="contact[Name]"
-                placeholder="Enter your name"
-                required
-              />
-            </label>
-
-            <label htmlFor="BusinessEnquiryEmail">
-              Business Email
-              <input
-                autoComplete="email"
-                id="BusinessEnquiryEmail"
-                name="contact[email]"
-                placeholder="name@company.com"
-                required
-                type="email"
-              />
-            </label>
-
-            <div className="home-business-form-row">
-              <label htmlFor="BusinessEnquiryPhone">
-                Phone Number
-                <input
-                  autoComplete="tel"
-                  id="BusinessEnquiryPhone"
-                  inputMode="tel"
-                  name="contact[Phone number]"
-                  placeholder="+91 0000000000"
-                  required
-                  type="tel"
-                />
-              </label>
-
-              <label htmlFor="BusinessEnquiryQuantity">
-                Select Quantity
-                <select
-                  defaultValue=""
-                  id="BusinessEnquiryQuantity"
-                  name="contact[Quantity]"
-                  required
-                >
-                  <option disabled value="">
-                    Select
-                  </option>
-                  {QUANTITIES.map((quantity) => (
-                    <option key={quantity} value={quantity}>
-                      {quantity}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            <label htmlFor="BusinessEnquiryState">
-              State
-              <select
-                autoComplete="address-level1"
-                defaultValue=""
-                id="BusinessEnquiryState"
-                name="contact[State]"
-                required
-              >
-                <option disabled value="">
-                  Select State
-                </option>
-                {STATES.map((state) => (
-                  <option key={state} value={state}>
-                    {state}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label htmlFor="BusinessEnquiryBody">
-              Tell Us Your Specific Requirement
-              <textarea
-                id="BusinessEnquiryBody"
-                name="contact[body]"
-                required
-                rows={5}
-              />
-            </label>
-
-            <button type="submit">
-              Submit <span aria-hidden="true">→</span>
-            </button>
-          </form>
+          <BusinessEnquiryForm />
         </div>
       </div>
     </section>
+  );
+}
+
+export function BusinessEnquiryForm({
+  idPrefix = 'BusinessEnquiry',
+  useCustomSelects = false,
+}: {
+  idPrefix?: string;
+  useCustomSelects?: boolean;
+}) {
+  return (
+    <form
+      acceptCharset="UTF-8"
+      action="https://sumeetcookware.in/contact"
+      className="home-business-form"
+      data-shopify-captcha="true"
+      id={`${idPrefix}Form`}
+      method="post"
+    >
+      <input name="form_type" type="hidden" value="contact" />
+      <input name="utf8" type="hidden" value="✓" />
+      <input
+        name="contact[Inquiry type]"
+        type="hidden"
+        value="Business bulk enquiry"
+      />
+
+      <label htmlFor={`${idPrefix}Company`}>
+        Company Name
+        <input
+          autoComplete="organization"
+          id={`${idPrefix}Company`}
+          name="contact[Company name]"
+          placeholder="Enter your company name"
+          required
+        />
+      </label>
+
+      <label htmlFor={`${idPrefix}Name`}>
+        Your Name
+        <input
+          autoComplete="name"
+          id={`${idPrefix}Name`}
+          name="contact[Name]"
+          placeholder="Enter your name"
+          required
+        />
+      </label>
+
+      <label htmlFor={`${idPrefix}Email`}>
+        Business Email
+        <input
+          autoComplete="email"
+          id={`${idPrefix}Email`}
+          name="contact[email]"
+          placeholder="name@company.com"
+          required
+          type="email"
+        />
+      </label>
+
+      <div className="home-business-form-row">
+        <label htmlFor={`${idPrefix}Phone`}>
+          Phone Number
+          <input
+            autoComplete="tel"
+            id={`${idPrefix}Phone`}
+            inputMode="tel"
+            name="contact[Phone number]"
+            placeholder="+91 0000000000"
+            required
+            type="tel"
+          />
+        </label>
+
+        <label
+          htmlFor={`${idPrefix}Quantity${useCustomSelects ? 'Trigger' : ''}`}
+        >
+          Select Quantity
+          {useCustomSelects ? (
+            <MobileFormSelect
+              id={`${idPrefix}Quantity`}
+              name="contact[Quantity]"
+              options={QUANTITIES}
+              placeholder="Select"
+            />
+          ) : (
+            <select
+              defaultValue=""
+              id={`${idPrefix}Quantity`}
+              name="contact[Quantity]"
+              required
+            >
+              <option disabled value="">
+                Select
+              </option>
+              {QUANTITIES.map((quantity) => (
+                <option key={quantity} value={quantity}>
+                  {quantity}
+                </option>
+              ))}
+            </select>
+          )}
+        </label>
+      </div>
+
+      <label htmlFor={`${idPrefix}State${useCustomSelects ? 'Trigger' : ''}`}>
+        State
+        {useCustomSelects ? (
+          <MobileFormSelect
+            direction="up"
+            id={`${idPrefix}State`}
+            name="contact[State]"
+            options={STATES}
+            placeholder="Select State"
+          />
+        ) : (
+          <select
+            autoComplete="address-level1"
+            defaultValue=""
+            id={`${idPrefix}State`}
+            name="contact[State]"
+            required
+          >
+            <option disabled value="">
+              Select State
+            </option>
+            {STATES.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+        )}
+      </label>
+
+      <label htmlFor={`${idPrefix}Body`}>
+        Tell Us Your Specific Requirement
+        <textarea
+          id={`${idPrefix}Body`}
+          name="contact[body]"
+          required
+          rows={5}
+        />
+      </label>
+
+      <button type="submit">
+        Submit <span aria-hidden="true">→</span>
+      </button>
+    </form>
+  );
+}
+
+function MobileFormSelect({
+  direction = 'down',
+  id,
+  name,
+  options,
+  placeholder,
+}: {
+  direction?: 'down' | 'up';
+  id: string;
+  name: string;
+  options: readonly string[];
+  placeholder: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [value, setValue] = useState('');
+  const listId = `${useId().replace(/:/g, '')}-options`;
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick);
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [isOpen]);
+
+  return (
+    <span
+      className={`home-mobile-form-select is-${direction}`}
+      ref={rootRef}
+    >
+      <select
+        aria-hidden="true"
+        className="home-mobile-form-select-native"
+        id={id}
+        name={name}
+        onChange={(event) => setValue(event.currentTarget.value)}
+        onInvalid={(event) => {
+          event.preventDefault();
+          setIsOpen(true);
+          buttonRef.current?.focus();
+        }}
+        required
+        tabIndex={-1}
+        value={value}
+      >
+        <option disabled value="">
+          {placeholder}
+        </option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
+      <button
+        aria-controls={listId}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        className="home-mobile-form-select-trigger"
+        id={`${id}Trigger`}
+        onClick={() => setIsOpen((open) => !open)}
+        ref={buttonRef}
+        type="button"
+      >
+        <span>{value || placeholder}</span>
+        <span aria-hidden="true">⌄</span>
+      </button>
+      {isOpen ? (
+        <span
+          aria-label={placeholder}
+          className="home-mobile-form-select-menu"
+          id={listId}
+          role="listbox"
+        >
+          {options.map((option) => (
+            <button
+              aria-selected={value === option}
+              className={value === option ? 'is-selected' : undefined}
+              key={option}
+              onClick={() => {
+                setValue(option);
+                setIsOpen(false);
+                buttonRef.current?.focus();
+              }}
+              role="option"
+              type="button"
+            >
+              {option}
+            </button>
+          ))}
+        </span>
+      ) : null}
+    </span>
   );
 }

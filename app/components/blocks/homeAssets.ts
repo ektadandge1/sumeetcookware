@@ -38,6 +38,12 @@ export const FIGMA_ASSETS = {
     'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_121_3af21c5f-5642-49b0-a5ec-2e0b3cf0d120.png?v=1790570053',
   recipeThree:
     'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_122_e784d4f3-cf36-4346-8eb0-041682b68e6f.png?v=1790570053',
+  recipeDesktopOne:
+    'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_121_60d08e74-8048-46c5-a5ae-ae5282478377.png?v=1789621673',
+  recipeDesktopTwo:
+    'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_123_8208d3f8-89a7-4c0f-84a0-754377f22107.png?v=1789621673',
+  recipeDesktopThree:
+    'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_122_df844a95-4d5e-4d75-a599-e6da17ac5601.png?v=1789621673',
 } as const;
 
 export const categories = [

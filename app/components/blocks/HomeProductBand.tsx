@@ -121,6 +121,7 @@ export function HomeProductBand({
     if (
       !showCarousel ||
       isPaused ||
+      window.matchMedia('(max-width: 48em)').matches ||
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     ) {
       return;
@@ -185,10 +186,10 @@ export function HomeProductBand({
             onPointerUp={finishDrag}
           >
             <div
-              className="home-product-track"
-              style={{
-                transform: `translateX(calc(-${currentSlide * (cardsPerSlide === 3 ? 120 : 100)}% + ${dragOffset}px))`,
-              }}
+               className="home-product-track"
+               style={{
+                 transform: `translateX(calc(-${currentSlide * (cardsPerSlide === 3 ? 120 : 100)}% + ${dragOffset}px))`,
+               }}
             >
               {slides.map((slide) => (
                 <div className="home-product-grid" key={slide[0]?.id}>
