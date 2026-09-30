@@ -16,15 +16,22 @@ export default async function handleRequest(
 ) {
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
-      checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
+      checkoutDomain:
+        context.env.PUBLIC_CHECKOUT_DOMAIN || context.env.PUBLIC_STORE_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
     connectSrc: ['https://hcaptcha.com', 'https://*.hcaptcha.com'],
-    frameSrc: ['https://hcaptcha.com', 'https://*.hcaptcha.com'],
+    formAction: ["'self'", 'https://sumeetcookware.in'],
+    frameSrc: [
+      'https://sumeetcookware.in',
+      'https://hcaptcha.com',
+      'https://*.hcaptcha.com',
+    ],
     imgSrc: [
       "'self'",
       'data:',
       'https://cdn.shopify.com',
+      'https://www.figma.com',
       'https://hcaptcha.com',
       'https://*.hcaptcha.com',
     ],
@@ -34,7 +41,12 @@ export default async function handleRequest(
       'https://hcaptcha.com',
       'https://*.hcaptcha.com',
     ],
-    styleSrc: ['https://hcaptcha.com', 'https://*.hcaptcha.com'],
+    styleSrc: [
+      'https://fonts.googleapis.com',
+      'https://hcaptcha.com',
+      'https://*.hcaptcha.com',
+    ],
+    fontSrc: ['https://fonts.gstatic.com'],
   });
 
   const body = await renderToReadableStream(

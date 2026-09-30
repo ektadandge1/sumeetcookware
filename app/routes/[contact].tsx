@@ -12,14 +12,29 @@ export function loader() {
 }
 
 export async function action({context, request}: Route.ActionArgs) {
+  const wantsJson = request.headers.get('Accept')?.includes('application/json');
   const formData = await request.formData();
+  const wantsIframe = formData.get('response_mode') === 'iframe';
   const email = formData.get('contact[email]');
-  const hasCaptcha = CAPTCHA_FIELDS.some((field) =>
-    Boolean(formData.get(field)),
-  );
 
-  if (typeof email !== 'string' || !email.trim() || !hasCaptcha) {
-    return Response.json({status: 'verification_error'}, {status: 400});
+  const respond = (status: 'success' | 'error', responseStatus = 200) => {
+    if (wantsIframe) {
+      return new Response(
+        `<!doctype html><html><body data-contact-status="${status}"></body></html>`,
+        {
+          headers: {'Content-Type': 'text/html; charset=utf-8'},
+          status: responseStatus,
+        },
+      );
+    }
+
+    if (wantsJson) return Response.json({status}, {status: responseStatus});
+
+    return redirect('/#business-enquiry');
+  };
+
+  if (typeof email !== 'string' || !email.trim()) {
+    return respond('error', 400);
   }
 
   const body = new URLSearchParams();
@@ -59,7 +74,7 @@ export async function action({context, request}: Route.ActionArgs) {
       location.includes('contact_posted=true');
 
     if (submitted) {
-      return Response.json({status: 'success'});
+      return respond('success');
     }
 
     console.error('Shopify rejected the business enquiry', {
@@ -70,5 +85,5 @@ export async function action({context, request}: Route.ActionArgs) {
     console.error('Unable to submit the business enquiry', error);
   }
 
-  return Response.json({status: 'error'}, {status: 502});
+  return respond('error', 502);
 }

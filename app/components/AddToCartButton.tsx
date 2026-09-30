@@ -11,6 +11,7 @@ export function AddToCartButton({
   lines,
   onClick,
   onSuccess,
+  redirectToCheckout,
 }: {
   analytics?: unknown;
   children:
@@ -20,6 +21,7 @@ export function AddToCartButton({
   lines: Array<OptimisticCartLineInput>;
   onClick?: () => void;
   onSuccess?: () => void;
+  redirectToCheckout?: boolean;
 }) {
   return (
     <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
@@ -31,6 +33,7 @@ export function AddToCartButton({
           lines={lines}
           onClick={onClick}
           onSuccess={onSuccess}
+          redirectToCheckout={redirectToCheckout}
         >
           {children}
         </CartSubmitButton>
@@ -47,6 +50,7 @@ function CartSubmitButton({
   lines,
   onClick,
   onSuccess,
+  redirectToCheckout,
 }: {
   analytics?: unknown;
   children:
@@ -57,6 +61,7 @@ function CartSubmitButton({
   lines: Array<OptimisticCartLineInput>;
   onClick?: () => void;
   onSuccess?: () => void;
+  redirectToCheckout?: boolean;
 }) {
   const transactionId = useId();
   const wasPending = useRef(false);
@@ -78,6 +83,10 @@ function CartSubmitButton({
       | undefined;
     const succeeded = Boolean(fetcher.data) && !result?.errors?.length;
     if (succeeded) {
+      if (redirectToCheckout && result?.cart?.checkoutUrl) {
+        window.location.assign(result.cart.checkoutUrl);
+        return;
+      }
       setIsAdded(true);
       if (addedTimer.current) window.clearTimeout(addedTimer.current);
       addedTimer.current = window.setTimeout(() => setIsAdded(false), 2400);
@@ -85,7 +94,7 @@ function CartSubmitButton({
     } else {
       setIsAdded(false);
     }
-  }, [fetcher.data, isPending, onSuccess]);
+  }, [fetcher.data, isPending, onSuccess, redirectToCheckout]);
 
   useEffect(
     () => () => {

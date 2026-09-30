@@ -1,4 +1,10 @@
-import {useEffect, useId, useRef, useState} from 'react';
+import {
+  type RefObject,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
 import {FIGMA_ASSETS} from './homeAssets';
 
 const QUANTITIES = ['10 - 49', '50 - 99', '100 - 249', '250 - 499', '500+'];
@@ -43,6 +49,13 @@ const STATES = [
 ];
 
 export function HomeBusinessBuyers() {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (showSuccess) successRef.current?.focus();
+  }, [showSuccess]);
+
   return (
     <section
       id="business-enquiry"
@@ -61,6 +74,9 @@ export function HomeBusinessBuyers() {
             On Your Bulk Order!
           </p>
           <small>When GST Benefits</small>
+          {showSuccess ? (
+            <BusinessEnquirySuccess messageRef={successRef} />
+          ) : null}
         </div>
 
         <div className="home-business-form-panel">
@@ -72,7 +88,10 @@ export function HomeBusinessBuyers() {
             </svg>
           </span>
 
-          <BusinessEnquiryForm />
+          <BusinessEnquiryForm
+            onSubmitStart={() => setShowSuccess(false)}
+            onSubmitSuccess={() => setShowSuccess(true)}
+          />
         </div>
       </div>
     </section>
@@ -81,11 +100,57 @@ export function HomeBusinessBuyers() {
 
 export function BusinessEnquiryForm({
   idPrefix = 'BusinessEnquiry',
+  onSubmitStart,
+  onSubmitSuccess,
   useCustomSelects = false,
 }: {
   idPrefix?: string;
+  onSubmitStart?: () => void;
+  onSubmitSuccess?: () => void;
   useCustomSelects?: boolean;
 }) {
+  const [status, setStatus] = useState<
+    'idle' | 'submitting' | 'success' | 'error'
+  >('idle');
+  const submissionTarget = `${useId().replace(/:/g, '')}-contact-response`;
+  const hasSubmitted = useRef(false);
+
+  useEffect(() => {
+    if (status !== 'submitting') return;
+
+    const timeout = window.setTimeout(() => setStatus('error'), 45000);
+    return () => window.clearTimeout(timeout);
+  }, [status]);
+
+  const handleSubmit = () => {
+    hasSubmitted.current = true;
+    setStatus('submitting');
+    onSubmitStart?.();
+  };
+
+  const handleResponse = (iframe: HTMLIFrameElement) => {
+    if (!hasSubmitted.current) return;
+
+    let isShopifyResponse = false;
+    let responseStatus: string | undefined;
+    try {
+      const responseDocument = iframe.contentDocument;
+      isShopifyResponse = !responseDocument;
+      responseStatus = responseDocument?.body.dataset.contactStatus;
+    } catch {
+      isShopifyResponse = true;
+    }
+
+    if (isShopifyResponse || responseStatus === 'success') {
+      hasSubmitted.current = false;
+      setStatus('success');
+      onSubmitSuccess?.();
+    } else if (responseStatus === 'error') {
+      hasSubmitted.current = false;
+      setStatus('error');
+    }
+  };
+
   return (
     <form
       acceptCharset="UTF-8"
@@ -94,6 +159,9 @@ export function BusinessEnquiryForm({
       data-shopify-captcha="true"
       id={`${idPrefix}Form`}
       method="post"
+      onSubmit={handleSubmit}
+      suppressHydrationWarning
+      target={submissionTarget}
     >
       <input name="form_type" type="hidden" value="contact" />
       <input name="utf8" type="hidden" value="✓" />
@@ -222,10 +290,53 @@ export function BusinessEnquiryForm({
         />
       </label>
 
-      <button type="submit">
-        Submit <span aria-hidden="true">→</span>
+      {status === 'success' && !onSubmitSuccess ? (
+        <BusinessEnquirySuccess compact />
+      ) : null}
+      {status === 'error' ? (
+        <div className="home-business-form-message is-error" role="alert">
+          <span aria-hidden="true">!</span>
+          <p>
+            <strong>Submission could not be completed</strong>
+            <small>Please try again in a moment.</small>
+          </p>
+        </div>
+      ) : null}
+      <button aria-busy={status === 'submitting'} type="submit">
+        {status === 'submitting' ? 'Submitting...' : 'Submit'}{' '}
+        <span aria-hidden="true">→</span>
       </button>
+      <iframe
+        hidden
+        name={submissionTarget}
+        onLoad={(event) => handleResponse(event.currentTarget)}
+        title="Business enquiry submission response"
+      />
     </form>
+  );
+}
+
+function BusinessEnquirySuccess({
+  compact = false,
+  messageRef,
+}: {
+  compact?: boolean;
+  messageRef?: RefObject<HTMLDivElement>;
+}) {
+  return (
+    <div
+      aria-live="polite"
+      className={`home-business-success${compact ? ' is-compact' : ''}`}
+      ref={messageRef}
+      tabIndex={-1}
+    >
+      <span aria-hidden="true">✓</span>
+      <strong>Details submitted successfully</strong>
+      <p>
+        Thank you for sharing your business enquiry. Our team will review your
+        details and connect with you soon.
+      </p>
+    </div>
   );
 }
 

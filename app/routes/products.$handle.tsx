@@ -1,4 +1,5 @@
-import {redirect, useLoaderData} from 'react-router';
+import {Await, data, redirect, useLoaderData} from 'react-router';
+import {Suspense} from 'react';
 import type {Route} from './+types/products.$handle';
 import {
   getSelectedProductOptions,
@@ -9,10 +10,17 @@ import {
   useSelectedOptionInUrlParam,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
-import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {WishlistButton} from '~/components/WishlistButton';
+import {ProductBenefits} from '~/components/ProductBenefits';
+import {ProductReviews} from '~/components/ProductReviews';
+import {ProductGallery} from '~/components/ProductGallery';
+import type {ProductReview} from '~/lib/judgeme.server';
+import {
+  loadProductReviews,
+  submitProductReview,
+} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -32,6 +40,44 @@ export async function loader(args: Route.LoaderArgs) {
   const criticalData = await loadCriticalData(args);
 
   return {...deferredData, ...criticalData};
+}
+
+export async function action({context, params, request}: Route.ActionArgs) {
+  const formData = await request.formData();
+  if (formData.get('intent') !== 'submit-review' || !params.handle) {
+    return data({error: 'Invalid review request.'}, {status: 400});
+  }
+
+  const name = String(formData.get('name') ?? '').trim();
+  const email = String(formData.get('email') ?? '').trim();
+  const body = String(formData.get('body') ?? '').trim();
+  const rating = Number(formData.get('rating'));
+  if (!name || !email || !body || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+    return data({error: 'Please complete all review fields.'}, {status: 400});
+  }
+
+  const {product} = await context.storefront.query(PRODUCT_ID_QUERY, {
+    variables: {handle: params.handle},
+  });
+  const externalId = Number(product?.id.split('/').pop());
+  if (!product || !Number.isSafeInteger(externalId)) {
+    return data({error: 'This product could not be found.'}, {status: 404});
+  }
+
+  try {
+    await submitProductReview({
+      body,
+      email,
+      env: context.env,
+      name,
+      productExternalId: externalId,
+      rating,
+    });
+    return data({success: true});
+  } catch (error) {
+    console.error('Judge.me review submission failed', error);
+    return data({error: 'Your review could not be submitted. Please try again.'}, {status: 502});
+  }
 }
 
 /**
@@ -74,11 +120,23 @@ function loadDeferredData({context, params}: Route.LoaderArgs) {
   // Put any API calls that is not critical to be available on first page render
   // For example: product reviews, product recommendations, social feeds.
 
-  return {};
+  const externalId = params.handle
+    ? context.storefront
+        .query(PRODUCT_ID_QUERY, {variables: {handle: params.handle}})
+        .then(({product}) => product?.id.split('/').pop() ?? '')
+    : Promise.resolve('');
+
+  return {
+    reviews: externalId.then((id) =>
+      params.handle && id
+        ? loadProductReviews(context.env, params.handle, id)
+        : [],
+    ),
+  };
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, reviews} = useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -97,13 +155,19 @@ export default function Product() {
   });
 
   const {title, descriptionHtml} = product;
+  const isBestseller = product.tags.some((tag: string) =>
+    /best[ -]?seller/i.test(tag),
+  );
+  const discount = getDiscountPercentage(
+    selectedVariant?.price.amount,
+    selectedVariant?.compareAtPrice?.amount,
+  );
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
-      <div className="product-main">
-        <div className="product-title-row">
-          <h1>{title}</h1>
+      <div className="product-details">
+        <div className="product-media">
+          {isBestseller ? <span className="product-bestseller">Bestseller</span> : null}
           <WishlistButton
             className="product-page-wishlist"
             item={{
@@ -116,25 +180,76 @@ export default function Product() {
               currencyCode: selectedVariant?.price.currencyCode,
             }}
           />
+          <ProductGallery
+            images={product.images.nodes}
+            selectedImage={selectedVariant?.image}
+          />
         </div>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+        <div className="product-main">
+          <h1>{title}</h1>
+          {product.description ? (
+            <p className="product-intro">{getDescriptionIntro(product.description)}</p>
+          ) : null}
+          <Suspense fallback={<div className="product-rating-placeholder" />}>
+            <Await resolve={reviews}>
+              {(productReviews) => (
+                <ProductRatingSummary reviews={productReviews} />
+              )}
+            </Await>
+          </Suspense>
+          <div className="product-price-row">
+            <ProductPrice
+              price={selectedVariant?.price}
+              compareAtPrice={selectedVariant?.compareAtPrice}
+            />
+            {discount ? (
+              <span className="product-saving">Save {discount}%</span>
+            ) : null}
+          </div>
+          <small className="product-shipping-note">
+            Shipping calculated at checkout
+          </small>
+          <ProductForm
+            productOptions={productOptions}
+            selectedVariant={selectedVariant}
+          />
+          <div className="product-information">
+            <details>
+              <summary>Product Description</summary>
+              <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+            </details>
+            <details>
+              <summary>Product Details</summary>
+              <dl>
+                <div><dt>Brand</dt><dd>{product.vendor}</dd></div>
+                {product.productType ? (
+                  <div><dt>Product type</dt><dd>{product.productType}</dd></div>
+                ) : null}
+                {selectedVariant?.sku ? (
+                  <div><dt>SKU</dt><dd>{selectedVariant.sku}</dd></div>
+                ) : null}
+                <div>
+                  <dt>Availability</dt>
+                  <dd>{selectedVariant?.availableForSale ? 'In stock' : 'Sold out'}</dd>
+                </div>
+              </dl>
+            </details>
+            <details>
+              <summary>Additional Details</summary>
+              <p>Shipping charges and delivery estimates are calculated at checkout.</p>
+              {product.tags.length ? (
+                <p>Features: {product.tags.join(', ')}</p>
+              ) : null}
+            </details>
+          </div>
+        </div>
       </div>
+      <ProductBenefits />
+      <Suspense fallback={null}>
+        <Await resolve={reviews}>
+          {(productReviews) => <ProductReviews reviews={productReviews} />}
+        </Await>
+      </Suspense>
       <Analytics.ProductView
         data={{
           products: [
@@ -153,6 +268,46 @@ export default function Product() {
     </div>
   );
 }
+
+function ProductRatingSummary({reviews}: {reviews: ProductReview[]}) {
+  const average = reviews.length
+    ? reviews.reduce((total, review) => total + review.rating, 0) /
+      reviews.length
+    : 0;
+
+  return (
+    <a className="product-rating-summary" href="#product-reviews-title">
+      <span>{average.toFixed(1)} Rating</span>
+      <span className="product-hero-stars" aria-label={`${average.toFixed(1)} out of 5 stars`}>
+        {[1, 2, 3, 4, 5].map((position) => (
+          <i className={position <= Math.round(average) ? 'is-filled' : undefined} key={position}>★</i>
+        ))}
+      </span>
+      <span>({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+    </a>
+  );
+}
+
+function getDescriptionIntro(description: string) {
+  const firstLine = description.split(/\n|\.(?:\s|$)/)[0]?.trim() ?? '';
+  return firstLine.length > 110 ? `${firstLine.slice(0, 107)}...` : firstLine;
+}
+
+function getDiscountPercentage(price?: string, compareAtPrice?: string) {
+  const current = Number(price);
+  const original = Number(compareAtPrice);
+  if (!current || !original || original <= current) return 0;
+  return Math.round(((original - current) / original) * 100);
+}
+
+const PRODUCT_ID_QUERY = `#graphql
+  query ProductId($country: CountryCode, $handle: String!, $language: LanguageCode)
+  @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      id
+    }
+  }
+` as const;
 
 const PRODUCT_VARIANT_FRAGMENT = `#graphql
   fragment ProductVariant on ProductVariant {
@@ -196,9 +351,20 @@ const PRODUCT_FRAGMENT = `#graphql
     id
     title
     vendor
+    productType
     handle
+    tags
     descriptionHtml
     description
+    images(first: 10) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     encodedVariantExistence
     encodedVariantAvailability
     options {

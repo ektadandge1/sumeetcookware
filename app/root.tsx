@@ -8,6 +8,7 @@ import {
   Meta,
   Scripts,
   ScrollRestoration,
+  redirect,
   useRouteLoaderData,
 } from 'react-router';
 import type {Route} from './+types/root';
@@ -67,6 +68,12 @@ export function links() {
 }
 
 export async function loader(args: Route.LoaderArgs) {
+  const requestUrl = new URL(args.request.url);
+  if (requestUrl.hostname === 'localhost') {
+    requestUrl.hostname = 'sumeetcookware.localhost';
+    return redirect(requestUrl.toString());
+  }
+
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
@@ -84,7 +91,7 @@ export async function loader(args: Route.LoaderArgs) {
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
     }),
     consent: {
-      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
+      checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN || env.PUBLIC_STORE_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       withPrivacyBanner: false,
       // localize the privacy banner
