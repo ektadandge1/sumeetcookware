@@ -57,6 +57,39 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Page() {
   const {page} = useLoaderData<typeof loader>();
 
+  if (page.handle === 'about-us') {
+    const image = page.body.match(/<img[^>]+src=["']([^"']+)["']/i)?.[1];
+    const aboutText = `SUMEET COOKWARE has come long way. During all this year we have worked very hard to fulfill your needs with of best quality and performance of products. We have wide range of products like HARD ANODISED COOKWARE, NONSTICK COOKWARE, and HARD ANODISED PRESSURE COOKER, ALUMINIUM PRESSURE COOKER (White) which are manufactured considering needs and requirements of consumers.\nOur mind is always conscious about changing needs and difficulties of consumer. We are committed to provide best quality at reasonable price. That's why our products are great saver of money, time and power. We strictly believe in quality, our product go through various types of quality check. We are equipped with latest technology and intelligent brains to produce superior quality products.`;
+
+    return (
+      <div className="about-us-page">
+        <section className="about-us-intro">
+          <h1>About Us</h1>
+          <div className="about-us-rule" />
+          <div className="about-us-intro-grid">
+            {image ? (
+              <img src={image} alt="Sumeet Cookware products" />
+            ) : (
+              <div className="about-us-image-placeholder" />
+            )}
+            <p>{aboutText}</p>
+          </div>
+        </section>
+        <section className="about-us-values">
+          <div>
+            <h2>Our Strength</h2>
+            <p>{aboutText}</p>
+          </div>
+          <div className="about-us-divider" />
+          <div>
+            <h2>Our Management</h2>
+            <p>{aboutText}</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="page">
       <header>
