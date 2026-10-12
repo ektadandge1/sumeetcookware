@@ -79,14 +79,14 @@ export default function Homepage() {
       <HomeEssentials />
       <HomeCustomerStories />
       <Suspense fallback={null}>
-        <Await resolve={data.reviews}>
+        <Await resolve={data.reviews} errorElement={null}>
           {(reviews) => <HomeReviews reviews={reviews} />}
         </Await>
       </Suspense>
       <HomeCustomerBanner />
       <HomeRecipes />
       <Suspense fallback={null}>
-        <Await resolve={data.instagramPosts}>
+        <Await resolve={data.instagramPosts} errorElement={null}>
           {(posts) => <HomeInstagram posts={posts} />}
         </Await>
       </Suspense>
@@ -288,7 +288,7 @@ async function loadJudgeMeReviewPage({
   url.searchParams.set('per_page', String(perPage));
   url.searchParams.set('shop_domain', shopDomain);
 
-  const response = await fetch(url, {signal: AbortSignal.timeout(8000)});
+  const response = await fetch(url, {signal: AbortSignal.timeout(3500)});
   if (!response.ok) {
     throw new Error(`Judge.me reviews request failed: ${response.status}`);
   }

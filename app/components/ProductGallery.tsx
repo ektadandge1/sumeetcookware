@@ -1,8 +1,12 @@
 import {Image} from '@shopify/hydrogen';
+import type {Image as ShopifyImage} from '@shopify/hydrogen/storefront-api-types';
 import {useEffect, useState} from 'react';
 import type {ProductVariantFragment} from 'storefrontapi.generated';
 
-type ProductGalleryImage = NonNullable<ProductVariantFragment['image']>;
+type ProductGalleryImage = Pick<
+  ShopifyImage,
+  'altText' | 'height' | 'id' | 'url' | 'width'
+> & {__typename?: 'Image'};
 
 export function ProductGallery({
   images,
@@ -61,6 +65,20 @@ export function ProductGallery({
           sizes="(min-width: 64em) 48vw, 100vw"
         />
       </div>
+      {galleryImages.length > 1 ? (
+        <div className="product-gallery-dots" aria-hidden="true">
+          {galleryImages.slice(0, 5).map((image) => (
+            <i
+              className={
+                getImageKey(image) === getImageKey(activeImage)
+                  ? 'is-active'
+                  : undefined
+              }
+              key={getImageKey(image)}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

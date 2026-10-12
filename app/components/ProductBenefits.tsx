@@ -7,16 +7,32 @@ const BENEFITS = [
   {label: 'Induction Compatible', icon: InductionIcon},
 ];
 
-export function ProductBenefits() {
+export function ProductBenefits({className = ''}: {className?: string}) {
   return (
-    <section className="product-benefits" aria-label="Product benefits">
+    <section
+      className={`product-benefits ${className}`.trim()}
+      aria-label="Product benefits"
+    >
       <div className="product-benefits-grid">
-        {BENEFITS.map(({label, icon: Icon}) => (
-          <div className="product-benefit" key={label}>
-            <Icon />
-            <span>{label}</span>
-          </div>
-        ))}
+        <div className="product-benefits-group">
+          {BENEFITS.slice(0, 3).map(({label, icon: Icon}) => (
+            <div className="product-benefit" key={label}>
+              <Icon />
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="product-bulk-offer">
+          <span>Up to</span> <strong>20% OFF</strong> <span>on bulk purchases</span>
+        </div>
+        <div className="product-benefits-group">
+          {BENEFITS.slice(3).map(({label, icon: Icon}) => (
+            <div className="product-benefit" key={label}>
+              <Icon />
+              <span>{label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import {useLoaderData} from 'react-router';
+import {redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/pages.$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
@@ -25,12 +25,31 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
     throw new Error('Missing page handle');
   }
 
+  if (params.handle === 'contact-us') {
+    throw redirect('/contact-us');
+  }
+
   const [{page}] = await Promise.all([
-    context.storefront.query(PAGE_QUERY, {
-      variables: {
-        handle: params.handle,
-      },
-    }),
+    context.storefront
+      .query(PAGE_QUERY, {
+        variables: {
+          handle: params.handle,
+        },
+      })
+      .catch((error) => {
+        if (params.handle !== 'about-us') throw error;
+
+        console.warn('About page unavailable from Shopify; using local fallback.', error);
+        return {
+          page: {
+            handle: 'about-us',
+            id: 'local-about-us',
+            title: 'About Us',
+            body: '',
+            seo: null,
+          },
+        };
+      }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 

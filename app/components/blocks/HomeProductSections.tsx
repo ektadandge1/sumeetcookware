@@ -8,9 +8,7 @@ export function HomeProductSections({
   productRatings,
 }: {
   products: Promise<RecommendedProductsQuery | null>;
-  productRatings: Promise<
-    Record<string, {average: number; count: number}>
-  >;
+  productRatings: Promise<Record<string, {average: number; count: number}>>;
 }) {
   return (
     <Suspense
@@ -20,7 +18,10 @@ export function HomeProductSections({
         </section>
       }
     >
-      <Await resolve={Promise.all([products, productRatings])}>
+      <Await
+        resolve={Promise.all([products, productRatings])}
+        errorElement={null}
+      >
         {([response, ratings]) => (
           <HomeProductBand
             collectionUrl="/collections/best-deal-of-the-day"

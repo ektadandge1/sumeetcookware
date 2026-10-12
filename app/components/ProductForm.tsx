@@ -1,8 +1,9 @@
 import {Link, useNavigate} from 'react-router';
 import {useState} from 'react';
-import {type MappedProductOptions} from '@shopify/hydrogen';
+import {Money, type MappedProductOptions} from '@shopify/hydrogen';
 import type {
   Maybe,
+  MoneyV2,
   ProductOptionValueSwatch,
 } from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from './AddToCartButton';
@@ -42,6 +43,7 @@ export function ProductForm({
                   selected,
                   available,
                   exists,
+                  firstSelectableVariant,
                   isDifferentProduct,
                   swatch,
                 } = value;
@@ -61,7 +63,11 @@ export function ProductForm({
                       to={`/products/${handle}?${variantUriQuery}`}
                       style={{opacity: available ? 1 : 0.45}}
                     >
-                      <ProductOptionCard name={name} swatch={swatch} />
+                      <ProductOptionCard
+                        name={name}
+                        swatch={swatch}
+                        variant={firstSelectableVariant}
+                      />
                     </Link>
                   );
                 } else {
@@ -88,7 +94,11 @@ export function ProductForm({
                         }
                       }}
                     >
-                      <ProductOptionCard name={name} swatch={swatch} />
+                      <ProductOptionCard
+                        name={name}
+                        swatch={swatch}
+                        variant={firstSelectableVariant}
+                      />
                     </button>
                   );
                 }
@@ -143,24 +153,44 @@ export function ProductForm({
             +
           </button>
         </div>
-        <Link className="product-bulk-link" to="/#business-enquiry">
-          For Business Bulk Buyer <span aria-hidden="true">⌄</span>
-        </Link>
       </div>
       {pincodeMessage ? (
         <p className="product-pincode-message" role="status">
           {pincodeMessage}
         </p>
       ) : null}
+      <form
+        className="product-business-pricing"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void navigate('/#business-enquiry');
+        }}
+      >
+        <p>Save up to 2% with business pricing and GST input tax credit</p>
+        <label>
+          <span className="visually-hidden">GST number</span>
+          <input name="gst-number" placeholder="GST number" required />
+        </label>
+        <button type="submit">Submit</button>
+      </form>
+      <Link className="product-bulk-link" to="/#business-enquiry">
+        For Business Bulk Buyer <span aria-hidden="true">⌄</span>
+      </Link>
       <div className="product-buy-actions">
         <AddToCartButton
           disabled={!selectedVariant || !selectedVariant.availableForSale}
-          onClick={() => open('cart')}
           lines={cartLines}
+          onSuccess={() => {
+            if (window.matchMedia('(max-width: 48em)').matches) {
+              window.requestAnimationFrame(() => open('cart'));
+            }
+          }}
         >
-          {(isPending) =>
+          {(isPending, isAdded) =>
             isPending
               ? 'Adding...'
+              : isAdded
+                ? 'Added to cart'
               : selectedVariant?.availableForSale
                 ? 'Add to cart'
                 : 'Sold out'
@@ -175,7 +205,12 @@ export function ProductForm({
             isPending
               ? 'Preparing checkout...'
               : selectedVariant?.availableForSale
-                ? 'Buy it now'
+                ? (
+                    <>
+                      <span className="product-buy-label-desktop">Buy it now</span>
+                      <span className="product-buy-label-mobile">Buy now</span>
+                    </>
+                  )
                 : 'Sold out'
           }
         </AddToCartButton>
@@ -187,9 +222,15 @@ export function ProductForm({
 function ProductOptionCard({
   swatch,
   name,
+  variant,
 }: {
   swatch?: Maybe<ProductOptionValueSwatch> | undefined;
   name: string;
+  variant?: Maybe<{
+    compareAtPrice?: Maybe<MoneyV2>;
+    price: MoneyV2;
+    title: string;
+  }>;
 }) {
   const image = swatch?.image?.previewImage?.url;
   const color = swatch?.color;
@@ -197,6 +238,13 @@ function ProductOptionCard({
   return (
     <>
       <strong>{name}</strong>
+      {variant ? (
+        <span className="product-option-card-details">
+          {variant.title !== 'Default Title' ? <small>{variant.title}</small> : null}
+          <b><Money data={variant.price} /></b>
+          {variant.compareAtPrice ? <s><Money data={variant.compareAtPrice} /></s> : null}
+        </span>
+      ) : null}
       {image || color ? (
         <span
           aria-hidden="true"

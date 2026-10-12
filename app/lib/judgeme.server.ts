@@ -6,6 +6,11 @@ export type ProductReview = {
   rating: number;
 };
 
+export type ProductRatingMap = Record<
+  string,
+  {average: number; count: number}
+>;
+
 type JudgeMeApiReview = {
   body?: string;
   created_at?: string;
@@ -80,6 +85,60 @@ export async function loadProductReviews(
   } catch (error) {
     console.error('Judge.me product reviews request failed', error);
     return [];
+  }
+}
+
+export async function loadProductRatingMap(env: Env): Promise<ProductRatingMap> {
+  const token = env.JUDGE_ME_PRIVATE_API_TOKEN;
+  const shopDomain = env.PUBLIC_STORE_DOMAIN;
+  if (!token || !shopDomain) return {};
+
+  const cacheKey = `https://product-reviews.local/${shopDomain}/ratings`;
+  const cached = await readCache<ProductRatingMap>(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const ratings: ProductRatingMap = {};
+    const perPage = 100;
+    for (let page = 1; page <= 20; page += 1) {
+      const reviews = await loadReviewPage({
+        page,
+        perPage,
+        shopDomain,
+        token,
+      });
+      for (const review of reviews) {
+        if (
+          review.curated !== 'ok' ||
+          review.published !== true ||
+          review.hidden === true ||
+          typeof review.rating !== 'number'
+        ) {
+          continue;
+        }
+        const keys = [
+          review.product_handle,
+          review.product?.handle,
+          review.product_external_id?.toString(),
+          review.product?.external_id?.toString(),
+        ].filter((key): key is string => Boolean(key));
+        for (const key of new Set(keys)) {
+          const current = ratings[key];
+          const count = (current?.count ?? 0) + 1;
+          ratings[key] = {
+            average:
+              ((current?.average ?? 0) * (count - 1) + review.rating) / count,
+            count,
+          };
+        }
+      }
+      if (reviews.length < perPage) break;
+    }
+    await writeCache(cacheKey, ratings);
+    return ratings;
+  } catch (error) {
+    console.error('Judge.me rating request failed', error);
+    return {};
   }
 }
 

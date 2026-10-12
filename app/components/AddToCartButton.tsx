@@ -67,7 +67,7 @@ function CartSubmitButton({
   const wasPending = useRef(false);
   const addedTimer = useRef<number | undefined>(undefined);
   const [isAdded, setIsAdded] = useState(false);
-  const {addPending} = useCartCount();
+  const {addPending, settlePending} = useCartCount();
   const isPending = fetcher.state !== 'idle';
 
   useEffect(() => {
@@ -83,6 +83,9 @@ function CartSubmitButton({
       | undefined;
     const succeeded = Boolean(fetcher.data) && !result?.errors?.length;
     if (succeeded) {
+      if (result?.cart) {
+        settlePending(transactionId, result.cart.totalQuantity, result.cart);
+      }
       if (redirectToCheckout && result?.cart?.checkoutUrl) {
         window.location.assign(result.cart.checkoutUrl);
         return;
@@ -94,7 +97,14 @@ function CartSubmitButton({
     } else {
       setIsAdded(false);
     }
-  }, [fetcher.data, isPending, onSuccess, redirectToCheckout]);
+  }, [
+    fetcher.data,
+    isPending,
+    onSuccess,
+    redirectToCheckout,
+    settlePending,
+    transactionId,
+  ]);
 
   useEffect(
     () => () => {

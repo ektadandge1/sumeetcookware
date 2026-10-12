@@ -326,7 +326,7 @@ function HeaderCtas({
       </Suspense>
       <WishlistToggle />
       <Suspense fallback={<HeaderCartToggle cart={null} />}>
-        <Await resolve={cart}>
+        <Await resolve={cart} errorElement={<HeaderCartToggle cart={null} />}>
           {(resolvedCart) => <HeaderCartToggle cart={resolvedCart} />}
         </Await>
       </Suspense>

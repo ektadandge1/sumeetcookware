@@ -1,9 +1,6 @@
 import {Await} from 'react-router';
 import {Suspense, useId} from 'react';
-import type {
-  CartApiQueryFragment,
-  HeaderQuery,
-} from 'storefrontapi.generated';
+import type {CartApiQueryFragment, HeaderQuery} from 'storefrontapi.generated';
 import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
@@ -34,24 +31,24 @@ export function PageLayout({
     <Aside.Provider>
       <CartCountProvider>
         <WishlistProvider>
-        <CartAside cart={cart} />
-        <SearchAside />
-        <MobileMenuAside
-          header={header}
-          publicStoreDomain={publicStoreDomain}
-        />
-        <AnnouncementBar />
-        {header && (
-          <Header
-            cart={cart}
+          <CartAside cart={cart} />
+          <SearchAside />
+          <MobileMenuAside
             header={header}
-            isLoggedIn={isLoggedIn}
             publicStoreDomain={publicStoreDomain}
           />
-        )}
-        <main>{children}</main>
-        <Footer />
-        <MobileBottomNav />
+          <AnnouncementBar />
+          {header && (
+            <Header
+              cart={cart}
+              header={header}
+              isLoggedIn={isLoggedIn}
+              publicStoreDomain={publicStoreDomain}
+            />
+          )}
+          <main>{children}</main>
+          <Footer />
+          <MobileBottomNav />
         </WishlistProvider>
       </CartCountProvider>
     </Aside.Provider>
@@ -62,7 +59,10 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
   return (
     <Aside type="cart" heading="CART">
       <Suspense fallback={<p>Loading cart ...</p>}>
-        <Await resolve={cart}>
+        <Await
+          resolve={cart}
+          errorElement={<CartMain cart={null} layout="aside" />}
+        >
           {(cart) => {
             return <CartMain cart={cart} layout="aside" />;
           }}
@@ -147,7 +147,7 @@ function MobileMenuAside({
   header,
   publicStoreDomain,
 }: {
-  header: PageLayoutProps['header'];
+  header: HeaderQuery;
   publicStoreDomain: PageLayoutProps['publicStoreDomain'];
 }) {
   return (

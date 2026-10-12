@@ -1,13 +1,33 @@
 import type {Route} from './+types/collections.all';
-import {useLoaderData} from 'react-router';
+import {Await, useLoaderData} from 'react-router';
+import {Suspense} from 'react';
 import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
+import {AllCollectionsMobile} from '~/components/AllCollectionsMobile';
+import {loadProductRatingMap} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Products`}];
 };
+
+const MOBILE_COLLECTION_HANDLES = [
+  'kadhai',
+  'non-stick-appachatty',
+  'non-stick-appam-patra',
+  'handi',
+  'sauce-pan',
+  'grater',
+  'spice-box',
+  'lunch-container',
+  'mug',
+  'oil-dispenser',
+  'tope',
+  'water-bottle',
+  'dinner-set',
+  'non-stick-cookware',
+] as const;
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -29,13 +49,18 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     pageBy: 8,
   });
 
-  const [{products}] = await Promise.all([
+  const [{products, collections}] = await Promise.all([
     storefront.query(CATALOG_QUERY, {
-      variables: {...paginationVariables},
+      variables: {...paginationVariables, collectionFirst: 50},
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);
-  return {products};
+  return {
+    collections: collections.nodes.filter((collection: {handle: string}) =>
+      MOBILE_COLLECTION_HANDLES.includes(collection.handle),
+    ),
+    products,
+  };
 }
 
 /**
@@ -44,27 +69,50 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  return {};
+  return {ratings: loadProductRatingMap(context.env)};
 }
 
 export default function Collection() {
-  const {products} = useLoaderData<typeof loader>();
+  const {collections, products, ratings} = useLoaderData<typeof loader>();
 
   return (
     <div className="collection">
-      <h1>Products</h1>
-      <PaginatedResourceSection<CollectionItemFragment>
-        connection={products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
+      <div className="all-collections-desktop">
+        <h1>Products</h1>
+        <PaginatedResourceSection<CollectionItemFragment>
+          connection={products}
+          resourcesClassName="products-grid"
+        >
+          {({node: product, index}) => (
+            <ProductItem
+              key={product.id}
+              product={product}
+              loading={index < 8 ? 'eager' : undefined}
+            />
+          )}
+        </PaginatedResourceSection>
+      </div>
+      <div className="all-collections-mobile-wrap">
+        <Suspense
+          fallback={
+            <AllCollectionsMobile collections={collections} ratings={{}} />
+          }
+        >
+          <Await
+            resolve={ratings}
+            errorElement={
+              <AllCollectionsMobile collections={collections} ratings={{}} />
+            }
+          >
+            {(productRatings) => (
+              <AllCollectionsMobile
+                collections={collections}
+                ratings={productRatings}
+              />
+            )}
+          </Await>
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -78,6 +126,7 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
     id
     handle
     title
+    tags
     featuredImage {
       id
       altText
@@ -133,6 +182,7 @@ const CATALOG_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
+    $collectionFirst: Int!
   ) @inContext(country: $country, language: $language) {
     products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       nodes {
@@ -143,6 +193,17 @@ const CATALOG_QUERY = `#graphql
         hasNextPage
         startCursor
         endCursor
+      }
+    }
+    collections(first: $collectionFirst) {
+      nodes {
+        handle
+        title
+        products(first: 4) {
+          nodes {
+            ...CollectionItem
+          }
+        }
       }
     }
   }

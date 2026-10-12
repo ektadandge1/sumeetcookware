@@ -1,175 +1,95 @@
-import {Link, useLoaderData} from 'react-router';
+import {Link} from 'react-router';
 import type {Route} from './+types/blogs.$blogHandle._index';
-import {Image, getPaginationVariables} from '@shopify/hydrogen';
-import type {ArticleItemFragment} from 'storefrontapi.generated';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
-export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.blog.title ?? ''} blog`}];
-};
+const FEATURE_IMAGE =
+  'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/middle_banner.jpg?v=1789964765';
 
-export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
+const BLOG_STORIES = [
+  {
+    handle: 'from-breakfast-to-dinner-easy-indian-recipes-using-everyday-cookware',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_123_8208d3f8-89a7-4c0f-84a0-754377f22107.png?v=1789621673',
+  },
+  {
+    handle: '5-quickest-easiest-food-items-for-breakfast',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_121_60d08e74-8048-46c5-a5ae-ae5282478377.png?v=1789621673',
+  },
+  {
+    handle: 'how-to-choose-the-right-cookware-for-your-kitchen',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_122_df844a95-4d5e-4d75-a599-e6da17ac5601.png?v=1789621673',
+  },
+] as const;
 
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
+const STORY_TITLE =
+  'From Breakfast to Dinner: Easy Indian Recipes Using Everyday Cookware';
+const STORY_COPY =
+  "Some days begin with a quick breakfast, move into a rushed lunch, and end with everyone gathering around the dinner table. Through it all, the kitchen keeps working. The good news? Everyday Indian cooking doesn't need complicated recipes or a cupboard full of specialized utensils. With a few dependable cookware essentials, you can prepare comforting meals from morning to night.";
 
-  return {...deferredData, ...criticalData};
-}
+export const meta: Route.MetaFunction = () => [{title: 'Sumeet Cookware | Blogs'}];
 
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
-  const paginationVariables = getPaginationVariables(request, {
-    pageBy: 4,
-  });
-
-  if (!params.blogHandle) {
-    throw new Response(`blog not found`, {status: 404});
-  }
-
-  const [{blog}] = await Promise.all([
-    context.storefront.query(BLOGS_QUERY, {
-      variables: {
-        blogHandle: params.blogHandle,
-        ...paginationVariables,
-      },
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-
-  if (!blog?.articles) {
-    throw new Response('Not found', {status: 404});
-  }
-
-  redirectIfHandleIsLocalized(request, {handle: params.blogHandle, data: blog});
-
-  return {blog};
-}
-
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context}: Route.LoaderArgs) {
-  return {};
+export function loader() {
+  return null;
 }
 
 export default function Blog() {
-  const {blog} = useLoaderData<typeof loader>();
-  const {articles} = blog;
-
   return (
-    <div className="blog">
-      <h1>{blog.title}</h1>
-      <div className="blog-grid">
-        <PaginatedResourceSection<ArticleItemFragment> connection={articles}>
-          {({node: article, index}) => (
-            <ArticleItem
-              article={article}
-              key={article.id}
-              loading={index < 2 ? 'eager' : 'lazy'}
-            />
-          )}
-        </PaginatedResourceSection>
-      </div>
+    <div className="editorial-blog-page">
+      <h1>Blogs</h1>
+      <section className="editorial-blog-feature">
+        <h2>
+          From Grandma&apos;s Kitchen to Today&apos;s Kitchen:
+          <br />
+          What Has Really Changed?
+        </h2>
+        <div className="editorial-blog-feature-media">
+          <img
+            src={FEATURE_IMAGE}
+            alt="From Grandma's Kitchen to Today's Kitchen"
+          />
+        </div>
+        <div className="editorial-blog-intro">
+          <p>
+            There was a time when the kitchen seemed to have its own rhythm.
+            Spices were measured by instinct, recipes were remembered rather
+            than written down, and the sound of something sizzling in a hot pan
+            could bring everyone to the dining table. Grandmothers rarely needed
+            a recipe book to know how much turmeric belonged in the dal or when
+            the tadka was ready.
+          </p>
+          <p>
+            Today, kitchens look different. Appliances have changed, cooking
+            routines are faster, and cookware has evolved with modern
+            lifestyles. Yet, surprisingly, many of the things that matter most
+            about cooking have stayed the same.
+            <br />
+            So, what really changed between grandma&apos;s kitchen and ours?
+          </p>
+        </div>
+        <div className="editorial-blog-list">
+          {BLOG_STORIES.map((story) => (
+            <article className="editorial-blog-card" key={story.handle}>
+              <Link
+                className="editorial-blog-card-image"
+                to={`/blogs/kitchen/${story.handle}`}
+              >
+                <img src={story.image} alt={STORY_TITLE} loading="lazy" />
+              </Link>
+              <div className="editorial-blog-card-copy">
+                <h3>{STORY_TITLE}</h3>
+                <p>{STORY_COPY}</p>
+                <Link
+                  className="editorial-blog-more"
+                  to={`/blogs/kitchen/${story.handle}`}
+                >
+                  See More
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
-
-function ArticleItem({
-  article,
-  loading,
-}: {
-  article: ArticleItemFragment;
-  loading?: HTMLImageElement['loading'];
-}) {
-  const publishedAt = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(new Date(article.publishedAt!));
-  return (
-    <div className="blog-article" key={article.id}>
-      <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
-        {article.image && (
-          <div className="blog-article-image">
-            <Image
-              alt={article.image.altText || article.title}
-              aspectRatio="3/2"
-              data={article.image}
-              loading={loading}
-              sizes="(min-width: 768px) 50vw, 100vw"
-            />
-          </div>
-        )}
-        <h3>{article.title}</h3>
-        <small>{publishedAt}</small>
-      </Link>
-    </div>
-  );
-}
-
-// NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog
-const BLOGS_QUERY = `#graphql
-  query Blog(
-    $language: LanguageCode
-    $blogHandle: String!
-    $first: Int
-    $last: Int
-    $startCursor: String
-    $endCursor: String
-  ) @inContext(language: $language) {
-    blog(handle: $blogHandle) {
-      title
-      handle
-      seo {
-        title
-        description
-      }
-      articles(
-        first: $first,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor
-      ) {
-        nodes {
-          ...ArticleItem
-        }
-        pageInfo {
-          hasPreviousPage
-          hasNextPage
-          hasNextPage
-          endCursor
-          startCursor
-        }
-
-      }
-    }
-  }
-  fragment ArticleItem on Article {
-    author: authorV2 {
-      name
-    }
-    contentHtml
-    handle
-    id
-    image {
-      id
-      altText
-      url
-      width
-      height
-    }
-    publishedAt
-    title
-    blog {
-      handle
-    }
-  }
-` as const;

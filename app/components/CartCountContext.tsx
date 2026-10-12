@@ -126,7 +126,7 @@ export function CartCountProvider({children}: {children: ReactNode}) {
       if (fetcher.state !== 'loading' || !cart || data?.errors?.length) {
         continue;
       }
-      const lineSignature = cart?.lines.nodes
+      const lineSignature = cart?.lines?.nodes
         .map((line) => `${line.id}:${line.quantity}`)
         .join('|');
       const signature = `${fetcher.key}:${cart?.id ?? 'error'}:${cart?.totalQuantity ?? 'none'}:${lineSignature ?? ''}`;

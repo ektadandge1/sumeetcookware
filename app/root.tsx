@@ -18,6 +18,29 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import type {HeaderQuery} from 'storefrontapi.generated';
+
+const FALLBACK_HEADER: HeaderQuery = {
+  shop: {
+    id: 'local-shop',
+    name: 'Sumeet Cookware',
+    description: '',
+    primaryDomain: {url: 'https://sumeetcookware.com'},
+    brand: null,
+  },
+  menu: {
+    id: 'local-menu',
+    items: [
+      {id: 'kitchen', resourceId: null, tags: [], title: 'Kitchen Cookware', type: 'HTTP', url: '/collections/kitchen-cookwares', items: []},
+      {id: 'storage', resourceId: null, tags: [], title: 'Storage & Container', type: 'HTTP', url: '/collections/storage', items: []},
+      {id: 'tableware', resourceId: null, tags: [], title: 'Tableware', type: 'HTTP', url: '/collections/dinner-ware', items: []},
+      {id: 'non-stick', resourceId: null, tags: [], title: 'Non-Stick', type: 'HTTP', url: '/collections/non-stick-cookware', items: []},
+      {id: 'warranty', resourceId: null, tags: [], title: 'Warranty Registration', type: 'HTTP', url: '/pages/warranty-registration', items: []},
+      {id: 'bulk', resourceId: null, tags: [], title: 'Bulk enquiry', type: 'HTTP', url: '/contact-us', items: []},
+      {id: 'more', resourceId: null, tags: [], title: 'More', type: 'HTTP', url: '/pages/about-us', items: []},
+    ],
+  },
+};
 
 export type RootLoader = typeof loader;
 
@@ -109,16 +132,21 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
   const {storefront} = context;
 
   const [header] = await Promise.all([
-    storefront.query(HEADER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-      },
-    }),
+    storefront
+      .query(HEADER_QUERY, {
+        cache: storefront.CacheLong(),
+        variables: {
+          headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+        },
+      })
+      .catch((error) => {
+        console.warn('Shopify header unavailable; running without navigation.', error);
+        return null;
+      }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  return {header: header ?? FALLBACK_HEADER};
 }
 
 /**

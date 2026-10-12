@@ -156,7 +156,7 @@ function applySharedPendingLines(
 
   for (const [variantId, pendingQuantity] of quantitiesByVariant) {
     const confirmedQuantity =
-      confirmedCart?.lines.nodes.find(
+      confirmedCart?.lines?.nodes?.find(
         (line) => line.merchandise.id === variantId,
       )?.quantity ?? 0;
     const expectedQuantity = confirmedQuantity + pendingQuantity;

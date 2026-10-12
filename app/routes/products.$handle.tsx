@@ -17,10 +17,7 @@ import {ProductBenefits} from '~/components/ProductBenefits';
 import {ProductReviews} from '~/components/ProductReviews';
 import {ProductGallery} from '~/components/ProductGallery';
 import type {ProductReview} from '~/lib/judgeme.server';
-import {
-  loadProductReviews,
-  submitProductReview,
-} from '~/lib/judgeme.server';
+import {loadProductReviews, submitProductReview} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -52,7 +49,14 @@ export async function action({context, params, request}: Route.ActionArgs) {
   const email = String(formData.get('email') ?? '').trim();
   const body = String(formData.get('body') ?? '').trim();
   const rating = Number(formData.get('rating'));
-  if (!name || !email || !body || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+  if (
+    !name ||
+    !email ||
+    !body ||
+    !Number.isInteger(rating) ||
+    rating < 1 ||
+    rating > 5
+  ) {
     return data({error: 'Please complete all review fields.'}, {status: 400});
   }
 
@@ -76,7 +80,10 @@ export async function action({context, params, request}: Route.ActionArgs) {
     return data({success: true});
   } catch (error) {
     console.error('Judge.me review submission failed', error);
-    return data({error: 'Your review could not be submitted. Please try again.'}, {status: 502});
+    return data(
+      {error: 'Your review could not be submitted. Please try again.'},
+      {status: 502},
+    );
   }
 }
 
@@ -167,7 +174,10 @@ export default function Product() {
     <div className="product">
       <div className="product-details">
         <div className="product-media">
-          {isBestseller ? <span className="product-bestseller">Bestseller</span> : null}
+          <h1 className="product-mobile-title">{title}</h1>
+          {isBestseller ? (
+            <span className="product-bestseller">Bestseller</span>
+          ) : null}
           <WishlistButton
             className="product-page-wishlist"
             item={{
@@ -181,17 +191,22 @@ export default function Product() {
             }}
           />
           <ProductGallery
-            images={product.images.nodes}
+            images={product.images?.nodes ?? []}
             selectedImage={selectedVariant?.image}
           />
         </div>
         <div className="product-main">
           <h1>{title}</h1>
           {product.description ? (
-            <p className="product-intro">{getDescriptionIntro(product.description)}</p>
+            <p className="product-intro">
+              {getDescriptionIntro(product.description)}
+            </p>
           ) : null}
           <Suspense fallback={<div className="product-rating-placeholder" />}>
-            <Await resolve={reviews}>
+            <Await
+              resolve={reviews}
+              errorElement={<div className="product-rating-placeholder" />}
+            >
               {(productReviews) => (
                 <ProductRatingSummary reviews={productReviews} />
               )}
@@ -213,6 +228,7 @@ export default function Product() {
             productOptions={productOptions}
             selectedVariant={selectedVariant}
           />
+          <ProductBenefits className="product-benefits-mobile" />
           <div className="product-information">
             <details>
               <summary>Product Description</summary>
@@ -221,22 +237,38 @@ export default function Product() {
             <details>
               <summary>Product Details</summary>
               <dl>
-                <div><dt>Brand</dt><dd>{product.vendor}</dd></div>
+                <div>
+                  <dt>Brand</dt>
+                  <dd>{product.vendor}</dd>
+                </div>
                 {product.productType ? (
-                  <div><dt>Product type</dt><dd>{product.productType}</dd></div>
+                  <div>
+                    <dt>Product type</dt>
+                    <dd>{product.productType}</dd>
+                  </div>
                 ) : null}
                 {selectedVariant?.sku ? (
-                  <div><dt>SKU</dt><dd>{selectedVariant.sku}</dd></div>
+                  <div>
+                    <dt>SKU</dt>
+                    <dd>{selectedVariant.sku}</dd>
+                  </div>
                 ) : null}
                 <div>
                   <dt>Availability</dt>
-                  <dd>{selectedVariant?.availableForSale ? 'In stock' : 'Sold out'}</dd>
+                  <dd>
+                    {selectedVariant?.availableForSale
+                      ? 'In stock'
+                      : 'Sold out'}
+                  </dd>
                 </div>
               </dl>
             </details>
             <details>
               <summary>Additional Details</summary>
-              <p>Shipping charges and delivery estimates are calculated at checkout.</p>
+              <p>
+                Shipping charges and delivery estimates are calculated at
+                checkout.
+              </p>
               {product.tags.length ? (
                 <p>Features: {product.tags.join(', ')}</p>
               ) : null}
@@ -244,9 +276,9 @@ export default function Product() {
           </div>
         </div>
       </div>
-      <ProductBenefits />
+      <ProductBenefits className="product-benefits-desktop" />
       <Suspense fallback={null}>
-        <Await resolve={reviews}>
+        <Await resolve={reviews} errorElement={null}>
           {(productReviews) => <ProductReviews reviews={productReviews} />}
         </Await>
       </Suspense>
@@ -278,12 +310,24 @@ function ProductRatingSummary({reviews}: {reviews: ProductReview[]}) {
   return (
     <a className="product-rating-summary" href="#product-reviews-title">
       <span>{average.toFixed(1)} Rating</span>
-      <span className="product-hero-stars" aria-label={`${average.toFixed(1)} out of 5 stars`}>
+      <span
+        className="product-hero-stars"
+        aria-label={`${average.toFixed(1)} out of 5 stars`}
+      >
         {[1, 2, 3, 4, 5].map((position) => (
-          <i className={position <= Math.round(average) ? 'is-filled' : undefined} key={position}>★</i>
+          <i
+            className={
+              position <= Math.round(average) ? 'is-filled' : undefined
+            }
+            key={position}
+          >
+            ★
+          </i>
         ))}
       </span>
-      <span>({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+      <span>
+        ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
+      </span>
     </a>
   );
 }

@@ -1,10 +1,11 @@
-import {redirect, useLoaderData} from 'react-router';
+import {Await, Link, redirect, useLoaderData} from 'react-router';
+import {Suspense} from 'react';
 import type {Route} from './+types/collections.$handle';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {ProductItem} from '~/components/ProductItem';
-import type {ProductItemFragment} from 'storefrontapi.generated';
+import {CollectionDesktopCatalog} from '~/components/CollectionDesktopCatalog';
+import {CollectionMobileCatalog} from '~/components/CollectionMobileCatalog';
+import {loadProductRatingMap} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -28,7 +29,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const {handle} = params;
   const {storefront} = context;
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 8,
+    pageBy: 24,
   });
 
   if (!handle) {
@@ -62,28 +63,82 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: Route.LoaderArgs) {
-  return {};
+  return {ratings: loadProductRatingMap(context.env)};
 }
 
 export default function Collection() {
-  const {collection} = useLoaderData<typeof loader>();
+  const {collection, ratings} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>{collection.title}</h1>
-      <p className="collection-description">{collection.description}</p>
-      <PaginatedResourceSection<ProductItemFragment>
-        connection={collection.products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
-        )}
-      </PaginatedResourceSection>
+    <div className="collection collection-page">
+      <div className="collection-desktop">
+        <p className="collection-eyebrow">Kitchen Cookware Subcategories</p>
+        <nav
+          className="collection-subcategories"
+          aria-label="Kitchen cookware subcategories"
+        >
+          {SUBCATEGORIES.map((subcategory) => (
+            <Link
+              className={
+                collection.handle === subcategory.handle
+                  ? 'is-active'
+                  : undefined
+              }
+              key={subcategory.handle}
+              to={`/collections/${subcategory.handle}`}
+            >
+              {subcategory.title}
+            </Link>
+          ))}
+        </nav>
+        <nav className="collection-breadcrumb" aria-label="Breadcrumb">
+          <Link to="/">Home</Link>
+          <span>/</span>
+          <Link to="/collections/kitchen-cookwares">Kitchen Cookware</Link>
+          <span>/</span>
+          <strong>{collection.title}</strong>
+        </nav>
+        <section className="collection-hero">
+          {collection.image ? (
+            <img
+              alt={collection.image.altText || collection.title}
+              src={collection.image.url}
+            />
+          ) : null}
+          <h1>{collection.title}</h1>
+          <div className="collection-offer">
+            <strong>Flat 5% OFF</strong>
+            <span>Use Code - FESTIVE5</span>
+          </div>
+        </section>
+        <CollectionDesktopCatalog
+          description={collection.description}
+          products={collection.products.nodes}
+          title={collection.title}
+        />
+      </div>
+
+      <div className="collection-mobile-default">
+        <Suspense
+          fallback={
+            <CollectionMobileCatalog collection={collection} ratings={{}} />
+          }
+        >
+          <Await
+            resolve={ratings}
+            errorElement={
+              <CollectionMobileCatalog collection={collection} ratings={{}} />
+            }
+          >
+            {(productRatings) => (
+              <CollectionMobileCatalog
+                collection={collection}
+                ratings={productRatings}
+              />
+            )}
+          </Await>
+        </Suspense>
+      </div>
       <Analytics.CollectionView
         data={{
           collection: {
@@ -96,6 +151,15 @@ export default function Collection() {
   );
 }
 
+const SUBCATEGORIES = [
+  {handle: 'kadhai', title: 'Kadhai'},
+  {handle: 'non-stick-appachatty', title: 'Appachatty'},
+  {handle: 'non-stick-appam-patra', title: 'Appam Patra'},
+  {handle: 'handi', title: 'Handi'},
+  {handle: 'sauce-pan', title: 'SaucePan'},
+  {handle: 'grater', title: 'Grater'},
+] as const;
+
 const PRODUCT_ITEM_FRAGMENT = `#graphql
   fragment MoneyProductItem on MoneyV2 {
     amount
@@ -105,6 +169,8 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
     id
     handle
     title
+    tags
+    productType
     featuredImage {
       id
       altText
@@ -138,6 +204,10 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
         amount
         currencyCode
       }
+      compareAtPrice {
+        amount
+        currencyCode
+      }
       product {
         title
         handle
@@ -168,6 +238,13 @@ const COLLECTION_QUERY = `#graphql
       handle
       title
       description
+      image {
+        id
+        url
+        altText
+        width
+        height
+      }
       products(
         first: $first,
         last: $last,
