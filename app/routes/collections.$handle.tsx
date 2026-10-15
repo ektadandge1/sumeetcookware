@@ -6,6 +6,8 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {CollectionDesktopCatalog} from '~/components/CollectionDesktopCatalog';
 import {CollectionMobileCatalog} from '~/components/CollectionMobileCatalog';
 import {loadProductRatingMap} from '~/lib/judgeme.server';
+import type {CollectionQuery} from 'storefrontapi.generated';
+import {getFallbackCollection} from '~/lib/catalogFallback';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -36,12 +38,18 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     throw redirect('/collections');
   }
 
-  const [{collection}] = await Promise.all([
-    storefront.query(COLLECTION_QUERY, {
+  const fallbackCollection = getFallbackCollection(handle);
+  const result = await storefront
+    .query(COLLECTION_QUERY, {
       variables: {handle, ...paginationVariables},
-      // Add other queries here, so that they are loaded in parallel
-    }),
-  ]);
+    })
+    .catch(() => ({
+      collection:
+        fallbackCollection as unknown as CollectionQuery['collection'],
+    }));
+  const collection =
+    result.collection ??
+    (fallbackCollection as unknown as NonNullable<CollectionQuery['collection']>);
 
   if (!collection) {
     throw new Response(`Collection ${handle} not found`, {

@@ -1,5 +1,5 @@
-import {Link, useNavigate} from 'react-router';
-import {useState} from 'react';
+import {Await, Link, useNavigate} from 'react-router';
+import {Suspense, useState} from 'react';
 import {Money, type MappedProductOptions} from '@shopify/hydrogen';
 import type {
   Maybe,
@@ -12,9 +12,11 @@ import type {ProductFragment} from 'storefrontapi.generated';
 
 export function ProductForm({
   productOptions,
+  reviews,
   selectedVariant,
 }: {
   productOptions: MappedProductOptions[];
+  reviews: Promise<Array<{rating: number}>>;
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
   const navigate = useNavigate();
@@ -65,6 +67,7 @@ export function ProductForm({
                     >
                       <ProductOptionCard
                         name={name}
+                        reviews={reviews}
                         swatch={swatch}
                         variant={firstSelectableVariant}
                       />
@@ -96,6 +99,7 @@ export function ProductForm({
                     >
                       <ProductOptionCard
                         name={name}
+                        reviews={reviews}
                         swatch={swatch}
                         variant={firstSelectableVariant}
                       />
@@ -107,75 +111,82 @@ export function ProductForm({
           </div>
         );
       })}
-      <div className="product-purchase-row">
-        <form
-          className="product-pincode"
-          onSubmit={(event) => {
-            event.preventDefault();
-            setPincodeMessage(
-              /^\d{6}$/.test(pincode)
-                ? 'Delivery availability will be confirmed at checkout.'
-                : 'Enter a valid 6-digit pincode.',
-            );
-          }}
-        >
-          <label>
-            <span className="visually-hidden">Delivery pincode</span>
-            <input
-              inputMode="numeric"
-              maxLength={6}
-              onChange={(event) => {
-                setPincode(event.target.value.replace(/\D/g, ''));
-                setPincodeMessage('');
-              }}
-              placeholder="Search Pincode"
-              value={pincode}
-            />
-          </label>
-          <button type="submit">Pincode</button>
-        </form>
-        <div className="product-quantity" aria-label="Quantity">
-          <span>Quantity</span>
-          <button
-            aria-label="Decrease quantity"
-            disabled={quantity === 1}
-            onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-            type="button"
+      <div className="product-desktop-purchase-controls">
+        <div className="product-purchase-row">
+          <form
+            className="product-pincode"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setPincodeMessage(
+                /^\d{6}$/.test(pincode)
+                  ? 'Delivery availability will be confirmed at checkout.'
+                  : 'Enter a valid 6-digit pincode.',
+              );
+            }}
           >
-            −
-          </button>
-          <output>{quantity}</output>
-          <button
-            aria-label="Increase quantity"
-            onClick={() => setQuantity((value) => value + 1)}
-            type="button"
-          >
-            +
-          </button>
+            <label>
+              <span className="visually-hidden">Delivery pincode</span>
+              <input
+                inputMode="numeric"
+                maxLength={6}
+                onChange={(event) => {
+                  setPincode(event.target.value.replace(/\D/g, ''));
+                  setPincodeMessage('');
+                }}
+                placeholder="Search Pincode"
+                value={pincode}
+              />
+            </label>
+            <button type="submit">Pincode</button>
+          </form>
+          <div className="product-quantity" aria-label="Quantity">
+            <span>Quantity</span>
+            <button
+              aria-label="Decrease quantity"
+              disabled={quantity === 1}
+              onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+              type="button"
+            >
+              −
+            </button>
+            <output>{quantity}</output>
+            <button
+              aria-label="Increase quantity"
+              onClick={() => setQuantity((value) => value + 1)}
+              type="button"
+            >
+              +
+            </button>
+          </div>
         </div>
+        <Link className="product-bulk-link" to="/#business-enquiry">
+          For Business Bulk Buyer <span aria-hidden="true">⌄</span>
+        </Link>
       </div>
       {pincodeMessage ? (
         <p className="product-pincode-message" role="status">
           {pincodeMessage}
         </p>
       ) : null}
-      <form
-        className="product-business-pricing"
-        onSubmit={(event) => {
-          event.preventDefault();
-          void navigate('/#business-enquiry');
-        }}
-      >
-        <p>Save up to 2% with business pricing and GST input tax credit</p>
-        <label>
-          <span className="visually-hidden">GST number</span>
-          <input name="gst-number" placeholder="GST number" required />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
-      <Link className="product-bulk-link" to="/#business-enquiry">
-        For Business Bulk Buyer <span aria-hidden="true">⌄</span>
-      </Link>
+      <div className="product-desktop-business-row">
+        <div className="product-desktop-bulk-offer">
+          Up to <strong>20% OFF</strong> on bulk purchases
+        </div>
+        <form
+          className="product-business-pricing"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void navigate('/#business-enquiry');
+          }}
+        >
+          <p>Save up to 2% with business pricing and GST input tax credit</p>
+          <label>
+            <span className="visually-hidden">GST number</span>
+            <input name="gst-number" placeholder="GST number" required />
+          </label>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
       <div className="product-buy-actions">
         <AddToCartButton
           disabled={!selectedVariant || !selectedVariant.availableForSale}
@@ -191,9 +202,9 @@ export function ProductForm({
               ? 'Adding...'
               : isAdded
                 ? 'Added to cart'
-              : selectedVariant?.availableForSale
-                ? 'Add to cart'
-                : 'Sold out'
+                : selectedVariant?.availableForSale
+                  ? 'Add to cart'
+                  : 'Sold out'
           }
         </AddToCartButton>
         <AddToCartButton
@@ -202,16 +213,16 @@ export function ProductForm({
           redirectToCheckout
         >
           {(isPending) =>
-            isPending
-              ? 'Preparing checkout...'
-              : selectedVariant?.availableForSale
-                ? (
-                    <>
-                      <span className="product-buy-label-desktop">Buy it now</span>
-                      <span className="product-buy-label-mobile">Buy now</span>
-                    </>
-                  )
-                : 'Sold out'
+            isPending ? (
+              'Preparing checkout...'
+            ) : selectedVariant?.availableForSale ? (
+              <>
+                <span className="product-buy-label-desktop">Buy it now</span>
+                <span className="product-buy-label-mobile">Buy now</span>
+              </>
+            ) : (
+              'Sold out'
+            )
           }
         </AddToCartButton>
       </div>
@@ -222,13 +233,17 @@ export function ProductForm({
 function ProductOptionCard({
   swatch,
   name,
+  reviews,
   variant,
 }: {
   swatch?: Maybe<ProductOptionValueSwatch> | undefined;
   name: string;
+  reviews: Promise<Array<{rating: number}>>;
   variant?: Maybe<{
     compareAtPrice?: Maybe<MoneyV2>;
     price: MoneyV2;
+    product?: {title: string};
+    selectedOptions?: Array<{name: string; value: string}>;
     title: string;
   }>;
 }) {
@@ -240,9 +255,37 @@ function ProductOptionCard({
       <strong>{name}</strong>
       {variant ? (
         <span className="product-option-card-details">
-          {variant.title !== 'Default Title' ? <small>{variant.title}</small> : null}
-          <b><Money data={variant.price} /></b>
-          {variant.compareAtPrice ? <s><Money data={variant.compareAtPrice} /></s> : null}
+          <small className="product-option-card-subtitle">
+            {variant.product?.title ?? variant.title}
+          </small>
+          {variant.selectedOptions?.map((option) => (
+            <span className="product-option-card-spec" key={option.name}>
+              {option.name}: <b>{option.value}</b>
+            </span>
+          ))}
+          <Suspense fallback={<ProductOptionRating reviews={[]} />}>
+            <Await
+              resolve={reviews}
+              errorElement={<ProductOptionRating reviews={[]} />}
+            >
+              {(productReviews) => (
+                <ProductOptionRating reviews={productReviews} />
+              )}
+            </Await>
+          </Suspense>
+          <span className="product-option-card-prices">
+            <b>
+              <Money data={variant.price} />
+            </b>
+            {variant.compareAtPrice ? (
+              <s>
+                <Money data={variant.compareAtPrice} />
+              </s>
+            ) : null}
+          </span>
+          <small className="product-option-card-tax-note">
+            Tax included. Shipping calculated at checkout
+          </small>
         </span>
       ) : null}
       {image || color ? (
@@ -255,5 +298,30 @@ function ProductOptionCard({
         </span>
       ) : null}
     </>
+  );
+}
+
+function ProductOptionRating({reviews}: {reviews: Array<{rating: number}>}) {
+  const average = reviews.length
+    ? reviews.reduce((total, review) => total + review.rating, 0) /
+      reviews.length
+    : 0;
+
+  return (
+    <span className="product-option-card-rating">
+      <small>
+        {average.toFixed(1)} Rating ({reviews.length})
+      </small>
+      <span aria-label={`${average.toFixed(1)} out of 5 stars`}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <i
+            className={star <= Math.round(average) ? 'is-filled' : ''}
+            key={star}
+          >
+            ★
+          </i>
+        ))}
+      </span>
+    </span>
   );
 }

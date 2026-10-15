@@ -1,6 +1,6 @@
 import {Image} from '@shopify/hydrogen';
 import type {Image as ShopifyImage} from '@shopify/hydrogen/storefront-api-types';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import type {ProductVariantFragment} from 'storefrontapi.generated';
 
 type ProductGalleryImage = Pick<
@@ -13,16 +13,18 @@ export function ProductGallery({
   selectedImage,
 }: {
   images: ProductGalleryImage[];
-  selectedImage:
-    | ProductVariantFragment['image']
-    | undefined;
+  selectedImage: ProductVariantFragment['image'] | undefined;
 }) {
   const galleryImages = selectedImage
-    ? [selectedImage, ...images.filter((image) => image.id !== selectedImage.id)]
+    ? [
+        selectedImage,
+        ...images.filter((image) => image.id !== selectedImage.id),
+      ]
     : images;
   const [activeImageId, setActiveImageId] = useState(
     getImageKey(galleryImages[0]),
   );
+  const thumbnailsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selectedImage) setActiveImageId(getImageKey(selectedImage));
@@ -32,6 +34,17 @@ export function ProductGallery({
     galleryImages.find((image) => getImageKey(image) === activeImageId) ??
     galleryImages[0];
 
+  const scrollThumbnails = (direction: -1 | 1) => {
+    const thumbnails = thumbnailsRef.current;
+    if (!thumbnails) return;
+
+    thumbnails.scrollBy({
+      behavior: 'smooth',
+      left: direction * thumbnails.clientWidth * 0.8,
+      top: direction * thumbnails.clientHeight * 0.8,
+    });
+  };
+
   if (!activeImage) {
     return <div className="product-gallery product-gallery-empty" />;
   }
@@ -39,22 +52,44 @@ export function ProductGallery({
   return (
     <div className="product-gallery">
       {galleryImages.length > 1 ? (
-        <div className="product-gallery-thumbnails" aria-label="Product images">
-          {galleryImages.map((image, index) => (
-            <button
-              aria-label={`View product image ${index + 1}`}
-              aria-pressed={getImageKey(image) === getImageKey(activeImage)}
-              key={getImageKey(image)}
-              onClick={() => setActiveImageId(getImageKey(image))}
-              type="button"
-            >
-              <Image
-                alt={image.altText || `Product image ${index + 1}`}
-                data={image}
-                sizes="72px"
-              />
-            </button>
-          ))}
+        <div className="product-gallery-thumbnail-rail">
+          <button
+            aria-label="View previous product images"
+            className="product-gallery-thumbnail-nav is-previous"
+            onClick={() => scrollThumbnails(-1)}
+            type="button"
+          >
+            <span aria-hidden="true" />
+          </button>
+          <div
+            className="product-gallery-thumbnails"
+            aria-label="Product images"
+            ref={thumbnailsRef}
+          >
+            {galleryImages.map((image, index) => (
+              <button
+                aria-label={`View product image ${index + 1}`}
+                aria-pressed={getImageKey(image) === getImageKey(activeImage)}
+                key={getImageKey(image)}
+                onClick={() => setActiveImageId(getImageKey(image))}
+                type="button"
+              >
+                <Image
+                  alt={image.altText || `Product image ${index + 1}`}
+                  data={image}
+                  sizes="72px"
+                />
+              </button>
+            ))}
+          </div>
+          <button
+            aria-label="View more product images"
+            className="product-gallery-thumbnail-nav is-next"
+            onClick={() => scrollThumbnails(1)}
+            type="button"
+          >
+            <span aria-hidden="true" />
+          </button>
         </div>
       ) : null}
       <div className="product-gallery-stage">

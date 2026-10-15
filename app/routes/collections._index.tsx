@@ -1,8 +1,15 @@
 import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/collections._index';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
-import type {CollectionFragment} from 'storefrontapi.generated';
+import type {
+  CollectionFragment,
+  StoreCollectionsQuery,
+} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {
+  fallbackCollections,
+  fallbackConnection,
+} from '~/lib/catalogFallback';
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -23,12 +30,16 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     pageBy: 4,
   });
 
-  const [{collections}] = await Promise.all([
-    context.storefront.query(COLLECTIONS_QUERY, {
+  const result = await context.storefront
+    .query(COLLECTIONS_QUERY, {
       variables: paginationVariables,
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
+    })
+    .catch(() => null);
+  const collections = result?.collections.nodes.length
+    ? result.collections
+    : (fallbackConnection(
+        fallbackCollections,
+      ) as unknown as StoreCollectionsQuery['collections']);
 
   return {collections};
 }

@@ -4,9 +4,17 @@ import {Suspense} from 'react';
 import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
-import type {CollectionItemFragment} from 'storefrontapi.generated';
+import type {
+  CatalogQuery,
+  CollectionItemFragment,
+} from 'storefrontapi.generated';
 import {AllCollectionsMobile} from '~/components/AllCollectionsMobile';
 import {loadProductRatingMap} from '~/lib/judgeme.server';
+import {
+  fallbackCollections,
+  fallbackConnection,
+  fallbackProducts,
+} from '~/lib/catalogFallback';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Products`}];
@@ -49,16 +57,29 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     pageBy: 8,
   });
 
-  const [{products, collections}] = await Promise.all([
-    storefront.query(CATALOG_QUERY, {
+  const result = await storefront
+    .query(CATALOG_QUERY, {
       variables: {...paginationVariables, collectionFirst: 50},
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-  return {
-    collections: collections.nodes.filter((collection: {handle: string}) =>
+    })
+    .catch(() => null);
+  const products = result?.products.nodes.length
+    ? result.products
+    : (fallbackConnection(
+        fallbackProducts,
+      ) as unknown as CatalogQuery['products']);
+  const collections = result?.collections.nodes.length
+    ? result.collections
+    : (fallbackConnection(
+        fallbackCollections,
+      ) as unknown as CatalogQuery['collections']);
+  const mobileCollections = collections.nodes.filter(
+    (collection: {handle: string}) =>
       MOBILE_COLLECTION_HANDLES.includes(collection.handle),
-    ),
+  );
+  return {
+    collections: mobileCollections.length
+      ? mobileCollections
+      : (fallbackCollections as unknown as typeof mobileCollections),
     products,
   };
 }

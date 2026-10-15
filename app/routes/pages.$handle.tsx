@@ -53,6 +53,18 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
+  if (!page && params.handle === 'about-us') {
+    return {
+      page: {
+        handle: 'about-us',
+        id: 'local-about-us',
+        title: 'About Us',
+        body: '',
+        seo: null,
+      },
+    };
+  }
+
   if (!page) {
     throw new Response('Not Found', {status: 404});
   }
