@@ -558,14 +558,22 @@ function collectHtmlImageUrls(html: string) {
 function collectImageUrls(value: string) {
   const urls = new Set<string>();
 
+  const addUrl = (value: string) => {
+    const trimmed = value.trim().replace(/^['"]|['"]$/g, '');
+    if (/^https?:\/\/\S+$/i.test(trimmed)) urls.add(trimmed);
+  };
+
   const visit = (item: unknown) => {
     if (typeof item === 'string') {
       const trimmed = item.trim();
       // JSON arrays from "A+ image URLs" contain raw https URLs – accept them
       // even when the CDN URL has no image extension.
-      if (/^https?:\/\/\S+$/i.test(trimmed)) {
-        urls.add(trimmed);
-      }
+      addUrl(trimmed);
+      trimmed
+        .split(/[\n,]+/)
+        .map((url) => url.trim())
+        .filter(Boolean)
+        .forEach(addUrl);
       collectHtmlImageUrls(item).forEach((url) => urls.add(url));
       return;
     }

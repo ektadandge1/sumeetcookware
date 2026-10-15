@@ -6115,6 +6115,12 @@ main:has(.home) {
   max-width: none;
 }
 
+body > main:has(.home) {
+  margin: 0;
+  max-width: none;
+  padding: 0;
+}
+
 .home {
   background: var(--background);
   color: var(--foreground);
@@ -6623,10 +6629,11 @@ main:has(.home) {
 }
 
 .home-hero {
-  aspect-ratio: 1520 / 612;
+  aspect-ratio: 16 / 9;
   background: #000;
   height: auto;
-  width: 100%;
+  margin-left: calc(50% - 50vw);
+  width: 100vw;
 }
 
 .home-hero-media,
@@ -6637,7 +6644,7 @@ main:has(.home) {
 }
 
 .home-hero-media video {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .home-hero-track {
@@ -8174,7 +8181,8 @@ main:has(.home) {
 
   .home-hero {
     aspect-ratio: auto;
-    height: clamp(380px, 110vw, 500px);
+    aspect-ratio: 16 / 9;
+    height: auto;
   }
 
   .home-service-benefit {
@@ -8589,7 +8597,8 @@ main:has(.home) {
   }
 
   .home-hero {
-    height: 390px;
+    aspect-ratio: 16 / 9;
+    height: auto;
   }
 
   .home-hero-media video {

@@ -1,5 +1,5 @@
 const HERO_VIDEO_URL =
-  'https://cdn.shopify.com/videos/c/o/v/3a51a52c0ccb4a02a933d7221c9f7c86.mp4';
+  'https://cdn.shopify.com/videos/c/o/v/51478521519a41a79a2aaf48e18486be.mp4';
 
 export function HomeHero() {
   return (
