@@ -10,7 +10,8 @@ export function HomeHero() {
       <Link
         aria-label="Shop the latest Sumeet offers"
         className="home-hero-media"
-        to="/collections/best-offer"
+        prefetch="intent"
+        to="/collections/all"
       >
         <video
           aria-label="Sumeet cookware hero video"

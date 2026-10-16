@@ -11,7 +11,7 @@ export function HomeCustomerBanner() {
       className="home-customer-banner"
       aria-label="Sumeet customer highlights"
     >
-      <Link aria-label="Shop all Sumeet cookware" to="/collections/all">
+      <Link aria-label="Shop all Sumeet cookware" prefetch="intent" to="/collections/all">
         <picture>
           <source
             media="(max-width: 48em)"

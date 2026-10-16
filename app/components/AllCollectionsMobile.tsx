@@ -29,7 +29,7 @@ export function AllCollectionsMobile({
         <section className="all-collections-mobile-section" key={collection.handle}>
           <header>
             <h2>{collection.title}</h2>
-            <Link to={`/collections/${collection.handle}`}>View all</Link>
+            <Link prefetch="intent" to={`/collections/${collection.handle}`}>View all</Link>
           </header>
           <div className="all-collections-mobile-row">
             {collection.products.nodes.slice(0, 4).map((product) => (

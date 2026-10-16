@@ -19,10 +19,10 @@ import {WishlistButton} from '~/components/WishlistButton';
 import {ProductBenefits} from '~/components/ProductBenefits';
 import {ProductReviews} from '~/components/ProductReviews';
 import {ProductGallery} from '~/components/ProductGallery';
+import {ProductAPlusContent} from '~/components/ProductAPlusContent';
 import type {ProductReview} from '~/lib/judgeme.server';
 import {loadProductReviews, submitProductReview} from '~/lib/judgeme.server';
-import type {BoughtTogetherQuery, ProductQuery} from 'storefrontapi.generated';
-import {getFallbackProduct} from '~/lib/catalogFallback';
+import type {BoughtTogetherQuery} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -105,34 +105,12 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   }
 
   const selectedOptions = getSelectedProductOptions(request);
-  const fallbackProduct = createFallbackProduct(handle, selectedOptions);
-  const result = await storefront
-    .query(PRODUCT_QUERY, {
-      variables: {handle, selectedOptions},
-    })
-    .catch(() => ({product: fallbackProduct}));
-  const product = result.product ?? fallbackProduct;
+  const {product} = await storefront.query(PRODUCT_QUERY, {
+    variables: {handle, selectedOptions},
+  });
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
-  }
-
-  if (
-    !String(product.id).startsWith('gid://shopify/Product/local-') &&
-    !product.aplusImageUrls &&
-    !product.aPlusImageUrls &&
-    !product.aPlusImageUrlsAlt &&
-    !product.aPlusImages &&
-    !product.aPlusContent &&
-    !product.aPlusBanners &&
-    !product.aplusContent &&
-    !product.enhancedContent &&
-    !product.productBanners &&
-    !product.specifications
-  ) {
-    console.warn(
-      `[a-plus] no A+ metafields returned for handle "${handle}". Check Admin > Settings > Custom data > definition namespace.key and enable Storefront access.`,
-    );
   }
 
   // The API handle might be localized, so redirect to the localized handle
@@ -167,7 +145,7 @@ function loadDeferredData({context, params}: Route.LoaderArgs) {
         : [],
     ),
     boughtTogether: productId.then((id) =>
-      id && !id.startsWith('gid://shopify/Product/local-')
+      id
         ? context.storefront
             .query(BOUGHT_TOGETHER_QUERY, {variables: {productId: id}})
             .catch(() => null)
@@ -193,14 +171,7 @@ export default function Product() {
   const productOptions = getProductOptions({
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
-  }).map((option) => ({
-    ...option,
-    optionValues: option.optionValues.map((value) =>
-      product.id.startsWith('gid://shopify/Product/local-')
-        ? {...value, available: true, exists: true}
-        : value,
-    ),
-  }));
+  });
 
   const {title, descriptionHtml} = product;
   const isBestseller = product.tags.some((tag: string) =>
@@ -323,20 +294,9 @@ export default function Product() {
       </div>
       <ProductBenefits className="product-benefits-desktop" />
       <ProductAPlusContent
-        descriptionHtml={descriptionHtml}
-        fields={[
-          product.aplusImageUrls,
-          product.aPlusImageUrls,
-          product.aPlusImageUrlsAlt,
-          product.aPlusImages,
-          product.aPlusContent,
-          product.aPlusBanners,
-          product.aplusContent,
-          product.enhancedContent,
-          product.productBanners,
-          product.specifications,
-        ]}
+        key={selectedVariant?.id}
         productTitle={title}
+        variant={selectedVariant}
       />
       <Suspense fallback={null}>
         <Await resolve={boughtTogether} errorElement={null}>
@@ -372,25 +332,6 @@ export default function Product() {
     </div>
   );
 }
-
-type APlusMediaNode = {
-  image?: {
-    altText?: string | null;
-    height?: number | null;
-    url: string;
-    width?: number | null;
-  } | null;
-  url?: string | null;
-};
-
-type APlusMetafield =
-  | {
-      reference?: APlusMediaNode | null;
-      references?: {nodes: APlusMediaNode[]} | null;
-      value: string;
-    }
-  | null
-  | undefined;
 
 function getGalleryImages(
   product: {
@@ -474,10 +415,7 @@ function ProductBoughtTogether({
   const recommended = (recommendations?.recommended ?? []).filter(
     (item) => item?.handle !== currentHandle,
   );
-  const fallback = (recommendations?.fallback?.nodes ?? []).filter(
-    (item) => item?.handle !== currentHandle,
-  );
-  const products = (recommended.length ? recommended : fallback).slice(0, 8);
+  const products = recommended.slice(0, 8);
   if (!products.length) return null;
 
   return (
@@ -499,100 +437,6 @@ function ProductBoughtTogether({
       </div>
     </section>
   );
-}
-
-function ProductAPlusContent({
-  descriptionHtml,
-  fields,
-  productTitle,
-}: {
-  descriptionHtml: string;
-  fields: APlusMetafield[];
-  productTitle: string;
-}) {
-  const assets = new Map<string, APlusMediaNode['image']>();
-
-  for (const field of fields) {
-    if (!field) continue;
-    addAPlusMedia(assets, field.reference);
-    field.references?.nodes.forEach((node) => addAPlusMedia(assets, node));
-    collectImageUrls(field.value).forEach((url) => assets.set(url, {url}));
-  }
-
-  collectHtmlImageUrls(descriptionHtml).forEach((url) =>
-    assets.set(url, {url}),
-  );
-
-  if (!assets.size) return null;
-
-  return (
-    <section className="product-a-plus" aria-label={`${productTitle} features`}>
-      {[...assets.entries()].map(([url, image], index) => (
-        <img
-          alt={image?.altText || `${productTitle} feature ${index + 1}`}
-          height={image?.height ?? undefined}
-          key={url}
-          loading="lazy"
-          src={url}
-          width={image?.width ?? undefined}
-        />
-      ))}
-    </section>
-  );
-}
-
-function addAPlusMedia(
-  assets: Map<string, APlusMediaNode['image']>,
-  media?: APlusMediaNode | null,
-) {
-  const url = media?.image?.url ?? media?.url;
-  if (url) assets.set(url, media?.image ?? {url});
-}
-
-function collectHtmlImageUrls(html: string) {
-  return [...html.matchAll(/<img[^>]+src=["']([^"']+)["']/gi)].map(
-    (match) => match[1],
-  );
-}
-
-function collectImageUrls(value: string) {
-  const urls = new Set<string>();
-
-  const addUrl = (value: string) => {
-    const trimmed = value.trim().replace(/^['"]|['"]$/g, '');
-    if (/^https?:\/\/\S+$/i.test(trimmed)) urls.add(trimmed);
-  };
-
-  const visit = (item: unknown) => {
-    if (typeof item === 'string') {
-      const trimmed = item.trim();
-      // JSON arrays from "A+ image URLs" contain raw https URLs – accept them
-      // even when the CDN URL has no image extension.
-      addUrl(trimmed);
-      trimmed
-        .split(/[\n,]+/)
-        .map((url) => url.trim())
-        .filter(Boolean)
-        .forEach(addUrl);
-      collectHtmlImageUrls(item).forEach((url) => urls.add(url));
-      return;
-    }
-    if (Array.isArray(item)) {
-      item.forEach(visit);
-      return;
-    }
-    if (item && typeof item === 'object') {
-      Object.values(item).forEach(visit);
-    }
-  };
-
-  try {
-    visit(JSON.parse(value));
-  } catch {
-    visit(value);
-  }
-
-  return urls;
 }
 
 function ProductRatingSummary({reviews}: {reviews: ProductReview[]}) {
@@ -638,88 +482,6 @@ function getDiscountPercentage(price?: string, compareAtPrice?: string) {
   return Math.round(((original - current) / original) * 100);
 }
 
-function createFallbackProduct(
-  handle: string,
-  requestedOptions: {name: string; value: string}[],
-): NonNullable<ProductQuery['product']> {
-  const product = getFallbackProduct(handle);
-  const image = {...product.featuredImage, __typename: 'Image' as const};
-  const {name: optionName, values: optionValues} = getFallbackVariantOption(
-    product.productType,
-  );
-  const variants = optionValues.map((value, index) => {
-    const price = Math.round(
-      Number(product.selectedOrFirstAvailableVariant.price.amount) *
-        (1 + index * 0.12),
-    );
-
-    return {
-      ...product.selectedOrFirstAvailableVariant,
-      compareAtPrice: {
-        amount: String(Math.round(price * 1.2)),
-        currencyCode: 'INR' as const,
-      },
-      id: `${product.selectedOrFirstAvailableVariant.id}-${index + 1}`,
-      image,
-      price: {amount: String(price), currencyCode: 'INR' as const},
-      product: {handle: product.handle, title: product.title},
-      selectedOptions: [{name: optionName, value}],
-      sku: `SUMEET-${handle.toUpperCase().slice(0, 12)}-${index + 1}`,
-      title: value,
-      unitPrice: null,
-    };
-  });
-  const requestedValue = requestedOptions.find(
-    (option) => option.name.toLowerCase() === optionName.toLowerCase(),
-  )?.value;
-  const variant =
-    variants.find((item) => item.title === requestedValue) ?? variants[0];
-  const description = `${product.title} is designed for reliable everyday cooking, combining Sumeet quality with durable materials and practical performance.`;
-
-  return {
-    adjacentVariants: variants.filter((item) => item.id !== variant.id),
-    description,
-    descriptionHtml: `<p>${description}</p>`,
-    encodedVariantAvailability: '',
-    encodedVariantExistence: '',
-    handle: product.handle,
-    id: product.id,
-    images: {nodes: [image]},
-    options: [
-      {
-        name: optionName,
-        optionValues: variants.map((item) => ({
-          firstSelectableVariant: item,
-          name: item.title,
-          swatch: null,
-        })),
-      },
-    ],
-    productType: product.productType,
-    selectedOrFirstAvailableVariant: variant,
-    seo: {description, title: product.title},
-    tags: product.tags,
-    title: product.title,
-    vendor: 'Sumeet Cookware',
-  } as unknown as NonNullable<ProductQuery['product']>;
-}
-
-function getFallbackVariantOption(productType: string) {
-  if (/bottle/i.test(productType)) {
-    return {name: 'Capacity', values: ['500 ml', '750 ml', '1 L']};
-  }
-
-  if (/dinner/i.test(productType)) {
-    return {name: 'Set Size', values: ['24 Pieces', '36 Pieces', '50 Pieces']};
-  }
-
-  if (/storage|container/i.test(productType)) {
-    return {name: 'Pack Size', values: ['Set of 3', 'Set of 5', 'Set of 7']};
-  }
-
-  return {name: 'Size', values: ['20 cm', '22 cm', '24 cm', '26 cm']};
-}
-
 const BOUGHT_TOGETHER_PRODUCT_FRAGMENT = `#graphql
   fragment BoughtTogetherProduct on Product {
     availableForSale
@@ -762,11 +524,6 @@ const BOUGHT_TOGETHER_QUERY = `#graphql
   ) @inContext(country: $country, language: $language) {
     recommended: productRecommendations(productId: $productId) {
       ...BoughtTogetherProduct
-    }
-    fallback: products(first: 8) {
-      nodes {
-        ...BoughtTogetherProduct
-      }
     }
   }
   ${BOUGHT_TOGETHER_PRODUCT_FRAGMENT}
@@ -816,6 +573,9 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       currencyCode
     }
     variantGallery: metafield(namespace: "custom", key: "variant_gallery") {
+      ...ProductAPlusMetafield
+    }
+    variantAPlusImages: metafield(namespace: "custom", key: "aplus_image_urls") {
       ...ProductAPlusMetafield
     }
     variantPackage: metafield(namespace: "custom", key: "package") {
@@ -887,39 +647,6 @@ const PRODUCT_FRAGMENT = `#graphql
     tags
     descriptionHtml
     description
-    aplusImageUrls: metafield(namespace: "custom", key: "aplus_image_urls") {
-      ...ProductAPlusMetafield
-    }
-    aPlusImageUrls: metafield(namespace: "custom", key: "a_image_urls") {
-      ...ProductAPlusMetafield
-    }
-    aPlusImageUrlsAlt: metafield(
-      namespace: "custom"
-      key: "a_plus_image_urls"
-    ) {
-      ...ProductAPlusMetafield
-    }
-    aPlusImages: metafield(namespace: "custom", key: "a_plus_images") {
-      ...ProductAPlusMetafield
-    }
-    aPlusContent: metafield(namespace: "custom", key: "a_plus_content") {
-      ...ProductAPlusMetafield
-    }
-    aPlusBanners: metafield(namespace: "custom", key: "a_plus_banners") {
-      ...ProductAPlusMetafield
-    }
-    aplusContent: metafield(namespace: "custom", key: "aplus_content") {
-      ...ProductAPlusMetafield
-    }
-    enhancedContent: metafield(namespace: "custom", key: "enhanced_content") {
-      ...ProductAPlusMetafield
-    }
-    productBanners: metafield(namespace: "custom", key: "product_banners") {
-      ...ProductAPlusMetafield
-    }
-    specifications: metafield(namespace: "custom", key: "specifications") {
-      ...ProductAPlusMetafield
-    }
     itemHighlight: metafield(namespace: "custom", key: "item_highlight") {
       ...ProductAPlusMetafield
     }

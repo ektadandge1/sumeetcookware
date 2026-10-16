@@ -6,16 +6,16 @@ export function MobileBottomNav() {
 
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile shortcuts">
-      <Link aria-label="Home" to="/">
+      <Link aria-label="Home" prefetch="intent" to="/">
         <HomeIcon />
       </Link>
       <button aria-label="Open cart" onClick={() => open('cart')} type="button">
         <CartIcon />
       </button>
-      <Link aria-label="Shop all categories" to="/collections/all">
+      <Link aria-label="Shop all categories" prefetch="intent" to="/collections/all">
         <GridIcon />
       </Link>
-      <Link aria-label="Best sellers" to="/collections/best-deal-of-the-day">
+      <Link aria-label="Best sellers" prefetch="intent" to="/collections/all">
         <SortIcon />
       </Link>
       <button

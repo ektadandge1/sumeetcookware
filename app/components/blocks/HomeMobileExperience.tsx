@@ -102,10 +102,10 @@ export function HomeMobileExperience() {
           <p>Find the right cookware, compare products, discover recipes</p>
           <Link to="/search">1. What are you looking for today?</Link>
           <Link to="/collections/all">2. What&rsquo;s your budget?</Link>
-          <Link to="/collections/kitchen-utility">
+          <Link to="/collections/all">
             3. Which cooktop do you use?
           </Link>
-          <Link to="/collections/gifts">4. What would you like to gift?</Link>
+          <Link to="/collections/all">4. What would you like to gift?</Link>
         </div>
       </section>
     </div>
@@ -265,7 +265,7 @@ export function HomeMobileActions() {
             <Link
               className="home-mobile-gift-shop"
               onClick={() => setIsGiftOpen(false)}
-              to="/collections/gifts"
+              to="/collections/all"
             >
               Shop Gifts
             </Link>

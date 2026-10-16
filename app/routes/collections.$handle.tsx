@@ -6,8 +6,6 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {CollectionDesktopCatalog} from '~/components/CollectionDesktopCatalog';
 import {CollectionMobileCatalog} from '~/components/CollectionMobileCatalog';
 import {loadProductRatingMap} from '~/lib/judgeme.server';
-import type {CollectionQuery} from 'storefrontapi.generated';
-import {getFallbackCollection} from '~/lib/catalogFallback';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
@@ -38,18 +36,9 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     throw redirect('/collections');
   }
 
-  const fallbackCollection = getFallbackCollection(handle);
-  const result = await storefront
-    .query(COLLECTION_QUERY, {
-      variables: {handle, ...paginationVariables},
-    })
-    .catch(() => ({
-      collection:
-        fallbackCollection as unknown as CollectionQuery['collection'],
-    }));
-  const collection =
-    result.collection ??
-    (fallbackCollection as unknown as NonNullable<CollectionQuery['collection']>);
+  const {collection, collections} = await storefront.query(COLLECTION_QUERY, {
+    variables: {handle, ...paginationVariables},
+  });
 
   if (!collection) {
     throw new Response(`Collection ${handle} not found`, {
@@ -62,6 +51,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   return {
     collection,
+    collections: collections.nodes,
   };
 }
 
@@ -75,17 +65,17 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Collection() {
-  const {collection, ratings} = useLoaderData<typeof loader>();
+  const {collection, collections, ratings} = useLoaderData<typeof loader>();
 
   return (
     <div className="collection collection-page">
       <div className="collection-desktop">
-        <p className="collection-eyebrow">Kitchen Cookware Subcategories</p>
+        <p className="collection-eyebrow">Collections</p>
         <nav
           className="collection-subcategories"
-          aria-label="Kitchen cookware subcategories"
+          aria-label="Collections"
         >
-          {SUBCATEGORIES.map((subcategory) => (
+          {collections.map((subcategory) => (
             <Link
               className={
                 collection.handle === subcategory.handle
@@ -93,6 +83,7 @@ export default function Collection() {
                   : undefined
               }
               key={subcategory.handle}
+              prefetch="intent"
               to={`/collections/${subcategory.handle}`}
             >
               {subcategory.title}
@@ -100,9 +91,9 @@ export default function Collection() {
           ))}
         </nav>
         <nav className="collection-breadcrumb" aria-label="Breadcrumb">
-          <Link to="/">Home</Link>
+          <Link prefetch="intent" to="/">Home</Link>
           <span>/</span>
-          <Link to="/collections/kitchen-cookwares">Kitchen Cookware</Link>
+          <Link prefetch="intent" to="/collections">Collections</Link>
           <span>/</span>
           <strong>{collection.title}</strong>
         </nav>
@@ -114,11 +105,10 @@ export default function Collection() {
             />
           ) : null}
           <h1>{collection.title}</h1>
-          <div className="collection-offer">
-            <strong>Flat 5% OFF</strong>
-            <span>Use Code - FESTIVE5</span>
-          </div>
         </section>
+        {!collection.products.nodes.length ? (
+          <p>No products in this collection.</p>
+        ) : null}
         <CollectionDesktopCatalog
           description={collection.description}
           products={collection.products.nodes}
@@ -158,15 +148,6 @@ export default function Collection() {
     </div>
   );
 }
-
-const SUBCATEGORIES = [
-  {handle: 'kadhai', title: 'Kadhai'},
-  {handle: 'non-stick-appachatty', title: 'Appachatty'},
-  {handle: 'non-stick-appam-patra', title: 'Appam Patra'},
-  {handle: 'handi', title: 'Handi'},
-  {handle: 'sauce-pan', title: 'SaucePan'},
-  {handle: 'grater', title: 'Grater'},
-] as const;
 
 const PRODUCT_ITEM_FRAGMENT = `#graphql
   fragment MoneyProductItem on MoneyV2 {
@@ -241,6 +222,12 @@ const COLLECTION_QUERY = `#graphql
     $startCursor: String
     $endCursor: String
   ) @inContext(country: $country, language: $language) {
+    collections(first: 50) {
+      nodes {
+        handle
+        title
+      }
+    }
     collection(handle: $handle) {
       id
       handle

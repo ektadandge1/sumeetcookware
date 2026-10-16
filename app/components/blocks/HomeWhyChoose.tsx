@@ -11,7 +11,8 @@ export function HomeWhyChoose() {
       <Link
         aria-label="Shop Sumeet stainless steel cookware"
         className="home-why-desktop"
-        to="/collections/stainless-steel"
+        prefetch="intent"
+        to="/collections/all"
       >
         <FigmaImage
           alt="Why Choose Sumeet: premium steel, warranty, ISI certification, and food-grade material"
@@ -21,7 +22,8 @@ export function HomeWhyChoose() {
       <Link
         aria-label="Shop Sumeet stainless steel cookware"
         className="home-why-mobile"
-        to="/collections/stainless-steel"
+        prefetch="intent"
+        to="/collections/all"
       >
         <FigmaImage
           alt="Why Choose Sumeet: premium steel, warranty, ISI certification, and food-grade material"

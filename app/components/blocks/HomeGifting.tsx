@@ -32,7 +32,7 @@ export function HomeGifting() {
           aria-label="Gift occasions"
         >
           {leftGifts.map((gift) => (
-            <Link className="home-outline-button" key={gift.label} to={gift.to}>
+            <Link className="home-outline-button" key={gift.label} prefetch="intent" to={gift.to}>
               {gift.label}
             </Link>
           ))}
@@ -40,7 +40,8 @@ export function HomeGifting() {
         <Link
           aria-label="Shop Sumeet gifts"
           className="home-gifting-image-link"
-          to="/collections/gifts"
+          prefetch="intent"
+          to="/collections/all"
         >
           <FigmaImage
             alt="Sumeet cookware gift"
@@ -53,7 +54,7 @@ export function HomeGifting() {
           aria-label="More gift occasions"
         >
           {rightGifts.map((gift) => (
-            <Link className="home-outline-button" key={gift.label} to={gift.to}>
+            <Link className="home-outline-button" key={gift.label} prefetch="intent" to={gift.to}>
               {gift.label}
             </Link>
           ))}

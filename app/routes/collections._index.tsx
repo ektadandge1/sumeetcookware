@@ -1,15 +1,8 @@
 import {useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/collections._index';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
-import type {
-  CollectionFragment,
-  StoreCollectionsQuery,
-} from 'storefrontapi.generated';
+import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {
-  fallbackCollections,
-  fallbackConnection,
-} from '~/lib/catalogFallback';
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -30,16 +23,9 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     pageBy: 4,
   });
 
-  const result = await context.storefront
-    .query(COLLECTIONS_QUERY, {
-      variables: paginationVariables,
-    })
-    .catch(() => null);
-  const collections = result?.collections.nodes.length
-    ? result.collections
-    : (fallbackConnection(
-        fallbackCollections,
-      ) as unknown as StoreCollectionsQuery['collections']);
+  const {collections} = await context.storefront.query(COLLECTIONS_QUERY, {
+    variables: paginationVariables,
+  });
 
   return {collections};
 }
@@ -59,6 +45,7 @@ export default function Collections() {
   return (
     <div className="collections">
       <h1>Collections</h1>
+      {!collections.nodes.length ? <p>No collections available.</p> : null}
       <PaginatedResourceSection<CollectionFragment>
         connection={collections}
         resourcesClassName="collections-grid"
@@ -94,7 +81,7 @@ function CollectionItem({
           alt={collection.image.altText || collection.title}
           aspectRatio="1/1"
           data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
+          loading={index < 3 ? 'eager' : 'lazy'}
           sizes="(min-width: 45em) 400px, 100vw"
         />
       )}

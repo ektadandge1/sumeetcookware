@@ -1,5 +1,5 @@
 import {Await} from 'react-router';
-import {Suspense} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import type {RecommendedProductsQuery} from 'storefrontapi.generated';
 import {HomeProductBand} from './HomeProductBand';
 
@@ -10,6 +10,27 @@ export function HomeProductSections({
   products: Promise<RecommendedProductsQuery | null>;
   productRatings: Promise<Record<string, {average: number; count: number}>>;
 }) {
+  const [ratings, setRatings] = useState<
+    Record<string, {average: number; count: number}>
+  >({});
+
+  useEffect(() => {
+    let active = true;
+    // Ratings must not hold back product cards or their navigation links.
+    setRatings({});
+    void productRatings.then(
+      (result) => {
+        if (active) setRatings(result);
+      },
+      () => {
+        if (active) setRatings({});
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [productRatings]);
+
   return (
     <Suspense
       fallback={
@@ -19,15 +40,15 @@ export function HomeProductSections({
       }
     >
       <Await
-        resolve={Promise.all([products, productRatings])}
+        resolve={products}
         errorElement={null}
       >
-        {([response, ratings]) => (
+        {(response) => (
           <HomeProductBand
-            collectionUrl="/collections/best-deal-of-the-day"
+            collectionUrl="/collections/all"
             heading="Best Seller"
             isBestSeller
-            products={response?.collection?.products.nodes ?? []}
+            products={response?.products.nodes ?? []}
             productRatings={ratings}
           />
         )}

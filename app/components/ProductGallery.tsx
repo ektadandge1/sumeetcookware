@@ -77,6 +77,8 @@ export function ProductGallery({
                 <Image
                   alt={image.altText || `Product image ${index + 1}`}
                   data={image}
+                  loading="lazy"
+                  decoding="async"
                   sizes="72px"
                 />
               </button>
@@ -97,6 +99,9 @@ export function ProductGallery({
           alt={activeImage.altText || 'Product image'}
           data={activeImage}
           key={getImageKey(activeImage)}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
           sizes="(min-width: 64em) 48vw, 100vw"
         />
       </div>

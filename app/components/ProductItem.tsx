@@ -45,7 +45,8 @@ export function ProductItem({
             alt={image.altText || product.title}
             aspectRatio="1/1"
             data={image}
-            loading={loading}
+            loading={loading ?? 'lazy'}
+            decoding="async"
             sizes="(min-width: 45em) 400px, 100vw"
           />
         )}

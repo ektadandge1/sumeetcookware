@@ -1,50 +1,16 @@
 import type {Route} from './+types/collections.all';
-import {Await, useLoaderData} from 'react-router';
-import {Suspense} from 'react';
-import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
+import {useLoaderData} from 'react-router';
+import {getPaginationVariables} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
-import type {
-  CatalogQuery,
-  CollectionItemFragment,
-} from 'storefrontapi.generated';
-import {AllCollectionsMobile} from '~/components/AllCollectionsMobile';
-import {loadProductRatingMap} from '~/lib/judgeme.server';
-import {
-  fallbackCollections,
-  fallbackConnection,
-  fallbackProducts,
-} from '~/lib/catalogFallback';
+import type {CollectionItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: `Hydrogen | Products`}];
 };
 
-const MOBILE_COLLECTION_HANDLES = [
-  'kadhai',
-  'non-stick-appachatty',
-  'non-stick-appam-patra',
-  'handi',
-  'sauce-pan',
-  'grater',
-  'spice-box',
-  'lunch-container',
-  'mug',
-  'oil-dispenser',
-  'tope',
-  'water-bottle',
-  'dinner-set',
-  'non-stick-cookware',
-] as const;
-
 export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
+  return loadCriticalData(args);
 }
 
 /**
@@ -57,49 +23,22 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
     pageBy: 8,
   });
 
-  const result = await storefront
-    .query(CATALOG_QUERY, {
-      variables: {...paginationVariables, collectionFirst: 50},
-    })
-    .catch(() => null);
-  const products = result?.products.nodes.length
-    ? result.products
-    : (fallbackConnection(
-        fallbackProducts,
-      ) as unknown as CatalogQuery['products']);
-  const collections = result?.collections.nodes.length
-    ? result.collections
-    : (fallbackConnection(
-        fallbackCollections,
-      ) as unknown as CatalogQuery['collections']);
-  const mobileCollections = collections.nodes.filter(
-    (collection: {handle: string}) =>
-      MOBILE_COLLECTION_HANDLES.includes(collection.handle),
-  );
+  const {products} = await storefront.query(CATALOG_QUERY, {
+    variables: paginationVariables,
+  });
   return {
-    collections: mobileCollections.length
-      ? mobileCollections
-      : (fallbackCollections as unknown as typeof mobileCollections),
     products,
   };
 }
 
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context}: Route.LoaderArgs) {
-  return {ratings: loadProductRatingMap(context.env)};
-}
-
 export default function Collection() {
-  const {collections, products, ratings} = useLoaderData<typeof loader>();
+  const {products} = useLoaderData<typeof loader>();
 
   return (
     <div className="collection">
-      <div className="all-collections-desktop">
+      <div>
         <h1>Products</h1>
+        {!products.nodes.length ? <p>No products available.</p> : null}
         <PaginatedResourceSection<CollectionItemFragment>
           connection={products}
           resourcesClassName="products-grid"
@@ -108,31 +47,10 @@ export default function Collection() {
             <ProductItem
               key={product.id}
               product={product}
-              loading={index < 8 ? 'eager' : undefined}
+              loading={index < 4 ? 'eager' : 'lazy'}
             />
           )}
         </PaginatedResourceSection>
-      </div>
-      <div className="all-collections-mobile-wrap">
-        <Suspense
-          fallback={
-            <AllCollectionsMobile collections={collections} ratings={{}} />
-          }
-        >
-          <Await
-            resolve={ratings}
-            errorElement={
-              <AllCollectionsMobile collections={collections} ratings={{}} />
-            }
-          >
-            {(productRatings) => (
-              <AllCollectionsMobile
-                collections={collections}
-                ratings={productRatings}
-              />
-            )}
-          </Await>
-        </Suspense>
       </div>
     </div>
   );
@@ -203,7 +121,6 @@ const CATALOG_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
-    $collectionFirst: Int!
   ) @inContext(country: $country, language: $language) {
     products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
       nodes {
@@ -214,17 +131,6 @@ const CATALOG_QUERY = `#graphql
         hasNextPage
         startCursor
         endCursor
-      }
-    }
-    collections(first: $collectionFirst) {
-      nodes {
-        handle
-        title
-        products(first: 4) {
-          nodes {
-            ...CollectionItem
-          }
-        }
       }
     }
   }

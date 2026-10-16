@@ -165,6 +165,7 @@ function HeaderSearch() {
                               className="header-search-product"
                               key={product.id}
                               onClick={closeSearch}
+                              prefetch="intent"
                               to={`/products/${product.handle}`}
                             >
                               {variant?.image ? (
@@ -200,6 +201,7 @@ function HeaderSearch() {
 }
 
 export function HeaderMenu({
+  menu,
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
@@ -211,7 +213,15 @@ export function HeaderMenu({
 }) {
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
-  const menuItems = DESKTOP_HEADER_MENU_ITEMS;
+  const menuItems = menu?.items ?? [];
+  const localUrl = (url: string) => {
+    const parsed = new URL(url, primaryDomainUrl);
+    return parsed.hostname.endsWith('.myshopify.com') ||
+      parsed.hostname === publicStoreDomain ||
+      parsed.origin === new URL(primaryDomainUrl).origin
+      ? `${parsed.pathname}${parsed.search}${parsed.hash}`
+      : url;
+  };
 
   return (
     <nav className={className} role="navigation">
@@ -219,15 +229,10 @@ export function HeaderMenu({
         if (!item.url) return null;
 
         // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        const submenu = HEADER_SUBMENUS[item.title];
+        const url = localUrl(item.url);
+        const submenu = item.items.filter((child) => child.url);
 
-        if (viewport === 'mobile' && submenu) {
+        if (viewport === 'mobile' && submenu.length) {
           return (
             <details className="header-mobile-menu-group" key={item.id}>
               <summary>{item.title}</summary>
@@ -237,7 +242,7 @@ export function HeaderMenu({
                     key={submenuItem.title}
                     onClick={close}
                     prefetch="intent"
-                    to={submenuItem.url}
+                    to={localUrl(submenuItem.url!)}
                   >
                     {submenuItem.title}
                   </NavLink>
@@ -247,7 +252,7 @@ export function HeaderMenu({
           );
         }
 
-        if (submenu) {
+        if (submenu.length) {
           return (
             <div className="header-menu-group" key={item.id}>
               <NavLink
@@ -269,7 +274,7 @@ export function HeaderMenu({
                     key={submenuItem.title}
                     onClick={close}
                     prefetch="intent"
-                    to={submenuItem.url}
+                    to={localUrl(submenuItem.url!)}
                   >
                     {submenuItem.title}
                   </NavLink>
@@ -440,164 +445,6 @@ function UserIcon() {
     </svg>
   );
 }
-
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Kitchen Cookwares',
-      type: 'HTTP',
-      url: '/collections/kitchen-utility',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Storage & Container',
-      type: 'HTTP',
-      url: '/collections/dabba',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Tableware',
-      type: 'HTTP',
-      url: '/collections/dinner-ware',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'Non-Stick',
-      type: 'PAGE',
-      url: '/collections/nonstick',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609632800',
-      resourceId: null,
-      tags: [],
-      title: 'Warranty Registration',
-      type: 'PAGE',
-      url: '/pages/warranty-registration',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609666568',
-      resourceId: null,
-      tags: [],
-      title: 'Bulk enquiry',
-      type: 'PAGE',
-      url: '/#business-enquiry',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609700336',
-      resourceId: null,
-      tags: [],
-      title: 'Gifting',
-      type: 'HTTP',
-      url: '/collections/gifts',
-      items: [],
-    },
-    {
-      id: 'fallback-menu-blogs',
-      resourceId: null,
-      tags: [],
-      title: 'Blogs',
-      type: 'HTTP',
-      url: '/blogs',
-      items: [],
-    },
-    {
-      id: 'fallback-menu-contact',
-      resourceId: null,
-      tags: [],
-      title: 'Contact Us',
-      type: 'HTTP',
-      url: '/pages/contact-us',
-      items: [],
-    },
-    {
-      id: 'fallback-menu-about',
-      resourceId: null,
-      tags: [],
-      title: 'About Us',
-      type: 'HTTP',
-      url: '/pages/about-us',
-      items: [],
-    },
-  ],
-};
-
-const DESKTOP_HEADER_MENU_ITEMS = [
-  ...FALLBACK_HEADER_MENU.items.slice(0, 6),
-  {
-    id: 'fallback-menu-more',
-    resourceId: null,
-    tags: [],
-    title: 'More',
-    type: 'HTTP',
-    url: '/collections/all',
-    items: [],
-  },
-];
-
-const HEADER_SUBMENUS: Record<
-  string,
-  ReadonlyArray<{title: string; url: string}>
-> = {
-  'Kitchen Cookwares': [
-    {title: 'Kadhai', url: '/collections/kadhai'},
-    {title: 'Appachatty', url: '/collections/non-stick-appachatty'},
-    {title: 'Appam Patra', url: '/collections/non-stick-appam-patra'},
-    {title: 'Handi', url: '/collections/handi'},
-    {title: 'Saucepan', url: '/collections/sauce-pan'},
-    {title: 'Grater', url: '/collections/grater'},
-  ],
-  'Storage & Container': [
-    {title: 'Spice Box', url: '/collections/spice-box'},
-    {title: 'Lunch Box', url: '/collections/lunch-container'},
-    {title: 'Stainless Steel Mug', url: '/collections/mug'},
-    {title: 'Ghee And Oil Pots', url: '/collections/oil-dispenser'},
-    {title: 'Tope', url: '/collections/tope'},
-    {title: 'Tasra', url: '/collections/tasra'},
-    {title: 'Water Bottle', url: '/collections/water-bottle'},
-    {title: 'Dabba and Canister', url: '/collections/dabba'},
-    {title: 'Tumbler', url: '/collections/tumbler'},
-  ],
-  Tableware: [
-    {title: 'Fork and Spoon', url: '/collections/dinner-ware-fork-and-spoon'},
-    {title: 'Wati', url: '/collections/dinner-ware-wati'},
-    {title: 'Plates', url: '/collections/plates'},
-    {title: 'Dinner Set', url: '/collections/dinner-set'},
-  ],
-  'Non-Stick': [
-    {title: 'Non-Stick Appachatty', url: '/collections/non-stick-appachatty'},
-    {title: 'Non-Stick Appam Patra', url: '/collections/non-stick-appam-patra'},
-    {title: 'Non-Stick Casserole', url: '/collections/non-stick-casserole'},
-    {title: 'Non-Stick Cookware', url: '/collections/non-stick-cookware'},
-    {title: 'Tope', url: '/collections/tope'},
-    {title: 'Non-Stick Dosa Tawa', url: '/collections/non-stick-dosa-tawa'},
-    {title: 'Non-Stick Fry Pan', url: '/collections/non-stick-fry-pan'},
-    {title: 'Non-Stick Grill Pan', url: '/collections/non-stick-grill-pan'},
-    {title: 'Non-Stick Kadhai', url: '/collections/non-stick-kadhai'},
-    {title: 'Non-Stick Pizza Pan', url: '/collections/non-stick-pizza-pan'},
-  ],
-  More: [
-    {title: 'Gifting', url: '/collections/gifts'},
-    {title: 'Blogs', url: '/blogs/kitchen'},
-    {title: 'Contact Us', url: '/pages/contact-us'},
-    {title: 'About Us', url: '/pages/about-us'},
-  ],
-};
 
 function activeLinkStyle({
   isActive,

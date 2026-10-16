@@ -39,7 +39,7 @@ export function HomeServiceBenefits() {
             {benefits.map(({image, label}) => (
               <article className="home-service-benefit" key={label}>
                 <span className="home-service-icon">
-                  <img alt="" height="170" src={image} width="170" />
+                  <img alt="" decoding="async" height="170" loading="lazy" src={image} width="170" />
                 </span>
                 <span className="home-service-label">{label}</span>
               </article>

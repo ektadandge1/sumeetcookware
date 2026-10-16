@@ -1,7 +1,6 @@
 import {Await, useLoaderData} from 'react-router';
 import {Suspense} from 'react';
 import type {Route} from './+types/_index';
-import {MockShopNotice} from '~/components/MockShopNotice';
 import {HomeHero} from '~/components/blocks/HomeHero';
 import {HomeServiceBenefits} from '~/components/blocks/HomeServiceBenefits';
 import {HomeCategoryStrip} from '~/components/blocks/HomeCategoryStrip';
@@ -37,7 +36,6 @@ export function loader(args: Route.LoaderArgs) {
 
   return {
     ...deferredData,
-    isShopLinked: Boolean(args.context.env.PUBLIC_STORE_DOMAIN),
     productRatings: allReviews.then(getProductRatings),
     reviews: allReviews.then((reviews) => reviews.slice(0, 9)),
     instagramPosts: loadInstagramPosts(args.context.env),
@@ -62,11 +60,16 @@ export default function Homepage() {
 
   return (
     <div className="home">
-      {data.isShopLinked ? null : <MockShopNotice />}
       <HomeHero />
       <HomeMobileExperience />
       <HomeServiceBenefits />
-      <HomeCategoryStrip />
+      <Suspense fallback={null}>
+        <Await resolve={data.recommendedProducts} errorElement={null}>
+          {(response) => (
+            <HomeCategoryStrip collections={response?.collections.nodes ?? []} />
+          )}
+        </Await>
+      </Suspense>
       <HomeProductSections
         productRatings={data.productRatings}
         products={data.recommendedProducts}
@@ -405,10 +408,21 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collection(handle: "best-deal-of-the-day") {
-      products(first: 250) {
-        nodes {
-          ...RecommendedProduct
+    products(first: 24, sortKey: BEST_SELLING) {
+      nodes {
+        ...RecommendedProduct
+      }
+    }
+    collections(first: 12) {
+      nodes {
+        id
+        title
+        handle
+        image {
+          url
+          altText
+          width
+          height
         }
       }
     }

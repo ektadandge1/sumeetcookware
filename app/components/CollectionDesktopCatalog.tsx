@@ -161,7 +161,7 @@ function CollectionProductCard({
 
   return (
     <article className="collection-product-card">
-      <Link className="collection-product-media" to={`/products/${product.handle}`}>
+      <Link className="collection-product-media" prefetch="intent" to={`/products/${product.handle}`}>
         {isBestseller ? <span>Bestseller</span> : null}
         {product.featuredImage ? (
           <Image
@@ -173,7 +173,7 @@ function CollectionProductCard({
         ) : null}
       </Link>
       <div className="collection-product-copy">
-        <Link to={`/products/${product.handle}`}>{product.title}</Link>
+        <Link prefetch="intent" to={`/products/${product.handle}`}>{product.title}</Link>
         <div className="collection-product-price">
           <Money data={variant?.price ?? product.priceRange.minVariantPrice} />
           {variant?.compareAtPrice ? (

@@ -6,5 +6,7 @@ node_modules
 /.mf
 .env
 .shopify
+/.agents/
+/skills-lock.json
 .react-router
 *.tsbuildinfo

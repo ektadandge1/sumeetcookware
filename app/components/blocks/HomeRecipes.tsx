@@ -32,7 +32,7 @@ export function HomeRecipes() {
       <SectionHeading id="recipes-title" title="Recipe Inspiration" />
       <div className="home-recipe-grid">
         {recipes.map((recipe) => (
-          <Link className="home-recipe-card" key={recipe.label} to={recipe.to}>
+          <Link className="home-recipe-card" key={recipe.label} prefetch="intent" to={recipe.to}>
             <div className="home-recipe-image">
               <picture>
                 <source

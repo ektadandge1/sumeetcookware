@@ -6,9 +6,7 @@ import {AddToCartButton, CartIcon} from '~/components/AddToCartButton';
 import {WishlistButton} from '~/components/WishlistButton';
 import {SectionHeading} from './SectionHeading';
 
-type RecommendedProduct = NonNullable<
-  RecommendedProductsQuery['collection']
->['products']['nodes'][number];
+type RecommendedProduct = RecommendedProductsQuery['products']['nodes'][number];
 
 export function HomeProductBand({
   heading,
@@ -158,7 +156,11 @@ export function HomeProductBand({
       aria-labelledby={headingId}
     >
       {collectionUrl ? (
-        <Link className="home-section-heading-link" to={collectionUrl}>
+        <Link
+          className="home-section-heading-link"
+          prefetch="intent"
+          to={collectionUrl}
+        >
           <SectionHeading id={headingId} title={heading} />
         </Link>
       ) : (
@@ -225,7 +227,11 @@ export function HomeProductBand({
           ))}
         </div>
       ) : null}
-      <Link className="home-text-link" to={collectionUrl ?? '/collections/all'}>
+      <Link
+        className="home-text-link"
+        prefetch="intent"
+        to={collectionUrl ?? '/collections/all'}
+      >
         {isBestSeller ? 'Shop best sellers →' : 'View all products →'}
       </Link>
       {variantProduct ? (
@@ -313,6 +319,7 @@ function HomeProductCard({
         </div>
         <Link
           className="home-product-image-link"
+          prefetch="intent"
           to={`/products/${product.handle}`}
         >
           {image ? (
@@ -351,7 +358,11 @@ function HomeProductCard({
           </div>
         ) : null}
       </div>
-      <Link className="home-product-title" to={`/products/${product.handle}`}>
+      <Link
+        className="home-product-title"
+        prefetch="intent"
+        to={`/products/${product.handle}`}
+      >
         {product.title}
       </Link>
       <div className="home-product-price">
@@ -393,7 +404,11 @@ function HomeProductCard({
           }
         </AddToCartButton>
       ) : (
-        <Link className="home-product-cta" to={`/products/${product.handle}`}>
+        <Link
+          className="home-product-cta"
+          prefetch="intent"
+          to={`/products/${product.handle}`}
+        >
           View product
         </Link>
       )}

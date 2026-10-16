@@ -97,7 +97,7 @@ export function MobileProductCard({
               product.priceRange.minVariantPrice.currencyCode,
           }}
         />
-        <Link to={`/products/${product.handle}`}>
+        <Link prefetch="intent" to={`/products/${product.handle}`}>
           {product.featuredImage ? (
             <Image
               alt={product.featuredImage.altText || product.title}
@@ -116,7 +116,7 @@ export function MobileProductCard({
         </span>
         <small>{rating ? `Average ${rating.average.toFixed(1)} Rating` : 'No reviews'}</small>
       </div>
-      <Link className="collection-mobile-card-title" to={`/products/${product.handle}`}>
+      <Link className="collection-mobile-card-title" prefetch="intent" to={`/products/${product.handle}`}>
         {product.title}
       </Link>
       <div className="collection-mobile-card-price">

@@ -46,69 +46,36 @@ export const FIGMA_ASSETS = {
     'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_122_df844a95-4d5e-4d75-a599-e6da17ac5601.png?v=1789621673',
 } as const;
 
-export const categories = [
-  {
-    label: 'Kadhai',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Kadhai.jpg?v=1789710351',
-    to: '/collections/kadhai',
-  },
-  {
-    label: 'Water Bottle',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Container.jpg?v=1789710351',
-    to: '/collections/water-bottle',
-  },
-  {
-    label: 'Dinner Set',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Dinner_set.jpg?v=1789710351',
-    to: '/collections/dinner-set',
-  },
-  {
-    label: 'Storage',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Storage.jpg?v=1789710351',
-    to: '/collections/dabba',
-  },
-  {
-    label: 'Fry Pan',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Pan.jpg?v=1789710351',
-    to: '/collections/non-stick-fry-pan',
-  },
-];
-
 export const essentials = [
   {
     label: 'For Cooking',
     image: FIGMA_ASSETS.essentialOne,
-    to: '/collections/kitchen-utility',
+    to: '/collections/all',
   },
   {
     label: 'For Storage',
     image: FIGMA_ASSETS.essentialTwo,
-    to: '/collections/dabba',
+    to: '/collections/all',
   },
   {
     label: 'For Serving',
     image: FIGMA_ASSETS.essentialThree,
-    to: '/collections/dinner-ware',
+    to: '/collections/all',
   },
   {
     label: 'For Kitchen',
     image: FIGMA_ASSETS.essentialFour,
-    to: '/collections/kitchen-tools',
+    to: '/collections/all',
   },
 ];
 
 export const gifts = [
-  {label: 'Wedding Gift', to: '/collections/gifts'},
-  {label: 'Diwali Gift', to: '/collections/diwali-sale'},
-  {label: 'Housewarming Gift', to: '/collections/gifts'},
-  {label: 'Corporate Gift', to: '/collections/corporate-gifting'},
-  {label: 'Festive Gifting', to: '/collections/festive-containers'},
-  {label: 'Return Gift', to: '/collections/gifts'},
-  {label: 'Gift for Her', to: '/collections/gifts'},
-  {label: 'Gift for Him', to: '/collections/gifts'},
+  {label: 'Wedding Gift', to: '/collections/all'},
+  {label: 'Diwali Gift', to: '/collections/all'},
+  {label: 'Housewarming Gift', to: '/collections/all'},
+  {label: 'Corporate Gift', to: '/collections/all'},
+  {label: 'Festive Gifting', to: '/collections/all'},
+  {label: 'Return Gift', to: '/collections/all'},
+  {label: 'Gift for Her', to: '/collections/all'},
+  {label: 'Gift for Him', to: '/collections/all'},
 ];
