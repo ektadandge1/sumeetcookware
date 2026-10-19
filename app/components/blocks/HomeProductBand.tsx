@@ -47,6 +47,13 @@ export function HomeProductBand({
       return;
     }
 
+    if (
+      event.target instanceof HTMLElement &&
+      event.target.closest('button, a, input, select, textarea, form')
+    ) {
+      return;
+    }
+
     dragStartX.current = event.clientX;
     setDragOffset(0);
     setIsDragging(true);
@@ -168,40 +175,64 @@ export function HomeProductBand({
       )}
       {availableProducts.length ? (
         showCarousel ? (
-          <div
-            className={`home-product-carousel${isDragging ? ' is-dragging' : ''}`}
-            onBlur={(event) => {
-              if (!event.currentTarget.contains(event.relatedTarget)) {
-                setIsPaused(false);
+          <div className="home-product-carousel-shell">
+            <button
+              aria-label="Previous bestseller products"
+              className="home-product-carousel-arrow is-previous"
+              onClick={() =>
+                setCurrentSlide(
+                  (slide) => (slide - 1 + slides.length) % slides.length,
+                )
               }
-            }}
-            onClickCapture={(event) => {
-              if (!suppressClick.current) return;
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-            onDragStart={(event) => event.preventDefault()}
-            onFocus={() => setIsPaused(true)}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-            onLostPointerCapture={cancelDrag}
-            onPointerCancel={cancelDrag}
-            onPointerDown={startDrag}
-            onPointerMove={moveDrag}
-            onPointerUp={finishDrag}
-          >
-            <div
-               className="home-product-track"
-               style={{
-                 transform: `translateX(calc(-${currentSlide * (cardsPerSlide === 3 ? 120 : 100)}% + ${dragOffset}px))`,
-               }}
+              type="button"
             >
-              {slides.map((slide) => (
-                <div className="home-product-grid" key={slide[0]?.id}>
-                  {productCards(slide)}
-                </div>
-              ))}
+              <span aria-hidden="true">‹</span>
+            </button>
+            <div
+              className={`home-product-carousel${isDragging ? ' is-dragging' : ''}`}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setIsPaused(false);
+                }
+              }}
+              onClickCapture={(event) => {
+                if (!suppressClick.current) return;
+                event.preventDefault();
+                event.stopPropagation();
+              }}
+              onDragStart={(event) => event.preventDefault()}
+              onFocus={() => setIsPaused(true)}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onLostPointerCapture={cancelDrag}
+              onPointerCancel={cancelDrag}
+              onPointerDown={startDrag}
+              onPointerMove={moveDrag}
+              onPointerUp={finishDrag}
+            >
+              <div
+                className="home-product-track"
+                style={{
+                  transform: `translateX(calc(-${currentSlide * (cardsPerSlide === 3 ? 120 : 100)}% + ${dragOffset}px))`,
+                }}
+              >
+                {slides.map((slide) => (
+                  <div className="home-product-grid" key={slide[0]?.id}>
+                    {productCards(slide)}
+                  </div>
+                ))}
+              </div>
             </div>
+            <button
+              aria-label="Next bestseller products"
+              className="home-product-carousel-arrow is-next"
+              onClick={() =>
+                setCurrentSlide((slide) => (slide + 1) % slides.length)
+              }
+              type="button"
+            >
+              <span aria-hidden="true">›</span>
+            </button>
           </div>
         ) : (
           <div className="home-product-grid">
@@ -263,6 +294,7 @@ function HomeProductCard({
 }) {
   const image = product.featuredImage;
   const variant = product.selectedOrFirstAvailableVariant;
+  const price = variant?.price ?? product.priceRange.minVariantPrice;
   const hasMultipleVariants = product.variants.nodes.length > 1;
   const wishlistItem = {
     id: product.id,
@@ -352,8 +384,7 @@ function HomeProductCard({
               ))}
             </span>
             <small>
-              {rating.average.toFixed(1)} from {rating.count}{' '}
-              {rating.count === 1 ? 'review' : 'reviews'}
+              {rating.average.toFixed(1)} Rating({rating.count})
             </small>
           </div>
         ) : null}
@@ -366,10 +397,22 @@ function HomeProductCard({
         {product.title}
       </Link>
       <div className="home-product-price">
-        <Money data={variant?.price ?? product.priceRange.minVariantPrice} />
+        {isBestSeller ? (
+          <span className="money">
+            RS. {formatBestSellerPrice(price.amount)}
+          </span>
+        ) : (
+          <Money data={price} />
+        )}
         {variant?.compareAtPrice ? (
           <s>
-            <Money data={variant.compareAtPrice} />
+            {isBestSeller ? (
+              <span className="money">
+                RS. {formatBestSellerPrice(variant.compareAtPrice.amount)}
+              </span>
+            ) : (
+              <Money data={variant.compareAtPrice} />
+            )}
           </s>
         ) : null}
       </div>
@@ -414,6 +457,12 @@ function HomeProductCard({
       )}
     </>
   );
+}
+
+function formatBestSellerPrice(amount: string) {
+  return new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 0,
+  }).format(Number(amount));
 }
 
 function HomeVariantDialog({

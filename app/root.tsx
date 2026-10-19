@@ -109,13 +109,13 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
   const {storefront} = context;
 
   const [header] = await Promise.all([
-    storefront
-      .query(HEADER_QUERY, {
-        cache: storefront.CacheLong(),
-        variables: {
-          headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-        },
-      }),
+    storefront.query(HEADER_QUERY, {
+      // Navigation is managed in Shopify Admin and should reflect menu edits immediately.
+      cache: storefront.CacheNone(),
+      variables: {
+        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+      },
+    }),
     // Add other queries here, so that they are loaded in parallel
   ]);
 

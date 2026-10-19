@@ -64,11 +64,7 @@ export default function Homepage() {
       <HomeMobileExperience />
       <HomeServiceBenefits />
       <Suspense fallback={null}>
-        <Await resolve={data.recommendedProducts} errorElement={null}>
-          {(response) => (
-            <HomeCategoryStrip collections={response?.collections.nodes ?? []} />
-          )}
-        </Await>
+        <HomeCategoryStrip />
       </Suspense>
       <HomeProductSections
         productRatings={data.productRatings}

@@ -41,9 +41,27 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   });
 
   if (!collection) {
-    throw new Response(`Collection ${handle} not found`, {
-      status: 404,
+    const fallback =
+      FALLBACK_COLLECTIONS[handle as keyof typeof FALLBACK_COLLECTIONS];
+    if (!fallback) {
+      throw new Response(`Collection ${handle} not found`, {status: 404});
+    }
+
+    const {products} = await storefront.query(FALLBACK_COLLECTION_QUERY, {
+      variables: {query: fallback.query, ...paginationVariables},
     });
+
+    return {
+      collection: {
+        description: `Shop ${fallback.title} products`,
+        handle,
+        id: `gid://shopify/Collection/fallback-${handle}`,
+        image: null,
+        products,
+        title: fallback.title,
+      },
+      collections: getFallbackCollectionNavigation(),
+    };
   }
 
   // The API handle might be localized, so redirect to the localized handle
@@ -53,6 +71,49 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     collection,
     collections: collections.nodes,
   };
+}
+
+const FALLBACK_COLLECTIONS = {
+  dabba: {query: 'storage', title: 'Storage'},
+  'dinner-set': {query: 'dinner set', title: 'Dinner Set'},
+  'dinner-ware-fork-and-spoon': {
+    query: 'fork spoon',
+    title: 'Fork and Spoon',
+  },
+  'dinner-ware-wati': {query: 'wati', title: 'Wati'},
+  'fry-pan': {query: 'fry pan', title: 'Fry Pan'},
+  grater: {query: 'grater', title: 'Grater'},
+  handi: {query: 'handi', title: 'Handi'},
+  kadhai: {query: 'kadhai', title: 'Kadhai'},
+  'kitchen-utility': {query: 'cookware', title: 'Kitchen Cookware'},
+  'lunch-container': {query: 'lunch box', title: 'Lunch Box'},
+  mug: {query: 'mug', title: 'Stainless Steel Mug'},
+  'non-stick-appachatty': {query: 'appachatty', title: 'Appachatty'},
+  'non-stick-appam-patra': {
+    query: 'appam patra',
+    title: 'Non-Stick Appam Patra',
+  },
+  'non-stick-casserole': {query: 'casserole', title: 'Non-Stick Casserole'},
+  'non-stick-cookware': {query: 'non stick', title: 'Non-Stick Cookware'},
+  'non-stick-dosa-tawa': {query: 'dosa tawa', title: 'Non-Stick Dosa Tawa'},
+  'non-stick-fry-pan': {query: 'fry pan', title: 'Fry Pan'},
+  'non-stick-grill-pan': {query: 'grill pan', title: 'Non-Stick Grill Pan'},
+  'non-stick-kadhai': {query: 'non stick kadhai', title: 'Non-Stick Kadhai'},
+  'non-stick-pizza-pan': {query: 'pizza pan', title: 'Non-Stick Pizza Pan'},
+  'oil-dispenser': {query: 'oil dispenser', title: 'Ghee And Oil Pots'},
+  plates: {query: 'plate', title: 'Plates'},
+  'sauce-pan': {query: 'saucepan', title: 'Saucepan'},
+  tasra: {query: 'tasra', title: 'Tasra'},
+  tope: {query: 'tope', title: 'Tope'},
+  tumbler: {query: 'tumbler', title: 'Tumbler'},
+  'water-bottle': {query: 'water bottle', title: 'Water Bottle'},
+} as const;
+
+function getFallbackCollectionNavigation() {
+  return Object.entries(FALLBACK_COLLECTIONS).map(([handle, collection]) => ({
+    handle,
+    title: collection.title,
+  }));
 }
 
 /**
@@ -71,11 +132,8 @@ export default function Collection() {
     <div className="collection collection-page">
       <div className="collection-desktop">
         <p className="collection-eyebrow">Collections</p>
-        <nav
-          className="collection-subcategories"
-          aria-label="Collections"
-        >
-          {collections.map((subcategory) => (
+        <nav className="collection-subcategories" aria-label="Collections">
+          {collections.map((subcategory: {handle: string; title: string}) => (
             <Link
               className={
                 collection.handle === subcategory.handle
@@ -91,9 +149,13 @@ export default function Collection() {
           ))}
         </nav>
         <nav className="collection-breadcrumb" aria-label="Breadcrumb">
-          <Link prefetch="intent" to="/">Home</Link>
+          <Link prefetch="intent" to="/">
+            Home
+          </Link>
           <span>/</span>
-          <Link prefetch="intent" to="/collections">Collections</Link>
+          <Link prefetch="intent" to="/collections">
+            Collections
+          </Link>
           <span>/</span>
           <strong>{collection.title}</strong>
         </nav>
@@ -255,6 +317,37 @@ const COLLECTION_QUERY = `#graphql
           endCursor
           startCursor
         }
+      }
+    }
+  }
+` as const;
+
+const FALLBACK_COLLECTION_QUERY = `#graphql
+  ${PRODUCT_ITEM_FRAGMENT}
+  query FallbackCollection(
+    $query: String!
+    $country: CountryCode
+    $language: LanguageCode
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+  ) @inContext(country: $country, language: $language) {
+    products(
+      first: $first,
+      last: $last,
+      before: $startCursor,
+      after: $endCursor,
+      query: $query
+    ) {
+      nodes {
+        ...ProductItem
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        endCursor
+        startCursor
       }
     }
   }

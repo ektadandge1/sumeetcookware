@@ -2,14 +2,14 @@ import {useState} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import {Link} from 'react-router';
 import type {Maybe, MoneyV2} from '@shopify/hydrogen/storefront-api-types';
-import type {ProductItemFragment} from 'storefrontapi.generated';
+import type {CollectionItemFragment} from 'storefrontapi.generated';
 import {AddToCartButton} from './AddToCartButton';
 
-type CollectionProduct = ProductItemFragment & {
+type CollectionProduct = CollectionItemFragment & {
   productType?: string;
   tags?: string[];
   selectedOrFirstAvailableVariant?:
-    | (NonNullable<ProductItemFragment['selectedOrFirstAvailableVariant']> & {
+    | (NonNullable<CollectionItemFragment['selectedOrFirstAvailableVariant']> & {
         compareAtPrice?: Maybe<MoneyV2>;
       })
     | null;

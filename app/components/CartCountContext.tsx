@@ -23,7 +23,6 @@ type CartCountContextValue = {
   pendingRemovedLineIds: string[];
   pendingRemovedQuantity: number;
   pendingQuantity: number;
-  removePending: (lines: Array<{id: string; quantity: number}>) => void;
   settlePending: (
     id: string,
     totalQuantity?: number,
@@ -44,9 +43,6 @@ export function CartCountProvider({children}: {children: ReactNode}) {
     null,
   );
   const [pending, setPending] = useState<Record<string, PendingCartLines>>({});
-  const [explicitRemovedLines, setExplicitRemovedLines] = useState<
-    Record<string, number>
-  >({});
   const pendingLines = Object.values(pending).flat();
   const fetcherRemovedLineIds = fetchers.flatMap((fetcher) => {
     if (!fetcher.formData) return [];
@@ -60,12 +56,9 @@ export function CartCountProvider({children}: {children: ReactNode}) {
     }
   });
   const pendingRemovedLineIds = Array.from(
-    new Set([...Object.keys(explicitRemovedLines), ...fetcherRemovedLineIds]),
+    new Set(fetcherRemovedLineIds),
   );
-  const pendingRemovedQuantity = Object.values(explicitRemovedLines).reduce(
-    (total, quantity) => total + quantity,
-    0,
-  );
+  const pendingRemovedQuantity = 0;
   const pendingQuantity = pendingLines.reduce(
     (total, line) => total + (line.quantity ?? 1),
     0,
@@ -74,15 +67,6 @@ export function CartCountProvider({children}: {children: ReactNode}) {
   const addPending = useCallback((id: string, lines: PendingCartLines) => {
     setPending((current) => ({...current, [id]: lines}));
   }, []);
-  const removePending = useCallback(
-    (lines: Array<{id: string; quantity: number}>) => {
-      setExplicitRemovedLines((current) => ({
-        ...current,
-        ...Object.fromEntries(lines.map((line) => [line.id, line.quantity])),
-      }));
-    },
-    [],
-  );
   const settlePending = useCallback(
     (id: string, totalQuantity?: number, cart?: CartApiQueryFragment) => {
       if (typeof totalQuantity === 'number') {
@@ -106,24 +90,19 @@ export function CartCountProvider({children}: {children: ReactNode}) {
       const data = fetcher.data as
         {cart?: CartApiQueryFragment; errors?: unknown[]} | undefined;
       const transactionId = fetcher.formData.get('cartTransactionId');
-      let action: string | undefined;
-      let removedLineIds: string[] = [];
-      try {
-        const formInput = CartForm.getFormInput(fetcher.formData);
-        action = formInput.action;
-        if (action === CartForm.ACTIONS.LinesRemove) {
-          removedLineIds = formInput.inputs.lineIds as string[];
-        }
-      } catch {
-        // Ignore malformed or unrelated submissions.
-      }
       const cart = data?.cart;
-      if (
-        fetcher.state !== 'loading' ||
-        !data ||
-        !cart ||
-        data.errors?.length
-      ) {
+      // Skip while the request is still in flight; process once data arrives
+      // in either the loading or idle state so no response is missed.
+      if (fetcher.state === 'submitting' || !data) {
+        continue;
+      }
+      if (!cart || data.errors?.length) {
+        // Roll back optimistic lines when the cart action failed.
+        settlePending(
+          typeof transactionId === 'string'
+            ? transactionId
+            : `fetcher-${fetcher.key}`,
+        );
         continue;
       }
       // A discount/gift-card update can change totals without changing lines.
@@ -138,13 +117,6 @@ export function CartCountProvider({children}: {children: ReactNode}) {
         cart.totalQuantity,
         cart,
       );
-      if (action === CartForm.ACTIONS.LinesRemove) {
-        setExplicitRemovedLines((current) => {
-          const next = {...current};
-          for (const lineId of removedLineIds) delete next[lineId];
-          return next;
-        });
-      }
     }
   }, [fetchers, settlePending]);
   const value = useMemo(
@@ -157,7 +129,6 @@ export function CartCountProvider({children}: {children: ReactNode}) {
       pendingRemovedLineIds,
       pendingRemovedQuantity,
       pendingQuantity,
-      removePending,
       settlePending,
     }),
     [
@@ -169,7 +140,6 @@ export function CartCountProvider({children}: {children: ReactNode}) {
       pendingRemovedLineIds,
       pendingRemovedQuantity,
       pendingQuantity,
-      removePending,
       settlePending,
     ],
   );
@@ -194,12 +164,20 @@ export function useCartCount(confirmedQuantity?: number) {
     }
   }, [confirmedQuantity, settlePending]);
 
+  const latestCartHasNodes = Array.isArray(
+    context.latestCart?.lines?.nodes,
+  );
+  const settledQuantity = context.latestCart
+    ? latestCartHasNodes
+      ? context.latestCart.totalQuantity
+      : (confirmedQuantity ?? 0)
+    : (context.confirmedQuantity ?? confirmedQuantity ?? 0);
+
   return {
     ...context,
     totalQuantity: Math.max(
       0,
-      (context.confirmedQuantity ?? confirmedQuantity ?? 0) +
-        context.pendingQuantity -
+      settledQuantity + context.pendingQuantity -
         context.pendingRemovedQuantity,
     ),
   };

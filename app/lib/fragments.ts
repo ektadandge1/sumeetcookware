@@ -194,6 +194,11 @@ export const CART_QUERY_FRAGMENT = `#graphql
   }
 ` as const;
 
+export const CART_MUTATE_FRAGMENT = CART_QUERY_FRAGMENT.replace(
+  'fragment CartApiQuery on Cart',
+  'fragment CartApiMutation on Cart',
+).replace('lines(first: $numCartLines)', 'lines(first: 100)');
+
 const MENU_FRAGMENT = `#graphql
   fragment MenuItem on MenuItem {
     id

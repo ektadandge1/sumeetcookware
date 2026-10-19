@@ -1,17 +1,17 @@
 import {Image, Money} from '@shopify/hydrogen';
 import {Link} from 'react-router';
 import type {Maybe, MoneyV2} from '@shopify/hydrogen/storefront-api-types';
-import type {ProductItemFragment} from 'storefrontapi.generated';
+import type {CollectionItemFragment} from 'storefrontapi.generated';
 import type {ProductRatingMap} from '~/lib/judgeme.server';
 import {WishlistButton} from './WishlistButton';
 
 export type MobileCollectionProduct = Omit<
-  ProductItemFragment,
+  CollectionItemFragment,
   'productType' | 'tags'
 > & {
   tags?: string[];
   selectedOrFirstAvailableVariant?:
-    | (NonNullable<ProductItemFragment['selectedOrFirstAvailableVariant']> & {
+    | (NonNullable<CollectionItemFragment['selectedOrFirstAvailableVariant']> & {
         compareAtPrice?: Maybe<MoneyV2>;
       })
     | null;

@@ -1,7 +1,6 @@
 import {Link} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
-  ProductItemFragment,
   CollectionItemFragment,
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
@@ -10,13 +9,12 @@ import {WishlistButton} from '~/components/WishlistButton';
 import {AddToCartButton, CartIcon} from '~/components/AddToCartButton';
 
 export function ProductItem({
+  appearance = 'default',
   product,
   loading,
 }: {
-  product:
-    | CollectionItemFragment
-    | ProductItemFragment
-    | RecommendedProductFragment;
+  appearance?: 'collection' | 'default';
+  product: CollectionItemFragment | RecommendedProductFragment;
   loading?: 'eager' | 'lazy';
 }) {
   const variantUrl = useVariantUrl(product.handle);
@@ -33,7 +31,11 @@ export function ProductItem({
   };
 
   return (
-    <div className="product-item-shell">
+    <div
+      className={`product-item-shell ${
+        appearance === 'collection' ? 'is-collection-card' : ''
+      }`}
+    >
       <Link
         className="product-item"
         key={product.id}
@@ -55,35 +57,63 @@ export function ProductItem({
           <Money data={product.priceRange.minVariantPrice} />
         </small>
       </Link>
-      <div className="product-item-actions">
-        <WishlistButton item={wishlistItem} />
-        {variant?.id ? (
-          <AddToCartButton
-            disabled={!variant.availableForSale}
-            lines={[
-              {
-                merchandiseId: variant.id,
-                quantity: 1,
-                selectedVariant: variant,
-              },
-            ]}
-            analytics={{productId: product.id}}
-          >
-            {(isPending) => (
-              <>
-                <CartIcon />
-                <span className="sr-only">
-                  {isPending
-                    ? `Adding ${product.title} to cart`
+      {appearance === 'collection' ? (
+        <div className="product-item-collection-actions">
+          {variant?.id ? (
+            <AddToCartButton
+              disabled={!variant.availableForSale}
+              lines={[
+                {
+                  merchandiseId: variant.id,
+                  quantity: 1,
+                  selectedVariant: variant,
+                },
+              ]}
+              analytics={{productId: product.id}}
+            >
+              {(isPending, isAdded) =>
+                isPending
+                  ? 'Adding...'
+                  : isAdded
+                    ? 'Added to cart'
                     : variant.availableForSale
-                      ? `Add ${product.title} to cart`
-                      : `${product.title} is sold out`}
-                </span>
-              </>
-            )}
-          </AddToCartButton>
-        ) : null}
-      </div>
+                      ? 'Add to cart'
+                      : 'Sold out'
+              }
+            </AddToCartButton>
+          ) : null}
+        </div>
+      ) : (
+        <div className="product-item-actions">
+          <WishlistButton item={wishlistItem} />
+          {variant?.id ? (
+            <AddToCartButton
+              disabled={!variant.availableForSale}
+              lines={[
+                {
+                  merchandiseId: variant.id,
+                  quantity: 1,
+                  selectedVariant: variant,
+                },
+              ]}
+              analytics={{productId: product.id}}
+            >
+              {(isPending) => (
+                <>
+                  <CartIcon />
+                  <span className="sr-only">
+                    {isPending
+                      ? `Adding ${product.title} to cart`
+                      : variant.availableForSale
+                        ? `Add ${product.title} to cart`
+                        : `${product.title} is sold out`}
+                  </span>
+                </>
+              )}
+            </AddToCartButton>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,4 @@
 import {useOptimisticCart} from '@shopify/hydrogen';
-import {useState} from 'react';
 import {Link} from 'react-router';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
@@ -43,28 +42,28 @@ function getLineItemChildrenMap(lines: CartLine[]): LineItemChildrenMap {
  */
 export function CartMain({layout, cart: originalCart}: CartMainProps) {
   const {latestCart, pendingLines, pendingRemovedLineIds} = useCartCount();
-  const [locallyRemovedLineIds, setLocallyRemovedLineIds] = useState<string[]>(
-    [],
-  );
 
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
-  const confirmedCart = latestCart ?? originalCart;
+  const confirmedCart = Array.isArray(latestCart?.lines?.nodes)
+    ? latestCart
+    : originalCart;
   const cart = applyPendingRemovals(
     applySharedPendingLines(
       useOptimisticCart(confirmedCart),
       confirmedCart,
       pendingLines,
     ),
-    [...pendingRemovedLineIds, ...locallyRemovedLineIds],
+    pendingRemovedLineIds,
   );
 
-  const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
+  const cartHasItems = (cart?.totalQuantity ?? 0) > 0;
   const withDiscount =
     cart &&
     Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
-  const className = `cart-main ${withDiscount ? 'with-discount' : ''}`;
-  const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
+  const className = `cart-main ${withDiscount ? 'with-discount' : ''} ${
+    cartHasItems ? 'has-items' : 'is-empty'
+  }`;
   const childrenMap = getLineItemChildrenMap(cart?.lines?.nodes ?? []);
 
   return (
@@ -72,7 +71,7 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
       className={className}
       aria-label={layout === 'page' ? 'Cart page' : 'Cart drawer'}
     >
-      <CartEmpty hidden={linesCount} layout={layout} />
+      <CartEmpty hidden={cartHasItems} layout={layout} />
       <div className="cart-details">
         <p id="cart-lines" className="sr-only">
           Line items
@@ -93,11 +92,6 @@ export function CartMain({layout, cart: originalCart}: CartMainProps) {
                   line={line}
                   layout={layout}
                   childrenMap={childrenMap}
-                  onRemove={(lineIds) =>
-                    setLocallyRemovedLineIds((current) =>
-                      Array.from(new Set([...current, ...lineIds])),
-                    )
-                  }
                 />
               );
             })}

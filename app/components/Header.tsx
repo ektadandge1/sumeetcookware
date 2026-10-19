@@ -22,6 +22,23 @@ interface HeaderProps {
 
 type Viewport = 'desktop' | 'mobile';
 
+const PLACEHOLDER_MENU_ROUTES: Record<string, string> = {
+  Appachatty: '/collections/non-stick-appachatty',
+  'Non-Stick Casserole': '/collections/non-stick-casserole',
+  'Non-Stick Cookware': '/collections/non-stick-cookware',
+  'Non-Stick Dosa Tawa': '/collections/non-stick-dosa-tawa',
+  'Non-Stick Grill Pan': '/collections/non-stick-grill-pan',
+  'Non-Stick Kadhai': '/collections/non-stick-kadhai',
+  'Non-Stick Pizza Pan': '/collections/non-stick-pizza-pan',
+  Tableware: '/collections/dinner-set',
+  'Non-Stick': '/collections/non-stick-cookware',
+  More: '/pages/about-us',
+  Gifting: '/collections/all',
+  Blogs: '/blogs/kitchen',
+  'Contact Us': '/contact-us',
+  'About Us': '/pages/about-us',
+};
+
 export function Header({
   cart,
   header,
@@ -222,15 +239,24 @@ export function HeaderMenu({
       ? `${parsed.pathname}${parsed.search}${parsed.hash}`
       : url;
   };
+  const menuUrl = (item: {title: string; url?: string | null}) => {
+    if (!item.url) return PLACEHOLDER_MENU_ROUTES[item.title];
+    const parsed = new URL(item.url, primaryDomainUrl);
+    const isPlaceholder =
+      parsed.pathname === '/' && !parsed.search && !parsed.hash;
+
+    return isPlaceholder && PLACEHOLDER_MENU_ROUTES[item.title]
+      ? PLACEHOLDER_MENU_ROUTES[item.title]
+      : localUrl(item.url);
+  };
 
   return (
     <nav className={className} role="navigation">
       {menuItems.map((item) => {
-        if (!item.url) return null;
+        const url = menuUrl(item);
+        if (!url) return null;
 
-        // if the url is internal, we strip the domain
-        const url = localUrl(item.url);
-        const submenu = item.items.filter((child) => child.url);
+        const submenu = item.items.filter((child) => menuUrl(child));
 
         if (viewport === 'mobile' && submenu.length) {
           return (
@@ -242,7 +268,7 @@ export function HeaderMenu({
                     key={submenuItem.title}
                     onClick={close}
                     prefetch="intent"
-                    to={localUrl(submenuItem.url!)}
+                    to={menuUrl(submenuItem)!}
                   >
                     {submenuItem.title}
                   </NavLink>
@@ -274,7 +300,7 @@ export function HeaderMenu({
                     key={submenuItem.title}
                     onClick={close}
                     prefetch="intent"
-                    to={localUrl(submenuItem.url!)}
+                    to={menuUrl(submenuItem)!}
                   >
                     {submenuItem.title}
                   </NavLink>

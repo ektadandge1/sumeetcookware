@@ -81,7 +81,7 @@ function CartSubmitButton({
     const result = fetcher.data as
       | {cart?: CartApiQueryFragment; errors?: unknown[]}
       | undefined;
-    const succeeded = Boolean(fetcher.data) && !result?.errors?.length;
+    const succeeded = Boolean(result?.cart) && !result?.errors?.length;
     if (succeeded) {
       if (result?.cart) {
         settlePending(transactionId, result.cart.totalQuantity, result.cart);
@@ -95,6 +95,7 @@ function CartSubmitButton({
       addedTimer.current = window.setTimeout(() => setIsAdded(false), 2400);
       onSuccess?.();
     } else {
+      settlePending(transactionId);
       setIsAdded(false);
     }
   }, [

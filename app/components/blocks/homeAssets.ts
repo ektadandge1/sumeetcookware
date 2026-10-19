@@ -46,6 +46,45 @@ export const FIGMA_ASSETS = {
     'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_122_df844a95-4d5e-4d75-a599-e6da17ac5601.png?v=1789621673',
 } as const;
 
+export const categories = [
+  {
+    label: 'Kadhai',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Kadhai.jpg?v=1789710351',
+    to: '/collections/kadhai',
+  },
+  {
+    label: 'Water Bottle',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Container.jpg?v=1789710351',
+    to: '/collections/water-bottle',
+  },
+  {
+    label: 'Dinner Set',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Dinner_set.jpg?v=1789710351',
+    to: '/collections/dinner-set',
+  },
+  {
+    label: 'Storage',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Storage.jpg?v=1789710351',
+    to: '/collections/dabba',
+  },
+  {
+    label: 'Fry Pan',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Pan.jpg?v=1789710351',
+    to: '/collections/non-stick-fry-pan',
+  },
+  {
+    label: 'Container',
+    image:
+      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Kadhai.jpg?v=1789710351',
+    to: '/collections/lunch-container',
+  },
+] as const;
+
 export const essentials = [
   {
     label: 'For Cooking',
