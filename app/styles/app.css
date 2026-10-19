@@ -2737,6 +2737,42 @@ aside.aside-cart .cart-details {
   align-items: center;
   display: flex;
   margin-top: 0.25rem;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.cart-discount-codes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+}
+
+.cart-discount button {
+  background: transparent;
+  color: inherit;
+  text-decoration: underline;
+  flex-shrink: 0;
+}
+
+.cart-discount-feedback {
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.cart-savings > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cart-savings dd {
+  margin: 0;
+}
+
+.cart-code-form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 .cart-subtotal {
@@ -2913,6 +2949,13 @@ aside.aside-cart,
 aside.aside-cart .cart-summary-aside {
   background: #080808;
   color: #fff;
+}
+
+aside.aside-cart .cart-summary-aside {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 60%;
+  overflow-y: auto;
 }
 
 aside.aside-cart header,
@@ -9909,7 +9952,7 @@ body > main:has(.home) {
 
   body:has(.product) aside.aside-cart .cart-summary-aside {
     border-top: 1px solid #343434;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     padding: 1.25rem;
   }
 

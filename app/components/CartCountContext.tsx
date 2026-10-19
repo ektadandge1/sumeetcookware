@@ -35,7 +35,7 @@ const CartCountContext = createContext<CartCountContextValue | null>(null);
 
 export function CartCountProvider({children}: {children: ReactNode}) {
   const fetchers = useFetchers();
-  const processedResponses = useRef(new Set<string>());
+  const processedResponses = useRef(new WeakSet<object>());
   const [confirmedQuantity, setConfirmedQuantity] = useState<number | null>(
     null,
   );
@@ -84,11 +84,7 @@ export function CartCountProvider({children}: {children: ReactNode}) {
     [],
   );
   const settlePending = useCallback(
-    (
-      id: string,
-      totalQuantity?: number,
-      cart?: CartApiQueryFragment,
-    ) => {
+    (id: string, totalQuantity?: number, cart?: CartApiQueryFragment) => {
       if (typeof totalQuantity === 'number') {
         setConfirmedQuantity(totalQuantity);
         if (id !== 'initial-cart') setCartPulse((pulse) => pulse + 1);
@@ -108,8 +104,7 @@ export function CartCountProvider({children}: {children: ReactNode}) {
       if (!fetcher.formData) continue;
 
       const data = fetcher.data as
-        | {cart?: CartApiQueryFragment; errors?: unknown[]}
-        | undefined;
+        {cart?: CartApiQueryFragment; errors?: unknown[]} | undefined;
       const transactionId = fetcher.formData.get('cartTransactionId');
       let action: string | undefined;
       let removedLineIds: string[] = [];
@@ -123,16 +118,18 @@ export function CartCountProvider({children}: {children: ReactNode}) {
         // Ignore malformed or unrelated submissions.
       }
       const cart = data?.cart;
-      if (fetcher.state !== 'loading' || !cart || data?.errors?.length) {
+      if (
+        fetcher.state !== 'loading' ||
+        !data ||
+        !cart ||
+        data.errors?.length
+      ) {
         continue;
       }
-      const lineSignature = cart?.lines?.nodes
-        .map((line) => `${line.id}:${line.quantity}`)
-        .join('|');
-      const signature = `${fetcher.key}:${cart?.id ?? 'error'}:${cart?.totalQuantity ?? 'none'}:${lineSignature ?? ''}`;
-
-      if (processedResponses.current.has(signature)) continue;
-      processedResponses.current.add(signature);
+      // A discount/gift-card update can change totals without changing lines.
+      // Deduplicate the response object, not a signature of line quantities.
+      if (processedResponses.current.has(data)) continue;
+      processedResponses.current.add(data);
 
       settlePending(
         typeof transactionId === 'string'

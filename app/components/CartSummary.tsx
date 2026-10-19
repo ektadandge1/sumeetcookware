@@ -3,6 +3,7 @@ import type {CartLayout} from '~/components/CartMain';
 import {CartForm, Money, type OptimisticCart} from '@shopify/hydrogen';
 import {useEffect, useId, useRef, useState} from 'react';
 import {useFetcher} from 'react-router';
+import type {action} from '~/routes/cart';
 
 type CartSummaryProps = {
   cart: OptimisticCart<CartApiQueryFragment | null>;
@@ -13,7 +14,6 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
   const className =
     layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside';
   const summaryId = useId();
-  const discountsHeadingId = useId();
   const discountCodeInputId = useId();
   const giftCardHeadingId = useId();
   const giftCardInputId = useId();
@@ -31,9 +31,9 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
           )}
         </dd>
       </dl>
+      <CartSavings cart={cart} />
       <CartDiscounts
         discountCodes={cart?.discountCodes}
-        discountsHeadingId={discountsHeadingId}
         discountCodeInputId={discountCodeInputId}
       />
       <CartGiftCard
@@ -70,78 +70,148 @@ function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
 
 function CartDiscounts({
   discountCodes,
-  discountsHeadingId,
   discountCodeInputId,
 }: {
   discountCodes?: CartApiQueryFragment['discountCodes'];
-  discountsHeadingId: string;
   discountCodeInputId: string;
 }) {
-  const codes: string[] =
-    discountCodes
-      ?.filter((discount) => discount.applicable)
-      ?.map(({code}) => code) || [];
+  const fetcherKey = useId();
+  const fetcher = useFetcher<typeof action>({key: fetcherKey});
+  const pending = fetcher.state !== 'idle';
+  const codes = discountCodes ?? [];
+  const applicableCodes = codes
+    .filter(({applicable}) => applicable)
+    .map(({code}) => code);
+  const errors = fetcher.data?.errors ?? [];
+  const feedbackId = `${discountCodeInputId}-feedback`;
 
   return (
     <section className="cart-promo-section" aria-label="Discounts">
-      <h5>Promo code</h5>
-      {/* Have existing discount, display it with a remove option */}
-      <dl hidden={!codes.length}>
-        <div className="cart-code-form">
-          <dt id={discountsHeadingId}>Discounts</dt>
-          <UpdateDiscountForm>
-            <div
-              className="cart-discount"
-              role="group"
-              aria-labelledby={discountsHeadingId}
-            >
-              <code>{codes?.join(', ')}</code>
-              &nbsp;
-              <button type="submit" aria-label="Remove discount">
-                Remove
-              </button>
-            </div>
-          </UpdateDiscountForm>
-        </div>
-      </dl>
-
-      {/* Show an input to apply a discount */}
-      <UpdateDiscountForm discountCodes={codes}>
+      <h5>Discount code</h5>
+      {codes.length > 0 && (
+        <ul className="cart-discount-codes" aria-label="Entered discount codes">
+          {codes.map(({code, applicable}) => (
+            <li key={code}>
+              <CartForm
+                route="/cart"
+                fetcherKey={fetcherKey}
+                action={CartForm.ACTIONS.DiscountCodesUpdate}
+                inputs={{
+                  discountCodes: codes
+                    .filter((item) => item.code !== code)
+                    .map((item) => item.code),
+                }}
+              >
+                <div className="cart-discount">
+                  <span>
+                    <code>{code}</code> —{' '}
+                    {applicable ? 'Applied' : 'Not applicable to this cart'}
+                  </span>
+                  <button
+                    type="submit"
+                    disabled={pending}
+                    aria-label={`Remove discount ${code}`}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </CartForm>
+            </li>
+          ))}
+        </ul>
+      )}
+      <CartForm
+        route="/cart"
+        fetcherKey={fetcherKey}
+        action={CartForm.ACTIONS.DiscountCodesUpdate}
+        inputs={{discountCodes: applicableCodes}}
+      >
         <div className="cart-code-form">
           <label htmlFor={discountCodeInputId}>Discount code</label>
           <input
             id={discountCodeInputId}
             type="text"
             name="discountCode"
-            placeholder="Discount code"
+            placeholder="Enter your code"
+            autoComplete="off"
+            autoCapitalize="characters"
+            spellCheck={false}
+            required
+            disabled={pending}
+            aria-describedby={feedbackId}
           />
-          &nbsp;
-          <button type="submit" aria-label="Apply discount code">
-            Apply
+          <button
+            type="submit"
+            disabled={pending}
+            aria-label="Apply discount code"
+          >
+            {pending ? 'Updating…' : 'Apply'}
           </button>
         </div>
-      </UpdateDiscountForm>
+      </CartForm>
+      <div
+        id={feedbackId}
+        className="cart-discount-feedback"
+        role="status"
+        aria-live="polite"
+      >
+        {errors.length > 0 ? (
+          <p>{errors.map((error) => error.message).join(' ')}</p>
+        ) : codes.some(({applicable}) => !applicable) ? (
+          <p>
+            This code may be invalid, expired, or require different items, a
+            minimum spend, or customer eligibility.
+          </p>
+        ) : null}
+      </div>
     </section>
   );
 }
 
-function UpdateDiscountForm({
-  discountCodes,
-  children,
-}: {
-  discountCodes?: string[];
-  children: React.ReactNode;
-}) {
+function CartSavings({cart}: Pick<CartSummaryProps, 'cart'>) {
+  const allocations = [
+    ...(cart?.discountAllocations ?? []),
+    ...(cart?.lines?.nodes ?? []).flatMap(
+      (line) => line.discountAllocations ?? [],
+    ),
+  ];
+  if (!allocations.length) return null;
+  const savings = new Map<
+    string,
+    {label: string; money: (typeof allocations)[number]['discountedAmount']}
+  >();
+  for (const allocation of allocations) {
+    const label =
+      'code' in allocation
+        ? allocation.code
+        : 'title' in allocation
+          ? allocation.title
+          : 'Discount';
+    const key = `${label}:${allocation.discountedAmount.currencyCode}`;
+    const previous = savings.get(key);
+    savings.set(key, {
+      label,
+      money: {
+        ...allocation.discountedAmount,
+        amount: (
+          Number(previous?.money.amount ?? 0) +
+          Number(allocation.discountedAmount.amount)
+        ).toString(),
+      },
+    });
+  }
+
   return (
-    <CartForm
-      route="/cart"
-      action={CartForm.ACTIONS.DiscountCodesUpdate}
-      inputs={{
-        discountCodes: discountCodes || [],
-      }}
-    >
-      {children}
-    </CartForm>
+    <dl className="cart-savings" aria-label="Applied savings">
+      {Array.from(savings, ([key, {label, money}]) => (
+        <div key={key}>
+          <dt>{label}</dt>
+          <dd>
+            −<Money data={money} />
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 

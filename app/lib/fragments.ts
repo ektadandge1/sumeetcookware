@@ -4,9 +4,26 @@ export const CART_QUERY_FRAGMENT = `#graphql
     currencyCode
     amount
   }
+  fragment CartDiscount on CartDiscountAllocation {
+    discountedAmount {
+      ...Money
+    }
+    ... on CartAutomaticDiscountAllocation {
+      title
+    }
+    ... on CartCodeDiscountAllocation {
+      code
+    }
+    ... on CartCustomDiscountAllocation {
+      title
+    }
+  }
   fragment CartLine on CartLine {
     id
     quantity
+    discountAllocations {
+      ...CartDiscount
+    }
     attributes {
       key
       value
@@ -63,6 +80,9 @@ export const CART_QUERY_FRAGMENT = `#graphql
   fragment CartLineComponent on ComponentizableCartLine {
     id
     quantity
+    discountAllocations {
+      ...CartDiscount
+    }
     attributes {
       key
       value
@@ -116,6 +136,9 @@ export const CART_QUERY_FRAGMENT = `#graphql
   fragment CartApiQuery on Cart {
     updatedAt
     id
+    discountAllocations {
+      ...CartDiscount
+    }
     appliedGiftCards {
       id
       lastCharacters
