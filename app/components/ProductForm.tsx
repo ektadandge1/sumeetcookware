@@ -1,5 +1,12 @@
 import {Await, Link, useNavigate} from 'react-router';
-import {Suspense, useState} from 'react';
+import {
+  Children,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import {Money, type MappedProductOptions} from '@shopify/hydrogen';
 import type {
   Maybe,
@@ -36,7 +43,7 @@ export function ProductForm({
         return (
           <div className="product-options" key={option.name}>
             <h2>Choose {option.name}</h2>
-            <div className="product-options-grid">
+            <ProductOptionsGrid>
               {option.optionValues.map((value) => {
                 const {
                   name,
@@ -107,7 +114,7 @@ export function ProductForm({
                   );
                 }
               })}
-            </div>
+            </ProductOptionsGrid>
           </div>
         );
       })}
@@ -225,6 +232,170 @@ export function ProductForm({
             )
           }
         </AddToCartButton>
+      </div>
+    </div>
+  );
+}
+
+function ProductOptionsGrid({children}: {children: ReactNode}) {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [hasOverflow, setHasOverflow] = useState(false);
+  const [activeDot, setActiveDot] = useState(0);
+  const dotCount = 4;
+
+  useEffect(() => {
+    const scroller = gridRef.current;
+    if (!scroller) return;
+    let dragStartX = 0;
+    let dragStartScrollLeft = 0;
+    let activePointerId: number | null = null;
+    let didDrag = false;
+
+    const updatePosition = () => {
+      const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+      setHasOverflow(maxScrollLeft > 1);
+      setActiveDot(
+        maxScrollLeft > 1
+          ? Math.round((scroller.scrollLeft / maxScrollLeft) * (dotCount - 1))
+          : 0,
+      );
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      if (
+        !window.matchMedia('(min-width: 64em)').matches ||
+        Math.abs(event.deltaY) <= Math.abs(event.deltaX)
+      ) {
+        return;
+      }
+
+      const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+      if (maxScrollLeft <= 0) return;
+
+      const isAtStart = scroller.scrollLeft <= 0;
+      const isAtEnd = scroller.scrollLeft >= maxScrollLeft - 1;
+      if (
+        (event.deltaY < 0 && isAtStart) ||
+        (event.deltaY > 0 && isAtEnd)
+      ) {
+        return;
+      }
+
+      const distance =
+        event.deltaMode === window.WheelEvent.DOM_DELTA_LINE
+          ? event.deltaY * 24
+          : event.deltaMode === window.WheelEvent.DOM_DELTA_PAGE
+            ? event.deltaY * scroller.clientWidth
+            : event.deltaY;
+
+      event.preventDefault();
+      scroller.scrollLeft += distance;
+    };
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        event.pointerType === 'touch' ||
+        event.button !== 0 ||
+        !window.matchMedia('(min-width: 64em)').matches
+      ) {
+        return;
+      }
+
+      dragStartX = event.clientX;
+      dragStartScrollLeft = scroller.scrollLeft;
+      activePointerId = event.pointerId;
+      didDrag = false;
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (activePointerId !== event.pointerId) return;
+
+      const distance = event.clientX - dragStartX;
+      if (Math.abs(distance) < 4) return;
+
+      if (!scroller.hasPointerCapture(event.pointerId)) {
+        scroller.setPointerCapture(event.pointerId);
+      }
+      didDrag = true;
+      event.preventDefault();
+      scroller.scrollLeft = dragStartScrollLeft - distance;
+    };
+
+    const handlePointerUp = (event: PointerEvent) => {
+      if (
+        activePointerId === event.pointerId &&
+        scroller.hasPointerCapture(event.pointerId)
+      ) {
+        scroller.releasePointerCapture(event.pointerId);
+      }
+
+      activePointerId = null;
+      if (didDrag) {
+        window.setTimeout(() => {
+          didDrag = false;
+        }, 0);
+      }
+    };
+
+    const preventClickAfterDrag = (event: MouseEvent) => {
+      if (!didDrag) return;
+      event.preventDefault();
+      event.stopPropagation();
+      didDrag = false;
+    };
+
+    const resizeObserver = new ResizeObserver(updatePosition);
+    resizeObserver.observe(scroller);
+    scroller.addEventListener('scroll', updatePosition, {passive: true});
+    scroller.addEventListener('wheel', handleWheel, {passive: false});
+    scroller.addEventListener('pointerdown', handlePointerDown);
+    scroller.addEventListener('pointermove', handlePointerMove, {
+      passive: false,
+    });
+    scroller.addEventListener('pointerup', handlePointerUp);
+    scroller.addEventListener('pointercancel', handlePointerUp);
+    scroller.addEventListener('click', preventClickAfterDrag, true);
+    updatePosition();
+
+    return () => {
+      resizeObserver.disconnect();
+      scroller.removeEventListener('scroll', updatePosition);
+      scroller.removeEventListener('wheel', handleWheel);
+      scroller.removeEventListener('pointerdown', handlePointerDown);
+      scroller.removeEventListener('pointermove', handlePointerMove);
+      scroller.removeEventListener('pointerup', handlePointerUp);
+      scroller.removeEventListener('pointercancel', handlePointerUp);
+      scroller.removeEventListener('click', preventClickAfterDrag, true);
+    };
+  }, [dotCount]);
+
+  const scrollToDot = (index: number) => {
+    const scroller = gridRef.current;
+    if (!scroller) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    scroller.scrollTo({
+      behavior: 'smooth',
+      left: maxScrollLeft * (index / (dotCount - 1)),
+    });
+  };
+
+  return (
+    <div className={`product-options-carousel${hasOverflow ? ' has-overflow' : ''}`}>
+      <div className="product-options-grid" ref={gridRef}>
+        {children}
+      </div>
+      <div className="product-options-dots" aria-label="More product options">
+        {Array.from({length: dotCount}, (_, index) => (
+          <button
+            aria-label={`Show product options ${index + 1} of ${dotCount}`}
+            aria-current={activeDot === index ? 'true' : undefined}
+            className={activeDot === index ? 'is-active' : undefined}
+            key={index}
+            onClick={() => scrollToDot(index)}
+            type="button"
+          />
+        ))}
       </div>
     </div>
   );
