@@ -16,6 +16,7 @@ import type {HomeReview} from '~/components/blocks/HomeReviews';
 import {HomeCustomerBanner} from '~/components/blocks/HomeCustomerBanner';
 import {HomeRecipes} from '~/components/blocks/HomeRecipes';
 import {HomeDiscountPopup} from '~/components/HomeDiscountPopup';
+import {HomeNewsletter} from '~/components/blocks/HomeNewsletter';
 import {
   HomeInstagram,
   type InstagramPost,
@@ -37,7 +38,7 @@ export function loader(args: Route.LoaderArgs) {
   return {
     ...deferredData,
     productRatings: allReviews.then(getProductRatings),
-    reviews: allReviews.then((reviews) => reviews.slice(0, 9)),
+    reviews: allReviews,
     instagramPosts: loadInstagramPosts(args.context.env),
   };
 }
@@ -89,6 +90,7 @@ export default function Homepage() {
           {(posts) => <HomeInstagram posts={posts} />}
         </Await>
       </Suspense>
+      <HomeNewsletter />
       <HomeDiscountPopup />
     </div>
   );

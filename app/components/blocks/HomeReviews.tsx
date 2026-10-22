@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {SectionHeading} from './SectionHeading';
 
 export type HomeReview = {
@@ -11,10 +11,12 @@ export type HomeReview = {
 };
 
 export function HomeReviews({reviews}: {reviews: HomeReview[]}) {
-  const [cardsPerSlide, setCardsPerSlide] = useState(3);
+  const [cardsPerSlide, setCardsPerSlide] = useState(4);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [showMobilePeek, setShowMobilePeek] = useState(false);
+  const dragStartX = useRef<number | null>(null);
   const slides = chunkReviews(reviews, cardsPerSlide);
   const slideOffset = showMobilePeek
     ? `calc(-${currentSlide * (200 / 3)}% - ${currentSlide * 0.75}rem)`
@@ -24,7 +26,7 @@ export function HomeReviews({reviews}: {reviews: HomeReview[]}) {
     const tabletQuery = window.matchMedia('(max-width: 64em)');
     const mobileQuery = window.matchMedia('(max-width: 48em)');
     const updateLayout = () => {
-      setCardsPerSlide(tabletQuery.matches ? 1 : 3);
+      setCardsPerSlide(tabletQuery.matches ? 1 : 4);
       setShowMobilePeek(mobileQuery.matches);
     };
 
@@ -57,6 +59,38 @@ export function HomeReviews({reviews}: {reviews: HomeReview[]}) {
     return () => window.clearInterval(interval);
   }, [isPaused, slides.length]);
 
+  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+    dragStartX.current = event.clientX;
+    setIsDragging(true);
+    setIsPaused(true);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    if (dragStartX.current === null) return;
+
+    const distance = event.clientX - dragStartX.current;
+    dragStartX.current = null;
+    setIsDragging(false);
+    event.currentTarget.releasePointerCapture(event.pointerId);
+
+    if (Math.abs(distance) < 50) return;
+
+    setCurrentSlide((slide) =>
+      distance < 0
+        ? Math.min(slide + 1, slides.length - 1)
+        : Math.max(slide - 1, 0),
+    );
+  }
+
+  function handlePointerCancel(event: React.PointerEvent<HTMLDivElement>) {
+    dragStartX.current = null;
+    setIsDragging(false);
+    event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+
   return (
     <section
       className="home-section home-reviews"
@@ -69,7 +103,7 @@ export function HomeReviews({reviews}: {reviews: HomeReview[]}) {
       />
       {reviews.length ? (
         <div
-          className="home-review-carousel"
+          className={`home-review-carousel${isDragging ? ' is-dragging' : ''}`}
           onBlur={(event) => {
             if (!event.currentTarget.contains(event.relatedTarget)) {
               setIsPaused(false);
@@ -78,6 +112,9 @@ export function HomeReviews({reviews}: {reviews: HomeReview[]}) {
           onFocus={() => setIsPaused(true)}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          onPointerCancel={handlePointerCancel}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
         >
           <div
             className="home-review-track"

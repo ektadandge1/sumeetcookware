@@ -95,9 +95,13 @@ export function Footer() {
           <Link to="/blogs/kitchen">Blogs</Link>
           <a href="https://wa.me/918976047019">Chat on whatsapp</a>
           <Link to="/pages/register-affiliate-account">Affiliate Register</Link>
-          <Link to="/pages">Page</Link>
+          <Link className="footer-mobile-hidden" to="/pages">
+            Page
+          </Link>
           <Link to="/pages/faq-about-cookware">FAQ About</Link>
-          <Link to="/collections/all">Cookware</Link>
+          <Link className="footer-mobile-hidden" to="/collections/all">
+            Cookware
+          </Link>
           <Link to="/pages/collab">Influencer Collab</Link>
         </nav>
 
@@ -114,26 +118,6 @@ export function Footer() {
             <Link to="/pages/warranty-registration">Warranty</Link>
             <Link to="/pages/warranty-registration">Registration</Link>
           </nav>
-
-          <section
-            aria-labelledby="footer-newsletter-title"
-            className="footer-newsletter"
-          >
-            <h2 id="footer-newsletter-title">Join Sumeet Kitchen</h2>
-            <form onSubmit={(event) => event.preventDefault()}>
-              <label className="sr-only" htmlFor="footer-newsletter-email">
-                Enter your mail id
-              </label>
-              <input
-                id="footer-newsletter-email"
-                name="email"
-                placeholder="enter your mail id"
-                required
-                type="email"
-              />
-              <button type="submit">Subscribe</button>
-            </form>
-          </section>
         </div>
       </div>
 

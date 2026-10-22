@@ -1,16 +1,32 @@
 import {Link} from 'react-router';
 import {useAside} from './Aside';
+import {useCartCount} from './CartCountContext';
 
 export function MobileBottomNav() {
   const {open} = useAside();
+  const {cartPulse, totalQuantity: quantity} = useCartCount();
 
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile shortcuts">
       <Link aria-label="Home" prefetch="intent" to="/">
         <HomeIcon />
       </Link>
-      <button aria-label="Open cart" onClick={() => open('cart')} type="button">
+      <button
+        aria-label={`Open cart, ${quantity} item${quantity === 1 ? '' : 's'}`}
+        className="mobile-cart-button"
+        onClick={() => open('cart')}
+        type="button"
+      >
         <CartIcon />
+        {quantity > 0 ? (
+          <span
+            aria-live="polite"
+            className="mobile-cart-count is-flashing"
+            key={cartPulse}
+          >
+            {quantity}
+          </span>
+        ) : null}
       </button>
       <Link aria-label="Shop all categories" prefetch="intent" to="/collections/all">
         <GridIcon />
