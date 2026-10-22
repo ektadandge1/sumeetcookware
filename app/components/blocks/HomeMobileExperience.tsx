@@ -18,6 +18,29 @@ const TRIPLY_BANNERS = [
   },
 ] as const;
 
+const TRIPLY_BENEFITS = [
+  {
+    label: 'Even Heat',
+    icon:
+      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Even_heat_1_2.png?v=1792642579',
+  },
+  {
+    label: 'Built to Last',
+    icon:
+      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Built_to_last_1_2.png?v=1792642580',
+  },
+  {
+    label: 'Faster Cooking',
+    icon:
+      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Fast_cooking_1_1.png?v=1792642580',
+  },
+  {
+    label: 'All Cooktops',
+    icon:
+      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/cooktops_1_2.png?v=1792642605',
+  },
+] as const;
+
 export function HomeMobileExperience() {
   const [currentBanner, setCurrentBanner] = useState(0);
 
@@ -84,10 +107,18 @@ export function HomeMobileExperience() {
           </div>
         </div>
         <ul>
-          <li>Even Heat</li>
-          <li>Built to Last</li>
-          <li>Faster Cooking</li>
-          <li>All Cooktops</li>
+          {TRIPLY_BENEFITS.map(({icon, label}) => (
+            <li key={label}>
+              <img
+                alt=""
+                decoding="async"
+                height="24"
+                src={icon}
+                width="24"
+              />
+              <span>{label}</span>
+            </li>
+          ))}
         </ul>
       </section>
 

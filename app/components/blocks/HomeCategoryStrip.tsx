@@ -4,28 +4,6 @@ import {FigmaImage} from './FigmaImage';
 import {categories} from './homeAssets';
 import {SectionHeading} from './SectionHeading';
 
-const mobileCategories = [
-  categories[0],
-  {
-    label: 'Water Bottles',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/products/THERMOMED-1PC_1.jpg?v=1617107671',
-    to: '/collections/water-bottle',
-  },
-  {
-    label: 'Spoons',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/products/41kMXPgD30L_da9f595c-1013-43cf-bce1-a62122b222b2.jpg?v=1693647016',
-    to: '/search?q=spoon',
-  },
-  {
-    label: 'Non-stick Kadhai',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Pan.jpg?v=1789710351',
-    to: '/collections/non-stick-kadhai',
-  },
-] as const;
-
 export function HomeCategoryStrip() {
   const desktopGridRef = useRef<HTMLDivElement>(null);
   const dragStart = useRef<{scrollLeft: number; x: number} | null>(null);
@@ -66,13 +44,17 @@ export function HomeCategoryStrip() {
       x: event.clientX,
     };
     suppressCategoryClick.current = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
   const moveCategoryDrag = (event: PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current) return;
 
     const distance = event.clientX - dragStart.current.x;
-    if (Math.abs(distance) >= 6) suppressCategoryClick.current = true;
+    if (Math.abs(distance) >= 6) {
+      suppressCategoryClick.current = true;
+      if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }
+    }
     event.currentTarget.scrollLeft = dragStart.current.scrollLeft - distance;
   };
   const finishCategoryDrag = (event: PointerEvent<HTMLDivElement>) => {
@@ -138,7 +120,7 @@ export function HomeCategoryStrip() {
         </button>
       </div>
       <div className="home-category-grid home-category-grid-mobile">
-        {mobileCategories.map((category) => (
+        {categories.map((category) => (
           <Link
             className="home-category-card"
             key={category.label}

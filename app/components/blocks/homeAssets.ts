@@ -75,7 +75,7 @@ export const categories = [
     label: 'Fry Pan',
     image:
       'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Pan.jpg?v=1789710351',
-    to: '/collections/non-stick-fry-pan',
+    to: '/collections/fry-pan',
   },
   {
     label: 'Container',

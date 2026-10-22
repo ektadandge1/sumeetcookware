@@ -39,6 +39,28 @@ const PLACEHOLDER_MENU_ROUTES: Record<string, string> = {
   'About Us': '/pages/about-us',
 };
 
+export function getMenuItemUrl(
+  item: {title: string; url?: string | null},
+  primaryDomainUrl: string,
+  publicStoreDomain: string,
+) {
+  if (!item.url) return PLACEHOLDER_MENU_ROUTES[item.title];
+
+  const parsed = new URL(item.url, primaryDomainUrl);
+  const isPlaceholder =
+    parsed.pathname === '/' && !parsed.search && !parsed.hash;
+
+  if (isPlaceholder && PLACEHOLDER_MENU_ROUTES[item.title]) {
+    return PLACEHOLDER_MENU_ROUTES[item.title];
+  }
+
+  return parsed.hostname.endsWith('.myshopify.com') ||
+    parsed.hostname === publicStoreDomain ||
+    parsed.origin === new URL(primaryDomainUrl).origin
+    ? `${parsed.pathname}${parsed.search}${parsed.hash}`
+    : item.url;
+}
+
 export function Header({
   cart,
   header,
@@ -231,24 +253,8 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
   const menuItems = menu?.items ?? [];
-  const localUrl = (url: string) => {
-    const parsed = new URL(url, primaryDomainUrl);
-    return parsed.hostname.endsWith('.myshopify.com') ||
-      parsed.hostname === publicStoreDomain ||
-      parsed.origin === new URL(primaryDomainUrl).origin
-      ? `${parsed.pathname}${parsed.search}${parsed.hash}`
-      : url;
-  };
-  const menuUrl = (item: {title: string; url?: string | null}) => {
-    if (!item.url) return PLACEHOLDER_MENU_ROUTES[item.title];
-    const parsed = new URL(item.url, primaryDomainUrl);
-    const isPlaceholder =
-      parsed.pathname === '/' && !parsed.search && !parsed.hash;
-
-    return isPlaceholder && PLACEHOLDER_MENU_ROUTES[item.title]
-      ? PLACEHOLDER_MENU_ROUTES[item.title]
-      : localUrl(item.url);
-  };
+  const menuUrl = (item: {title: string; url?: string | null}) =>
+    getMenuItemUrl(item, primaryDomainUrl, publicStoreDomain);
 
   return (
     <nav className={className} role="navigation">

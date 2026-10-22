@@ -115,6 +115,25 @@ export function Footer() {
             <Link to="/pages/warranty-registration">Registration</Link>
           </nav>
 
+          <section
+            aria-labelledby="footer-newsletter-title"
+            className="footer-newsletter"
+          >
+            <h2 id="footer-newsletter-title">Join Sumeet Kitchen</h2>
+            <form onSubmit={(event) => event.preventDefault()}>
+              <label className="sr-only" htmlFor="footer-newsletter-email">
+                Enter your mail id
+              </label>
+              <input
+                id="footer-newsletter-email"
+                name="email"
+                placeholder="enter your mail id"
+                required
+                type="email"
+              />
+              <button type="submit">Subscribe</button>
+            </form>
+          </section>
         </div>
       </div>
 

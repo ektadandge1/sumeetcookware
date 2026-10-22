@@ -22,7 +22,11 @@ import {ProductGallery} from '~/components/ProductGallery';
 import {ProductAPlusContent} from '~/components/ProductAPlusContent';
 import type {ProductReview} from '~/lib/judgeme.server';
 import {loadProductReviews, submitProductReview} from '~/lib/judgeme.server';
-import type {BoughtTogetherQuery} from 'storefrontapi.generated';
+import type {
+  BoughtTogetherQuery,
+  RecommendedProductsQuery,
+} from 'storefrontapi.generated';
+import {HomeProductBand} from '~/components/blocks/HomeProductBand';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -105,9 +109,12 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   }
 
   const selectedOptions = getSelectedProductOptions(request);
-  const {product} = await storefront.query(PRODUCT_QUERY, {
-    variables: {handle, selectedOptions},
-  });
+  const [{product}, bestSelling] = await Promise.all([
+    storefront.query(PRODUCT_QUERY, {
+      variables: {handle, selectedOptions},
+    }),
+    storefront.query(BEST_SELLING_PRODUCTS_QUERY).catch(() => null),
+  ]);
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
@@ -118,6 +125,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   return {
     product,
+    bestSelling,
   };
 }
 
@@ -155,7 +163,8 @@ function loadDeferredData({context, params}: Route.LoaderArgs) {
 }
 
 export default function Product() {
-  const {product, reviews, boughtTogether} = useLoaderData<typeof loader>();
+  const {bestSelling, product, reviews, boughtTogether} =
+    useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -308,6 +317,14 @@ export default function Product() {
           )}
         </Await>
       </Suspense>
+      <HomeProductBand
+        collectionUrl="/collections/all"
+        heading="Top Selling Products"
+        isBestSeller
+        products={
+          (bestSelling?.products.nodes ?? []) as RecommendedProductsQuery['products']['nodes']
+        }
+      />
       <HomeCustomerStories />
       <Suspense fallback={null}>
         <Await resolve={reviews} errorElement={null}>
@@ -481,6 +498,73 @@ function getDiscountPercentage(price?: string, compareAtPrice?: string) {
   if (!current || !original || original <= current) return 0;
   return Math.round(((original - current) / original) * 100);
 }
+
+const BEST_SELLING_PRODUCTS_QUERY = `#graphql
+  fragment ProductBandVariant on ProductVariant {
+    availableForSale
+    id
+    title
+    compareAtPrice {
+      amount
+      currencyCode
+    }
+    price {
+      amount
+      currencyCode
+    }
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    product {
+      title
+      handle
+    }
+    selectedOptions {
+      name
+      value
+    }
+  }
+  query ProductBestSellingProducts($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 24, sortKey: BEST_SELLING) {
+      nodes {
+        availableForSale
+        id
+        title
+        handle
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        selectedOrFirstAvailableVariant(
+          selectedOptions: []
+          ignoreUnknownOptions: true
+          caseInsensitiveMatch: true
+        ) {
+          ...ProductBandVariant
+        }
+        variants(first: 50) {
+          nodes {
+            ...ProductBandVariant
+          }
+        }
+        featuredImage {
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
+    }
+  }
+` as const;
 
 const BOUGHT_TOGETHER_PRODUCT_FRAGMENT = `#graphql
   fragment BoughtTogetherProduct on Product {

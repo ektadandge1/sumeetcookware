@@ -1,10 +1,18 @@
-import {Await, Link, redirect, useLoaderData} from 'react-router';
+import {
+  Await,
+  Link,
+  redirect,
+  useLoaderData,
+  useRouteLoaderData,
+} from 'react-router';
 import {Suspense} from 'react';
 import type {Route} from './+types/collections.$handle';
+import type {RootLoader} from '~/root';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {CollectionDesktopCatalog} from '~/components/CollectionDesktopCatalog';
 import {CollectionMobileCatalog} from '~/components/CollectionMobileCatalog';
+import {getMenuItemUrl} from '~/components/Header';
 import {loadProductRatingMap} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -36,7 +44,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     throw redirect('/collections');
   }
 
-  const {collection, collections} = await storefront.query(COLLECTION_QUERY, {
+  const {collection} = await storefront.query(COLLECTION_QUERY, {
     variables: {handle, ...paginationVariables},
   });
 
@@ -53,24 +61,20 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
     return {
       collection: {
-        description: `Shop ${fallback.title} products`,
+        description: '',
         handle,
         id: `gid://shopify/Collection/fallback-${handle}`,
         image: null,
         products,
         title: fallback.title,
       },
-      collections: getFallbackCollectionNavigation(),
     };
   }
 
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: collection});
 
-  return {
-    collection,
-    collections: collections.nodes,
-  };
+  return {collection};
 }
 
 const FALLBACK_COLLECTIONS = {
@@ -109,13 +113,6 @@ const FALLBACK_COLLECTIONS = {
   'water-bottle': {query: 'water bottle', title: 'Water Bottle'},
 } as const;
 
-function getFallbackCollectionNavigation() {
-  return Object.entries(FALLBACK_COLLECTIONS).map(([handle, collection]) => ({
-    handle,
-    title: collection.title,
-  }));
-}
-
 /**
  * Load data for rendering content below the fold. This data is deferred and will be
  * fetched after the initial page load. If it's unavailable, the page should still 200.
@@ -126,28 +123,41 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Collection() {
-  const {collection, collections, ratings} = useLoaderData<typeof loader>();
+  const {collection, ratings} = useLoaderData<typeof loader>();
+  const rootData = useRouteLoaderData<RootLoader>('root');
+  const primaryDomainUrl = rootData?.header.shop.primaryDomain.url;
+  const publicStoreDomain = rootData?.publicStoreDomain;
+  const currentPath = `/collections/${collection.handle}`;
+  const activeMenu = rootData?.header.menu?.items.find((item) =>
+    [item, ...item.items].some((menuItem) => {
+      if (!primaryDomainUrl || !publicStoreDomain) return false;
+      const url = getMenuItemUrl(menuItem, primaryDomainUrl, publicStoreDomain);
+      return url
+        ? new URL(url, primaryDomainUrl).pathname === currentPath
+        : false;
+    }),
+  );
+  const subcollections =
+    activeMenu?.items.flatMap((item) => {
+      if (!primaryDomainUrl || !publicStoreDomain) return [];
+      const url = getMenuItemUrl(item, primaryDomainUrl, publicStoreDomain);
+      if (
+        !url ||
+        !new URL(url, primaryDomainUrl).pathname.startsWith('/collections/')
+      ) {
+        return [];
+      }
+      return [{title: item.title, to: url}];
+    }) ?? [];
 
   return (
     <div className="collection collection-page">
       <div className="collection-desktop">
-        <p className="collection-eyebrow">Collections</p>
-        <nav className="collection-subcategories" aria-label="Collections">
-          {collections.map((subcategory: {handle: string; title: string}) => (
-            <Link
-              className={
-                collection.handle === subcategory.handle
-                  ? 'is-active'
-                  : undefined
-              }
-              key={subcategory.handle}
-              prefetch="intent"
-              to={`/collections/${subcategory.handle}`}
-            >
-              {subcategory.title}
-            </Link>
-          ))}
-        </nav>
+        <CollectionSubcategoryNav
+          currentPath={currentPath}
+          items={subcollections}
+          title={activeMenu?.title}
+        />
         <nav className="collection-breadcrumb" aria-label="Breadcrumb">
           <Link prefetch="intent" to="/">
             Home
@@ -173,12 +183,18 @@ export default function Collection() {
         ) : null}
         <CollectionDesktopCatalog
           description={collection.description}
+          key={collection.id}
           products={collection.products.nodes}
           title={collection.title}
         />
       </div>
 
       <div className="collection-mobile-default">
+        <CollectionSubcategoryNav
+          currentPath={currentPath}
+          items={subcollections}
+          title={activeMenu?.title}
+        />
         <Suspense
           fallback={
             <CollectionMobileCatalog collection={collection} ratings={{}} />
@@ -211,6 +227,44 @@ export default function Collection() {
   );
 }
 
+function CollectionSubcategoryNav({
+  currentPath,
+  items,
+  title,
+}: {
+  currentPath: string;
+  items: Array<{title: string; to: string}>;
+  title?: string;
+}) {
+  if (!items.length) return null;
+
+  return (
+    <div className="collection-family-nav">
+      <p className="collection-eyebrow">{title}</p>
+      <nav
+        className="collection-subcategories"
+        aria-label={`${title} collections`}
+      >
+        {items.map((item) => (
+          <Link
+            className={
+              new URL(item.to, 'https://sumeetcookware.com').pathname ===
+              currentPath
+                ? 'is-active'
+                : undefined
+            }
+            key={item.to}
+            prefetch="intent"
+            to={item.to}
+          >
+            {item.title}
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
 const PRODUCT_ITEM_FRAGMENT = `#graphql
   fragment MoneyProductItem on MoneyV2 {
     amount
@@ -222,6 +276,12 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
     title
     tags
     productType
+    options {
+      name
+      optionValues {
+        name
+      }
+    }
     featuredImage {
       id
       altText
@@ -284,12 +344,6 @@ const COLLECTION_QUERY = `#graphql
     $startCursor: String
     $endCursor: String
   ) @inContext(country: $country, language: $language) {
-    collections(first: 50) {
-      nodes {
-        handle
-        title
-      }
-    }
     collection(handle: $handle) {
       id
       handle
