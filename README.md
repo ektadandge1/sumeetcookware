@@ -22,17 +22,20 @@ Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dov
 
 ## Instagram Feed
 
-The homepage Instagram gallery uses the official Instagram Graph API. Configure
-these server-only variables in `.env` and in the production deployment:
+The homepage Instagram gallery uses the Mintt Studio Instafeed Feed API v6.
+Configure this server-only variable in `.env` and in Oxygen Production:
 
 ```text
-INSTAGRAM_ACCOUNT_ID=your_instagram_professional_account_id
-INSTAGRAM_ACCESS_TOKEN=your_server_side_graph_api_token
+INSTAFEED_API_KEY=your_instafeed_feed_api_key
 ```
 
-The Instagram account must be a Professional account connected to a Facebook
-Page. The access token is never sent to the browser. Without both variables,
-the gallery remains hidden.
+Instafeed must be installed and connected through Instagram Login in the same
+Shopify store as `PUBLIC_STORE_DOMAIN`. Get the key under **Apps → Instafeed →
+Channels → Feed API**. The loader requests the main feed (`fid=0`) with the key
+in the `X-API-Key` header; it never sends the key to the browser. Successful
+non-empty feeds are cached for 15 minutes. The gallery hides on API errors and
+never renders dummy posts. Video thumbnails link to the original Instagram post.
+See <https://docs.minttstudio.com/developer-api/docs/instafeed-api/developer-api>.
 
 **Requirements:**
 

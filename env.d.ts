@@ -10,7 +10,6 @@ declare global {
   interface Env {
     JUDGE_ME_PRIVATE_API_TOKEN?: string;
     JUDGE_ME_PUBLIC_API_TOKEN?: string;
-    INSTAGRAM_ACCOUNT_ID?: string;
-    INSTAGRAM_ACCESS_TOKEN?: string;
+    INSTAFEED_API_KEY?: string;
   }
 }

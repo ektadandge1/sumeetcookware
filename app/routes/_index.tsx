@@ -10,7 +10,6 @@ import {HomeWhyChoose} from '~/components/blocks/HomeWhyChoose';
 import {HomeBusinessBuyers} from '~/components/blocks/HomeBusinessBuyers';
 import {HomeGifting} from '~/components/blocks/HomeGifting';
 import {HomeEssentials} from '~/components/blocks/HomeEssentials';
-import {HomeCustomerStories} from '~/components/blocks/HomeCustomerStories';
 import {HomeReviews} from '~/components/blocks/HomeReviews';
 import type {HomeReview} from '~/components/blocks/HomeReviews';
 import {HomeCustomerBanner} from '~/components/blocks/HomeCustomerBanner';
@@ -77,7 +76,11 @@ export default function Homepage() {
       <HomeBusinessBuyers />
       <HomeGifting />
       <HomeEssentials />
-      <HomeCustomerStories />
+      <Suspense fallback={null}>
+        <Await resolve={data.instagramPosts} errorElement={null}>
+          {(posts) => <HomeInstagram posts={posts} />}
+        </Await>
+      </Suspense>
       <Suspense fallback={null}>
         <Await resolve={data.reviews} errorElement={null}>
           {(reviews) => <HomeReviews reviews={reviews} />}
@@ -85,73 +88,127 @@ export default function Homepage() {
       </Suspense>
       <HomeCustomerBanner />
       <HomeRecipes />
-      <Suspense fallback={null}>
-        <Await resolve={data.instagramPosts} errorElement={null}>
-          {(posts) => <HomeInstagram posts={posts} />}
-        </Await>
-      </Suspense>
       <HomeNewsletter />
       <HomeDiscountPopup />
     </div>
   );
 }
 
-type InstagramApiMedia = {
-  caption?: string;
+type InstafeedMedia = {
+  caption?: {text?: string};
   id?: string;
-  media_type?: 'CAROUSEL_ALBUM' | 'IMAGE' | 'VIDEO';
-  media_url?: string;
-  permalink?: string;
-  thumbnail_url?: string;
+  type?: 'image' | 'video';
+  link?: string;
+  alt_text?: string;
+  images?: {standard_resolution?: {url?: string}};
+  videos?: {standard_resolution?: {url?: string}};
 };
 
 async function loadInstagramPosts(env: Env): Promise<InstagramPost[]> {
-  const accountId = env.INSTAGRAM_ACCOUNT_ID;
-  const accessToken = env.INSTAGRAM_ACCESS_TOKEN;
+  const apiKey = env.INSTAFEED_API_KEY;
+  const account = env.PUBLIC_STORE_DOMAIN;
 
-  if (!accountId || !accessToken) return [];
+  if (!account || !apiKey) return [];
 
-  const cacheKey = `instagram-${accountId}-v1`;
+  const cacheKey = `instafeed-${account}-v1`;
   const cachedPosts = await readHomepageCache<InstagramPost[]>(cacheKey);
   if (cachedPosts) return cachedPosts;
 
-  const url = new URL(`https://graph.facebook.com/v22.0/${accountId}/media`);
-  url.searchParams.set(
-    'fields',
-    'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp',
-  );
-  url.searchParams.set('limit', '8');
-  url.searchParams.set('access_token', accessToken);
+  const url = new URL('https://instafeed.nfcube.com/feed/v6');
+  url.searchParams.set('account', account);
+  url.searchParams.set('limit', '10');
+  url.searchParams.set('fu', '0');
+  url.searchParams.set('fid', '0');
 
   try {
-    const response = await fetch(url, {signal: AbortSignal.timeout(4000)});
+    const response = await fetch(url, {
+      headers: {'X-API-Key': apiKey},
+      signal: AbortSignal.timeout(8000),
+    });
     if (!response.ok) {
-      console.error('Instagram Graph API request failed', response.status);
+      console.error('Instafeed request failed', response.status);
       return [];
     }
 
-    const data = (await response.json()) as {data?: InstagramApiMedia[]};
-    const posts: InstagramPost[] = (data.data ?? [])
-      .filter(
-        (post) =>
-          typeof post.id === 'string' &&
-          typeof post.permalink === 'string' &&
-          (typeof post.media_url === 'string' ||
-            typeof post.thumbnail_url === 'string'),
+    const data = (await response.json()) as {
+      meta?: {code?: number};
+      data?: InstafeedMedia[];
+    };
+    // Instafeed can report loading/error states in its JSON envelope with HTTP 200.
+    // Don't cache those states as an empty feed for the next 15 minutes.
+    if (data.meta?.code !== 200 || !Array.isArray(data.data)) {
+      console.warn('Instafeed not ready', data.meta?.code);
+      return [];
+    }
+
+    const posts = data.data.flatMap((post): InstagramPost[] => {
+      const image = post.images?.standard_resolution?.url;
+      const video = post.videos?.standard_resolution?.url;
+      if (
+        typeof post.id !== 'string' ||
+        typeof image !== 'string' ||
+        !isInstagramMediaUrl(image) ||
+        typeof post.link !== 'string' ||
+        !isInstagramPermalink(post.link)
       )
-      .map((post) => ({
-        caption: post.caption?.trim(),
-        id: post.id as string,
-        mediaType: post.media_type === 'VIDEO' ? 'VIDEO' : 'IMAGE',
-        mediaUrl: (post.media_url || post.thumbnail_url) as string,
-        permalink: post.permalink as string,
-        thumbnailUrl: post.thumbnail_url,
-      }));
-    await writeHomepageCache(cacheKey, posts);
+        return [];
+
+      const isVideo = post.type === 'video';
+      return [
+        {
+          altText:
+            typeof post.alt_text === 'string'
+              ? post.alt_text.trim()
+              : undefined,
+          caption:
+            typeof post.caption?.text === 'string'
+              ? post.caption.text.trim()
+              : undefined,
+          id: post.id,
+          mediaType: isVideo ? 'VIDEO' : 'IMAGE',
+          mediaUrl:
+            isVideo && typeof video === 'string' && isInstagramMediaUrl(video)
+              ? video
+              : image,
+          permalink: post.link,
+          thumbnailUrl: image,
+        },
+      ];
+    });
+    if (posts.length) await writeHomepageCache(cacheKey, posts);
     return posts;
   } catch (error) {
-    console.error('Instagram Graph API request failed', error);
+    console.error(
+      'Instafeed request failed',
+      error instanceof Error ? error.name : 'Unknown error',
+    );
     return [];
+  }
+}
+
+function isInstagramMediaUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      ['cdninstagram.com', 'fbcdn.net', 'nfcube.com'].some(
+        (host) => url.hostname === host || url.hostname.endsWith(`.${host}`),
+      )
+    );
+  } catch {
+    return false;
+  }
+}
+
+function isInstagramPermalink(value: string) {
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      (url.hostname === 'instagram.com' || url.hostname === 'www.instagram.com')
+    );
+  } catch {
+    return false;
   }
 }
 

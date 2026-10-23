@@ -1,4 +1,5 @@
 export type InstagramPost = {
+  altText?: string;
   caption?: string;
   id: string;
   mediaType: 'IMAGE' | 'VIDEO';
@@ -39,22 +40,19 @@ export function HomeInstagram({posts}: {posts: InstagramPost[]}) {
             rel="noopener noreferrer"
             target="_blank"
           >
-            {post.mediaType === 'VIDEO' ? (
-              <video
-                aria-label={post.caption || 'Sumeet Cookware on Instagram'}
-                muted
-                playsInline
-                poster={post.thumbnailUrl}
-                preload="none"
-                src={post.mediaUrl}
-              />
-            ) : (
-              <img
-                alt={post.caption || 'Sumeet Cookware on Instagram'}
-                decoding="async"
-                loading="lazy"
-                src={post.mediaUrl}
-              />
+            <img
+              alt={
+                post.altText || post.caption || 'Sumeet Cookware on Instagram'
+              }
+              decoding="async"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              src={post.thumbnailUrl || post.mediaUrl}
+            />
+            {post.mediaType === 'VIDEO' && (
+              <span className="home-instagram-play" aria-hidden="true">
+                ▶
+              </span>
             )}
           </a>
         ))}
