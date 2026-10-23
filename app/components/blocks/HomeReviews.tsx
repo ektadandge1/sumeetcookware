@@ -154,20 +154,6 @@ export function HomeReviews({reviews}: {reviews: HomeReview[]}) {
       ) : (
         <p className="home-empty">Customer reviews will appear here soon.</p>
       )}
-      {slides.length > 1 ? (
-        <div className="home-review-dots">
-          {slides.map((slide, index) => (
-            <button
-              aria-label={`Show review slide ${index + 1}`}
-              aria-pressed={index === currentSlide}
-              className={index === currentSlide ? 'is-active' : undefined}
-              key={slide[0]?.id}
-              onClick={() => setCurrentSlide(index)}
-              type="button"
-            />
-          ))}
-        </div>
-      ) : null}
     </section>
   );
 }

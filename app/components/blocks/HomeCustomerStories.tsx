@@ -2,7 +2,11 @@ import {FigmaImage} from './FigmaImage';
 import {FIGMA_ASSETS} from './homeAssets';
 import {SectionHeading} from './SectionHeading';
 
-export function HomeCustomerStories() {
+export function HomeCustomerStories({
+  mobileTitle = 'Shop By Video',
+}: {
+  mobileTitle?: string;
+} = {}) {
   const stories = [
     FIGMA_ASSETS.hero,
     FIGMA_ASSETS.heroAlt,
@@ -13,7 +17,7 @@ export function HomeCustomerStories() {
     <section className="home-stories" aria-labelledby="stories-title">
       <SectionHeading
         id="stories-title"
-        mobileTitle="Shop By Video"
+        mobileTitle={mobileTitle}
         title="Our Happy Customer"
       />
       <div className="home-story-grid">

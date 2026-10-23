@@ -27,6 +27,7 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import {HomeProductBand} from '~/components/blocks/HomeProductBand';
+import {HomeNewsletter} from '~/components/blocks/HomeNewsletter';
 
 export const meta: Route.MetaFunction = ({data}) => {
   return [
@@ -325,12 +326,15 @@ export default function Product() {
           (bestSelling?.products.nodes ?? []) as RecommendedProductsQuery['products']['nodes']
         }
       />
-      <HomeCustomerStories />
+      <HomeCustomerStories mobileTitle="Videos" />
       <Suspense fallback={null}>
         <Await resolve={reviews} errorElement={null}>
           {(productReviews) => <ProductReviews reviews={productReviews} />}
         </Await>
       </Suspense>
+      <div className="product-mobile-newsletter">
+        <HomeNewsletter />
+      </div>
       <Analytics.ProductView
         data={{
           products: [

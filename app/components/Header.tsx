@@ -74,6 +74,7 @@ export function Header({
     <header className="header">
       <div className="header-main">
         <MobileMenuButton />
+        <MobileBackButton />
         <HeaderSearch />
         <NavLink
           className="header-brand"
@@ -102,6 +103,22 @@ export function Header({
         />
       </div>
     </header>
+  );
+}
+
+function MobileBackButton() {
+  return (
+    <button
+      aria-label="Go back"
+      className="header-product-back-button"
+      onClick={() => window.history.back()}
+      type="button"
+    >
+      <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+        <path d="m9 6-6 6 6 6" />
+        <path d="M4 12h8a7 7 0 0 1 7 7" />
+      </svg>
+    </button>
   );
 }
 

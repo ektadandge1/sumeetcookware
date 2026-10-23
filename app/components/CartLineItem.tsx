@@ -38,15 +38,27 @@ export function CartLineItem({
     <li key={id} className="cart-line">
       <div className="cart-line-inner">
         {image && (
-          <Image
-            alt={title}
-            aspectRatio="1/1"
-            className="cart-line-image"
-            data={image}
-            height={100}
-            loading="lazy"
-            width={100}
-          />
+          <Link
+            aria-label={`View ${product.title}`}
+            className="cart-line-image-link"
+            onClick={() => {
+              if (layout === 'aside') {
+                close();
+              }
+            }}
+            prefetch="intent"
+            to={lineItemUrl}
+          >
+            <Image
+              alt={title}
+              aspectRatio="1/1"
+              className="cart-line-image"
+              data={image}
+              height={100}
+              loading="lazy"
+              width={100}
+            />
+          </Link>
         )}
 
         <div className="cart-line-details">

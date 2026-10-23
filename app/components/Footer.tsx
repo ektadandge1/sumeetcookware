@@ -94,14 +94,10 @@ export function Footer() {
           <Link to="/pages/contact-us">Contact Us</Link>
           <Link to="/blogs/kitchen">Blogs</Link>
           <a href="https://wa.me/918976047019">Chat on whatsapp</a>
-          <Link to="/pages/register-affiliate-account">Affiliate Register</Link>
-          <Link className="footer-mobile-hidden" to="/pages">
-            Page
+          <Link to="/pages/register-affiliate-account">
+            Affiliate Register Page
           </Link>
-          <Link to="/pages/faq-about-cookware">FAQ About</Link>
-          <Link className="footer-mobile-hidden" to="/collections/all">
-            Cookware
-          </Link>
+          <Link to="/pages/faq-about-cookware">FAQ About Cookware</Link>
           <Link to="/pages/collab">Influencer Collab</Link>
         </nav>
 
@@ -115,8 +111,9 @@ export function Footer() {
             <Link to="/policies/refund-policy">Refund Policy</Link>
             <Link to="/policies/shipping-policy">Shipping Policy</Link>
             <Link to="/policies/terms-of-service">Terms of Service</Link>
-            <Link to="/pages/warranty-registration">Warranty</Link>
-            <Link to="/pages/warranty-registration">Registration</Link>
+            <Link to="/pages/warranty-registration">
+              Warranty Registration
+            </Link>
           </nav>
         </div>
       </div>

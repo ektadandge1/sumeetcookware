@@ -28,6 +28,7 @@ export function HomeProductBand({
   const [isDragging, setIsDragging] = useState(false);
   const [variantProduct, setVariantProduct] =
     useState<RecommendedProduct | null>(null);
+  const dragStarted = useRef(false);
   const dragStartX = useRef<number | null>(null);
   const suppressClick = useRef(false);
   const headingId = heading.toLowerCase().replace(/[^a-z0-9]+/g, '-');
@@ -55,15 +56,23 @@ export function HomeProductBand({
     }
 
     dragStartX.current = event.clientX;
+    dragStarted.current = false;
     setDragOffset(0);
-    setIsDragging(true);
     setIsPaused(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const moveDrag = (event: PointerEvent<HTMLDivElement>) => {
     if (dragStartX.current === null) return;
-    setDragOffset(event.clientX - dragStartX.current);
+
+    const distance = event.clientX - dragStartX.current;
+    if (!dragStarted.current && Math.abs(distance) < 8) return;
+
+    if (!dragStarted.current) {
+      dragStarted.current = true;
+      setIsDragging(true);
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    setDragOffset(distance);
   };
 
   const finishDrag = (event: PointerEvent<HTMLDivElement>) => {
@@ -71,7 +80,7 @@ export function HomeProductBand({
 
     const distance = event.clientX - dragStartX.current;
     const threshold = Math.min(70, event.currentTarget.clientWidth * 0.12);
-    const wasDragged = Math.abs(distance) >= 8;
+    const wasDragged = dragStarted.current;
 
     if (Math.abs(distance) >= threshold) {
       setCurrentSlide((slide) =>
@@ -82,6 +91,7 @@ export function HomeProductBand({
     }
 
     dragStartX.current = null;
+    dragStarted.current = false;
     setDragOffset(0);
     setIsDragging(false);
     if (event.pointerType !== 'mouse') setIsPaused(false);
@@ -97,6 +107,7 @@ export function HomeProductBand({
 
   const cancelDrag = (event: PointerEvent<HTMLDivElement>) => {
     dragStartX.current = null;
+    dragStarted.current = false;
     setDragOffset(0);
     setIsDragging(false);
     if (event.pointerType !== 'mouse') setIsPaused(false);
@@ -204,7 +215,6 @@ export function HomeProductBand({
               onFocus={() => setIsPaused(true)}
               onMouseEnter={() => setIsPaused(true)}
               onMouseLeave={() => setIsPaused(false)}
-              onLostPointerCapture={cancelDrag}
               onPointerCancel={cancelDrag}
               onPointerDown={startDrag}
               onPointerMove={moveDrag}
