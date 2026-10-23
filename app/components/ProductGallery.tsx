@@ -25,10 +25,62 @@ export function ProductGallery({
     getImageKey(galleryImages[0]),
   );
   const thumbnailsRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [thumbnailScroll, setThumbnailScroll] = useState({
+    previous: false,
+    next: false,
+  });
 
   useEffect(() => {
     if (selectedImage) setActiveImageId(getImageKey(selectedImage));
   }, [selectedImage]);
+
+  useEffect(() => {
+    const gallery = galleryRef.current;
+    const stage = stageRef.current;
+    const thumbnails = thumbnailsRef.current;
+    if (!gallery || !stage || !thumbnails) return;
+
+    const updateScroll = () => {
+      const vertical = getComputedStyle(thumbnails).flexDirection === 'column';
+      const position = vertical ? thumbnails.scrollTop : thumbnails.scrollLeft;
+      const maximum = vertical
+        ? thumbnails.scrollHeight - thumbnails.clientHeight
+        : thumbnails.scrollWidth - thumbnails.clientWidth;
+      const previous = position > 1;
+      const next = position < maximum - 1;
+      setThumbnailScroll((current) =>
+        current.previous === previous && current.next === next
+          ? current
+          : {previous, next},
+      );
+    };
+    const updateLayout = () => {
+      // Let the main image size the gallery, not the full thumbnail list.
+      gallery.style.setProperty(
+        '--product-gallery-stage-height',
+        `${stage.getBoundingClientRect().height}px`,
+      );
+      scrollSelectedThumbnailIntoView(thumbnails);
+      updateScroll();
+    };
+
+    const observer = new ResizeObserver(updateLayout);
+    observer.observe(stage);
+    observer.observe(thumbnails);
+    thumbnails.addEventListener('scroll', updateScroll, {passive: true});
+    updateLayout();
+    return () => {
+      observer.disconnect();
+      thumbnails.removeEventListener('scroll', updateScroll);
+    };
+  }, [galleryImages.length]);
+
+  useEffect(() => {
+    const thumbnails = thumbnailsRef.current;
+    if (thumbnails) scrollSelectedThumbnailIntoView(thumbnails);
+  }, [activeImageId, galleryImages.length]);
 
   const activeImage =
     galleryImages.find((image) => getImageKey(image) === activeImageId) ??
@@ -38,11 +90,18 @@ export function ProductGallery({
     const thumbnails = thumbnailsRef.current;
     if (!thumbnails) return;
 
-    thumbnails.scrollBy({
-      behavior: 'smooth',
-      left: direction * thumbnails.clientWidth * 0.8,
-      top: direction * thumbnails.clientHeight * 0.8,
-    });
+    const vertical = getComputedStyle(thumbnails).flexDirection === 'column';
+    const distance =
+      direction *
+      (vertical ? thumbnails.clientHeight : thumbnails.clientWidth) *
+      0.8;
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)')
+      .matches
+      ? 'auto'
+      : 'smooth';
+    thumbnails.scrollBy(
+      vertical ? {top: distance, behavior} : {left: distance, behavior},
+    );
   };
 
   if (!activeImage) {
@@ -50,12 +109,13 @@ export function ProductGallery({
   }
 
   return (
-    <div className="product-gallery">
+    <div className="product-gallery" ref={galleryRef}>
       {galleryImages.length > 1 ? (
         <div className="product-gallery-thumbnail-rail">
           <button
             aria-label="View previous product images"
             className="product-gallery-thumbnail-nav is-previous"
+            disabled={!thumbnailScroll.previous}
             onClick={() => scrollThumbnails(-1)}
             type="button"
           >
@@ -87,6 +147,7 @@ export function ProductGallery({
           <button
             aria-label="View more product images"
             className="product-gallery-thumbnail-nav is-next"
+            disabled={!thumbnailScroll.next}
             onClick={() => scrollThumbnails(1)}
             type="button"
           >
@@ -94,7 +155,7 @@ export function ProductGallery({
           </button>
         </div>
       ) : null}
-      <div className="product-gallery-stage">
+      <div className="product-gallery-stage" ref={stageRef}>
         <Image
           alt={activeImage.altText || 'Product image'}
           data={activeImage}
@@ -107,7 +168,7 @@ export function ProductGallery({
       </div>
       {galleryImages.length > 1 ? (
         <div className="product-gallery-dots" aria-hidden="true">
-          {galleryImages.slice(0, 5).map((image) => (
+          {galleryImages.map((image) => (
             <i
               className={
                 getImageKey(image) === getImageKey(activeImage)
@@ -125,4 +186,24 @@ export function ProductGallery({
 
 function getImageKey(image?: ProductGalleryImage) {
   return image?.id ?? image?.url ?? '';
+}
+
+function scrollSelectedThumbnailIntoView(thumbnails: HTMLDivElement) {
+  const selected = thumbnails.querySelector<HTMLButtonElement>(
+    'button[aria-pressed="true"]',
+  );
+  if (!selected) return;
+
+  const vertical = getComputedStyle(thumbnails).flexDirection === 'column';
+  const container = thumbnails.getBoundingClientRect();
+  const image = selected.getBoundingClientRect();
+  const start = vertical
+    ? image.top - container.top
+    : image.left - container.left;
+  const end = vertical
+    ? image.bottom - container.bottom
+    : image.right - container.right;
+  const distance = start < 0 ? start : end > 0 ? end : 0;
+  if (distance)
+    thumbnails.scrollBy(vertical ? {top: distance} : {left: distance});
 }

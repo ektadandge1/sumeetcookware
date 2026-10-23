@@ -29,8 +29,6 @@ export function ProductForm({
   const navigate = useNavigate();
   const {open} = useAside();
   const [quantity, setQuantity] = useState(1);
-  const [pincode, setPincode] = useState('');
-  const [pincodeMessage, setPincodeMessage] = useState('');
   const cartLines = selectedVariant
     ? [{merchandiseId: selectedVariant.id, quantity, selectedVariant}]
     : [];
@@ -120,32 +118,6 @@ export function ProductForm({
       })}
       <div className="product-desktop-purchase-controls">
         <div className="product-purchase-row">
-          <form
-            className="product-pincode"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setPincodeMessage(
-                /^\d{6}$/.test(pincode)
-                  ? 'Delivery availability will be confirmed at checkout.'
-                  : 'Enter a valid 6-digit pincode.',
-              );
-            }}
-          >
-            <label>
-              <span className="visually-hidden">Delivery pincode</span>
-              <input
-                inputMode="numeric"
-                maxLength={6}
-                onChange={(event) => {
-                  setPincode(event.target.value.replace(/\D/g, ''));
-                  setPincodeMessage('');
-                }}
-                placeholder="Search Pincode"
-                value={pincode}
-              />
-            </label>
-            <button type="submit">Pincode</button>
-          </form>
           <div className="product-quantity" aria-label="Quantity">
             <span>Quantity</span>
             <button
@@ -170,11 +142,6 @@ export function ProductForm({
           For Business Bulk Buyer <span aria-hidden="true">⌄</span>
         </Link>
       </div>
-      {pincodeMessage ? (
-        <p className="product-pincode-message" role="status">
-          {pincodeMessage}
-        </p>
-      ) : null}
       <div className="product-desktop-business-row">
         <div className="product-desktop-bulk-offer">
           Up to <strong>20% OFF</strong> on bulk purchases
@@ -274,10 +241,7 @@ function ProductOptionsGrid({children}: {children: ReactNode}) {
 
       const isAtStart = scroller.scrollLeft <= 0;
       const isAtEnd = scroller.scrollLeft >= maxScrollLeft - 1;
-      if (
-        (event.deltaY < 0 && isAtStart) ||
-        (event.deltaY > 0 && isAtEnd)
-      ) {
+      if ((event.deltaY < 0 && isAtStart) || (event.deltaY > 0 && isAtEnd)) {
         return;
       }
 
@@ -381,7 +345,9 @@ function ProductOptionsGrid({children}: {children: ReactNode}) {
   };
 
   return (
-    <div className={`product-options-carousel${hasOverflow ? ' has-overflow' : ''}`}>
+    <div
+      className={`product-options-carousel${hasOverflow ? ' has-overflow' : ''}`}
+    >
       <div className="product-options-grid" ref={gridRef}>
         {children}
       </div>

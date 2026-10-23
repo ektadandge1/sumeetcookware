@@ -343,9 +343,9 @@
     .product-desktop-purchase-controls {
       display: grid;
       gap: 2.25rem;
-      grid-template-columns: 23.1875rem minmax(0, 1fr);
+      grid-template-columns: 9rem minmax(0, 1fr);
       order: 3;
-      width: calc(100% + 0.8125rem);
+      width: 100%;
     }
 
     .product-form:not(:has(.product-options))
@@ -355,29 +355,14 @@
 
     .product-purchase-row {
       gap: 1.25rem;
-      grid-template-columns: 12.9375rem 9rem;
+      grid-template-columns: minmax(0, 1fr);
       margin: 0;
     }
 
-    .product-pincode,
     .product-quantity,
     .product-bulk-link {
       height: 2.5rem;
       min-height: 2.5rem;
-    }
-
-    .product-pincode {
-      grid-template-columns: 7.5625rem 5.375rem;
-    }
-
-    .product-pincode input {
-      font-size: 0.8rem;
-      padding-inline: 0.7rem;
-    }
-
-    .product-pincode button {
-      font-size: 0.875rem;
-      padding: 0;
     }
 
     .product-quantity {
@@ -409,10 +394,6 @@
       margin-left: 1rem;
       transform: rotate(45deg) translateY(-0.12rem);
       width: 0.45rem;
-    }
-
-    .product-pincode-message {
-      order: 3;
     }
 
     .product-buy-actions {
@@ -5199,6 +5180,7 @@ main:has(.all-products-page) {
 }
 
 .product-gallery {
+  align-items: start;
   display: grid;
   gap: 1.25rem;
   grid-template-columns: 4.75rem minmax(0, 1fr);
@@ -5207,7 +5189,9 @@ main:has(.all-products-page) {
 .product-gallery-thumbnail-rail {
   display: flex;
   flex-direction: column;
+  height: var(--product-gallery-stage-height, min(36rem, 70vh));
   min-height: 0;
+  overflow: hidden;
 }
 
 .product-gallery-thumbnail-nav {
@@ -5226,6 +5210,11 @@ main:has(.all-products-page) {
 
 .product-gallery-thumbnail-nav:hover {
   opacity: 1;
+}
+
+.product-gallery-thumbnail-nav:disabled {
+  cursor: default;
+  opacity: 0.25;
 }
 
 .product-gallery-thumbnail-nav.is-previous {
@@ -5258,6 +5247,7 @@ main:has(.all-products-page) {
   gap: 0.55rem;
   max-height: 36rem;
   min-height: 0;
+  min-width: 0;
   overflow-y: auto;
   padding-block: 0.35rem;
   scrollbar-width: none;
@@ -5562,49 +5552,8 @@ main:has(.all-products-page) {
   align-items: stretch;
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: minmax(12rem, 1fr) auto minmax(13rem, 1.45fr);
+  grid-template-columns: max-content;
   margin-top: 1.5rem;
-}
-
-.product-pincode {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  margin: 0;
-  max-width: none;
-}
-
-.product-pincode label {
-  min-width: 0;
-}
-
-.product-pincode input {
-  background: #fff;
-  border: 0;
-  border-radius: 0.5rem 0 0 0.5rem;
-  box-sizing: border-box;
-  color: #111;
-  height: 100%;
-  margin: 0;
-  min-width: 0;
-  padding: 0 0.75rem;
-  width: 100%;
-}
-
-.product-pincode button {
-  background: var(--primary);
-  border: 0;
-  border-radius: 0 0.5rem 0.5rem 0;
-  color: var(--primary-foreground);
-  cursor: pointer;
-  font-family: var(--font-body-family);
-  font-weight: 700;
-  padding: 0 0.9rem;
-}
-
-.product-pincode-message {
-  color: #bbb;
-  font-size: 0.72rem;
-  margin: 0.4rem 0 0;
 }
 
 .product-quantity {
@@ -5789,7 +5738,7 @@ main:has(.all-products-page) {
 
 @media (max-width: 75em) {
   .product-purchase-row {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: max-content;
   }
 
   .product-bulk-link {
@@ -5803,6 +5752,7 @@ main:has(.all-products-page) {
   }
 
   .product-gallery {
+    align-items: stretch;
     display: flex;
     flex-direction: column-reverse;
     gap: 0.75rem;
@@ -5817,6 +5767,8 @@ main:has(.all-products-page) {
 
   .product-gallery-thumbnail-rail {
     flex-direction: row;
+    height: auto;
+    min-width: 0;
   }
 
   .product-gallery-thumbnail-nav {
@@ -6739,20 +6691,9 @@ main:has(.all-products-page) {
     align-items: center;
     display: grid;
     column-gap: clamp(1rem, 12vw, 2.5rem);
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: max-content;
     margin-top: 0;
     order: 1;
-  }
-
-  .product-pincode {
-    min-height: 2rem;
-    min-width: 0;
-    width: 100%;
-  }
-
-  .product-pincode input,
-  .product-pincode button {
-    font-size: 0.55rem;
   }
 
   .product-quantity {
@@ -6771,10 +6712,6 @@ main:has(.all-products-page) {
   .product-quantity button,
   .product-quantity output {
     font-size: 0.75rem;
-  }
-
-  .product-pincode-message {
-    order: 1;
   }
 
   .product-options {
