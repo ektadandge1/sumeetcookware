@@ -12,7 +12,8 @@ import {
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductForm} from '~/components/ProductForm';
 import {ProductItem} from '~/components/ProductItem';
-import {HomeCustomerStories} from '~/components/blocks/HomeCustomerStories';
+import {HomeInstagram} from '~/components/blocks/HomeInstagram';
+import {loadInstagramPosts} from '~/lib/instafeed.server';
 import {SectionHeading} from '~/components/blocks/SectionHeading';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {WishlistButton} from '~/components/WishlistButton';
@@ -148,6 +149,7 @@ function loadDeferredData({context, params}: Route.LoaderArgs) {
   const externalId = productId.then((id) => id.split('/').pop() ?? '');
 
   return {
+    instagramPosts: loadInstagramPosts(context.env, params.handle),
     reviews: externalId.then((id) =>
       params.handle && id
         ? loadProductReviews(context.env, params.handle, id)
@@ -164,7 +166,7 @@ function loadDeferredData({context, params}: Route.LoaderArgs) {
 }
 
 export default function Product() {
-  const {bestSelling, product, reviews, boughtTogether} =
+  const {bestSelling, product, reviews, boughtTogether, instagramPosts} =
     useLoaderData<typeof loader>();
 
   // Optimistically selects a variant with given available variant information
@@ -323,10 +325,15 @@ export default function Product() {
         heading="Top Selling Products"
         isBestSeller
         products={
-          (bestSelling?.products.nodes ?? []) as RecommendedProductsQuery['products']['nodes']
+          (bestSelling?.products.nodes ??
+            []) as RecommendedProductsQuery['products']['nodes']
         }
       />
-      <HomeCustomerStories mobileTitle="Videos" />
+      <Suspense fallback={null}>
+        <Await resolve={instagramPosts} errorElement={null}>
+          {(posts) => <HomeInstagram posts={posts} />}
+        </Await>
+      </Suspense>
       <Suspense fallback={null}>
         <Await resolve={reviews} errorElement={null}>
           {(productReviews) => <ProductReviews reviews={productReviews} />}

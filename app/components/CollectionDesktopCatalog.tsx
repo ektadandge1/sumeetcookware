@@ -37,20 +37,24 @@ export function CollectionDesktopCatalog({
   ).sort((first, second) =>
     first.localeCompare(second, undefined, {numeric: true}),
   );
-  const priceFloor = Math.floor(
-    Math.min(
-      ...products.map((product) =>
-        Number(product.priceRange.minVariantPrice.amount),
-      ),
-    ),
-  );
-  const priceCeiling = Math.ceil(
-    Math.max(
-      ...products.map((product) =>
-        Number(product.priceRange.maxVariantPrice.amount),
-      ),
-    ),
-  );
+  const priceFloor = products.length
+    ? Math.floor(
+        Math.min(
+          ...products.map((product) =>
+            Number(product.priceRange.minVariantPrice.amount),
+          ),
+        ),
+      )
+    : 0;
+  const priceCeiling = products.length
+    ? Math.ceil(
+        Math.max(
+          ...products.map((product) =>
+            Number(product.priceRange.maxVariantPrice.amount),
+          ),
+        ),
+      )
+    : 0;
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>([
     ...MATERIALS,
   ]);

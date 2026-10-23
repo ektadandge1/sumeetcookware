@@ -37,6 +37,10 @@ non-empty feeds are cached for 15 minutes. The gallery hides on API errors and
 never renders dummy posts. Video thumbnails link to the original Instagram post.
 See <https://docs.minttstudio.com/developer-api/docs/instafeed-api/developer-api>.
 
+Product pages request an Instafeed product feed using the Shopify product handle.
+If no tagged posts are available, they show the main feed instead. Both the
+homepage and product pages use the same server-only integration.
+
 **Requirements:**
 
 - Node.js version 22.x or 24.x

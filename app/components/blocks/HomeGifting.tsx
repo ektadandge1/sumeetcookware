@@ -20,7 +20,7 @@ export function HomeGifting() {
       </span>
       <SectionHeading
         id="gifting-title"
-        title="Perfect gift for every occassion"
+        title="Perfect gift for every occasion"
       />
       <p className="home-section-intro">
         Thoughtfully curated cookware gifts for weddings, housewarmings,
@@ -32,7 +32,12 @@ export function HomeGifting() {
           aria-label="Gift occasions"
         >
           {leftGifts.map((gift) => (
-            <Link className="home-outline-button" key={gift.label} prefetch="intent" to={gift.to}>
+            <Link
+              className="home-outline-button"
+              key={gift.label}
+              prefetch="intent"
+              to={gift.to}
+            >
               {gift.label}
             </Link>
           ))}
@@ -41,7 +46,7 @@ export function HomeGifting() {
           aria-label="Shop Sumeet gifts"
           className="home-gifting-image-link"
           prefetch="intent"
-          to="/collections/all"
+          to="/collections/festive-gifting"
         >
           <FigmaImage
             alt="Sumeet cookware gift"
@@ -54,7 +59,12 @@ export function HomeGifting() {
           aria-label="More gift occasions"
         >
           {rightGifts.map((gift) => (
-            <Link className="home-outline-button" key={gift.label} prefetch="intent" to={gift.to}>
+            <Link
+              className="home-outline-button"
+              key={gift.label}
+              prefetch="intent"
+              to={gift.to}
+            >
               {gift.label}
             </Link>
           ))}

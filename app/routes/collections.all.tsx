@@ -60,6 +60,7 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
   const sortOption = SORT_OPTIONS[sort as keyof typeof SORT_OPTIONS];
 
   const {products} = await storefront.query(CATALOG_QUERY, {
+    cache: storefront.CacheNone(),
     variables: {
       ...paginationVariables,
       reverse: sortOption.reverse,
@@ -142,7 +143,9 @@ export default function Collection() {
                     aria-current={sort === value ? 'true' : undefined}
                     key={value}
                     onClick={(event) =>
-                      event.currentTarget.closest('details')?.removeAttribute('open')
+                      event.currentTarget
+                        .closest('details')
+                        ?.removeAttribute('open')
                     }
                     preventScrollReset
                     replace
@@ -158,8 +161,10 @@ export default function Collection() {
 
         {!products.nodes.length ? (
           <div className="all-products-empty">
-            <h2>More essentials are on the way</h2>
-            <p>Please check back soon for new cookware and kitchenware.</p>
+            <h2>No products are currently in stock</h2>
+            <p>
+              Please check back soon for available cookware and kitchenware.
+            </p>
           </div>
         ) : (
           <div className="all-products-pagination">
@@ -180,7 +185,6 @@ export default function Collection() {
           </div>
         )}
       </section>
-
     </div>
   );
 }
@@ -268,6 +272,7 @@ const CATALOG_QUERY = `#graphql
       after: $endCursor
       reverse: $reverse
       sortKey: $sortKey
+      query: "available_for_sale:true"
     ) {
       nodes {
         ...CollectionItem

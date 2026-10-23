@@ -109,12 +109,12 @@ export const essentials = [
 ];
 
 export const gifts = [
-  {label: 'Wedding Gift', to: '/collections/all'},
-  {label: 'Diwali Gift', to: '/collections/all'},
-  {label: 'Housewarming Gift', to: '/collections/all'},
-  {label: 'Corporate Gift', to: '/collections/all'},
-  {label: 'Festive Gifting', to: '/collections/all'},
-  {label: 'Return Gift', to: '/collections/all'},
-  {label: 'Gift for Her', to: '/collections/all'},
-  {label: 'Gift for Him', to: '/collections/all'},
+  {label: 'Wedding Gift', to: '/collections/wedding-gift'},
+  {label: 'Diwali Gift', to: '/collections/diwali-gift'},
+  {label: 'Housewarming Gift', to: '/collections/housewarming-gift'},
+  {label: 'Corporate Gift', to: '/collections/corporate-gift'},
+  {label: 'Festive Gifting', to: '/collections/festive-gifting'},
+  {label: 'Return Gift', to: '/collections/return-gift'},
+  {label: 'Gift for Her', to: '/collections/gift-for-her'},
+  {label: 'Gift for Him', to: '/collections/gift-for-him'},
 ];

@@ -57,6 +57,9 @@ export function CollectionMobileCatalog({
         </p>
       )}
       <div className="collection-mobile-grid">
+        {!collection.products.nodes.length && (
+          <p>No in-stock products in this collection right now.</p>
+        )}
         {collection.products.nodes.map((product, index) => (
           <div className="collection-mobile-grid-item" key={product.id}>
             <MobileProductCard

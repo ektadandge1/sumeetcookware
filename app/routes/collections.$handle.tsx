@@ -52,6 +52,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   const {collection} = await storefront.query(COLLECTION_QUERY, {
     variables: {handle, ...paginationVariables},
+    cache: storefront.CacheNone(),
   });
 
   if (!collection) {
@@ -62,7 +63,11 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     }
 
     const {products} = await storefront.query(FALLBACK_COLLECTION_QUERY, {
-      variables: {query: fallback.query, ...paginationVariables},
+      variables: {
+        query: `(${fallback.query}) AND available_for_sale:true`,
+        ...paginationVariables,
+      },
+      cache: storefront.CacheNone(),
     });
     const image =
       products.nodes[0]?.featuredImage ??
@@ -209,7 +214,7 @@ export default function Collection() {
           <p className="collection-summary">{collection.description}</p>
         )}
         {!collection.products.nodes.length ? (
-          <p>No products in this collection.</p>
+          <p>No in-stock products in this collection right now.</p>
         ) : null}
         <CollectionDesktopCatalog
           key={collection.id}
@@ -388,7 +393,8 @@ const COLLECTION_QUERY = `#graphql
         first: $first,
         last: $last,
         before: $startCursor,
-        after: $endCursor
+        after: $endCursor,
+        filters: [{available: true}]
       ) {
         nodes {
           ...ProductItem

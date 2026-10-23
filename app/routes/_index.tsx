@@ -16,10 +16,8 @@ import {HomeCustomerBanner} from '~/components/blocks/HomeCustomerBanner';
 import {HomeRecipes} from '~/components/blocks/HomeRecipes';
 import {HomeDiscountPopup} from '~/components/HomeDiscountPopup';
 import {HomeNewsletter} from '~/components/blocks/HomeNewsletter';
-import {
-  HomeInstagram,
-  type InstagramPost,
-} from '~/components/blocks/HomeInstagram';
+import {HomeInstagram} from '~/components/blocks/HomeInstagram';
+import {loadInstagramPosts} from '~/lib/instafeed.server';
 import {
   HomeMobileActions,
   HomeMobileExperience,
@@ -92,124 +90,6 @@ export default function Homepage() {
       <HomeDiscountPopup />
     </div>
   );
-}
-
-type InstafeedMedia = {
-  caption?: {text?: string};
-  id?: string;
-  type?: 'image' | 'video';
-  link?: string;
-  alt_text?: string;
-  images?: {standard_resolution?: {url?: string}};
-  videos?: {standard_resolution?: {url?: string}};
-};
-
-async function loadInstagramPosts(env: Env): Promise<InstagramPost[]> {
-  const apiKey = env.INSTAFEED_API_KEY;
-  const account = env.PUBLIC_STORE_DOMAIN;
-
-  if (!account || !apiKey) return [];
-
-  const cacheKey = `instafeed-${account}-v1`;
-  const cachedPosts = await readHomepageCache<InstagramPost[]>(cacheKey);
-  if (cachedPosts) return cachedPosts;
-
-  const url = new URL('https://instafeed.nfcube.com/feed/v6');
-  url.searchParams.set('account', account);
-  url.searchParams.set('limit', '10');
-  url.searchParams.set('fu', '0');
-  url.searchParams.set('fid', '0');
-
-  try {
-    const response = await fetch(url, {
-      headers: {'X-API-Key': apiKey},
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!response.ok) {
-      console.error('Instafeed request failed', response.status);
-      return [];
-    }
-
-    const data = (await response.json()) as {
-      meta?: {code?: number};
-      data?: InstafeedMedia[];
-    };
-    // Instafeed can report loading/error states in its JSON envelope with HTTP 200.
-    // Don't cache those states as an empty feed for the next 15 minutes.
-    if (data.meta?.code !== 200 || !Array.isArray(data.data)) {
-      console.warn('Instafeed not ready', data.meta?.code);
-      return [];
-    }
-
-    const posts = data.data.flatMap((post): InstagramPost[] => {
-      const image = post.images?.standard_resolution?.url;
-      const video = post.videos?.standard_resolution?.url;
-      if (
-        typeof post.id !== 'string' ||
-        typeof image !== 'string' ||
-        !isInstagramMediaUrl(image) ||
-        typeof post.link !== 'string' ||
-        !isInstagramPermalink(post.link)
-      )
-        return [];
-
-      const isVideo = post.type === 'video';
-      return [
-        {
-          altText:
-            typeof post.alt_text === 'string'
-              ? post.alt_text.trim()
-              : undefined,
-          caption:
-            typeof post.caption?.text === 'string'
-              ? post.caption.text.trim()
-              : undefined,
-          id: post.id,
-          mediaType: isVideo ? 'VIDEO' : 'IMAGE',
-          mediaUrl:
-            isVideo && typeof video === 'string' && isInstagramMediaUrl(video)
-              ? video
-              : image,
-          permalink: post.link,
-          thumbnailUrl: image,
-        },
-      ];
-    });
-    if (posts.length) await writeHomepageCache(cacheKey, posts);
-    return posts;
-  } catch (error) {
-    console.error(
-      'Instafeed request failed',
-      error instanceof Error ? error.name : 'Unknown error',
-    );
-    return [];
-  }
-}
-
-function isInstagramMediaUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return (
-      url.protocol === 'https:' &&
-      ['cdninstagram.com', 'fbcdn.net', 'nfcube.com'].some(
-        (host) => url.hostname === host || url.hostname.endsWith(`.${host}`),
-      )
-    );
-  } catch {
-    return false;
-  }
-}
-
-function isInstagramPermalink(value: string) {
-  try {
-    const url = new URL(value);
-    return (
-      url.protocol === 'https:' &&
-      (url.hostname === 'instagram.com' || url.hostname === 'www.instagram.com')
-    );
-  } catch {
-    return false;
-  }
 }
 
 type JudgeMeApiReview = {

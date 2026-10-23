@@ -21,23 +21,19 @@ const TRIPLY_BANNERS = [
 const TRIPLY_BENEFITS = [
   {
     label: 'Even Heat',
-    icon:
-      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Even_heat_1_2.png?v=1792642579',
+    icon: 'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Even_heat_1_2.png?v=1792642579',
   },
   {
     label: 'Built to Last',
-    icon:
-      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Built_to_last_1_2.png?v=1792642580',
+    icon: 'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Built_to_last_1_2.png?v=1792642580',
   },
   {
     label: 'Faster Cooking',
-    icon:
-      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Fast_cooking_1_1.png?v=1792642580',
+    icon: 'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/Fast_cooking_1_1.png?v=1792642580',
   },
   {
     label: 'All Cooktops',
-    icon:
-      'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/cooktops_1_2.png?v=1792642605',
+    icon: 'https://cdn.shopify.com/s/files/1/1022/8596/7677/files/cooktops_1_2.png?v=1792642605',
   },
 ] as const;
 
@@ -109,13 +105,7 @@ export function HomeMobileExperience() {
         <ul>
           {TRIPLY_BENEFITS.map(({icon, label}) => (
             <li key={label}>
-              <img
-                alt=""
-                decoding="async"
-                height="24"
-                src={icon}
-                width="24"
-              />
+              <img alt="" decoding="async" height="24" src={icon} width="24" />
               <span>{label}</span>
             </li>
           ))}
@@ -133,9 +123,7 @@ export function HomeMobileExperience() {
           <p>Find the right cookware, compare products, discover recipes</p>
           <Link to="/search">1. What are you looking for today?</Link>
           <Link to="/collections/all">2. What&rsquo;s your budget?</Link>
-          <Link to="/collections/all">
-            3. Which cooktop do you use?
-          </Link>
+          <Link to="/collections/all">3. Which cooktop do you use?</Link>
           <Link to="/collections/all">4. What would you like to gift?</Link>
         </div>
       </section>
@@ -285,8 +273,8 @@ export function HomeMobileActions() {
                 Meal Memorable
               </h2>
               <p>
-                Thoughtfully curated cookware gifts for weddings,
-                housewarmings, festivals, birthdays, and corporate gifting
+                Thoughtfully curated cookware gifts for weddings, housewarmings,
+                festivals, birthdays, and corporate gifting
               </p>
             </header>
             <img
@@ -296,7 +284,7 @@ export function HomeMobileActions() {
             <Link
               className="home-mobile-gift-shop"
               onClick={() => setIsGiftOpen(false)}
-              to="/collections/all"
+              to="/collections/festive-gifting"
             >
               Shop Gifts
             </Link>
