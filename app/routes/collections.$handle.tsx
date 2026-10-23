@@ -13,6 +13,7 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {CollectionDesktopCatalog} from '~/components/CollectionDesktopCatalog';
 import {CollectionMobileCatalog} from '~/components/CollectionMobileCatalog';
 import {getMenuItemUrl} from '~/components/Header';
+import {categories as defaultCollectionImages} from '~/components/blocks/homeAssets';
 import {loadProductRatingMap} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -58,13 +59,17 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     const {products} = await storefront.query(FALLBACK_COLLECTION_QUERY, {
       variables: {query: fallback.query, ...paginationVariables},
     });
+    const image =
+      getDefaultCollectionImage(handle, fallback.title) ??
+      products.nodes[0]?.featuredImage ??
+      null;
 
     return {
       collection: {
         description: '',
         handle,
         id: `gid://shopify/Collection/fallback-${handle}`,
-        image: null,
+        image,
         products,
         title: fallback.title,
       },
@@ -74,7 +79,24 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: collection});
 
-  return {collection};
+  return {
+    collection: {
+      ...collection,
+      image:
+        collection.image ??
+        getDefaultCollectionImage(collection.handle, collection.title) ??
+        collection.products.nodes[0]?.featuredImage ??
+        null,
+    },
+  };
+}
+
+function getDefaultCollectionImage(handle: string, title: string) {
+  const category = defaultCollectionImages.find(
+    ({to}) => to === `/collections/${handle}`,
+  );
+
+  return category ? {altText: title, url: category.image} : null;
 }
 
 const FALLBACK_COLLECTIONS = {

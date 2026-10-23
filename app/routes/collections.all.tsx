@@ -18,11 +18,27 @@ export const meta: Route.MetaFunction = () => {
 };
 
 const SORT_OPTIONS = {
-  featured: {reverse: false, sortKey: 'BEST_SELLING'},
-  'newest-first': {reverse: true, sortKey: 'CREATED_AT'},
-  'price-low-high': {reverse: false, sortKey: 'PRICE'},
-  'price-high-low': {reverse: true, sortKey: 'PRICE'},
-  'title-a-z': {reverse: false, sortKey: 'TITLE'},
+  featured: {
+    label: 'Best selling',
+    reverse: false,
+    sortKey: 'BEST_SELLING',
+  },
+  'newest-first': {
+    label: 'Newest first',
+    reverse: true,
+    sortKey: 'CREATED_AT',
+  },
+  'price-low-high': {
+    label: 'Price: low to high',
+    reverse: false,
+    sortKey: 'PRICE',
+  },
+  'price-high-low': {
+    label: 'Price: high to low',
+    reverse: true,
+    sortKey: 'PRICE',
+  },
+  'title-a-z': {label: 'Name: A to Z', reverse: false, sortKey: 'TITLE'},
 } as const;
 
 export async function loader(args: Route.LoaderArgs) {
@@ -98,7 +114,7 @@ export default function Collection() {
           </div>
           <Form className="all-products-sort" method="get">
             <label htmlFor="all-products-sort">Sort by</label>
-            <div>
+            <div className="all-products-sort-native">
               <select
                 defaultValue={sort}
                 id="all-products-sort"
@@ -113,6 +129,30 @@ export default function Collection() {
               </select>
               <SortIcon />
             </div>
+            <details className="all-products-sort-mobile">
+              <summary>
+                <span>
+                  {SORT_OPTIONS[sort as keyof typeof SORT_OPTIONS].label}
+                </span>
+                <SortIcon />
+              </summary>
+              <nav aria-label="Sort products">
+                {Object.entries(SORT_OPTIONS).map(([value, option]) => (
+                  <Link
+                    aria-current={sort === value ? 'true' : undefined}
+                    key={value}
+                    onClick={(event) =>
+                      event.currentTarget.closest('details')?.removeAttribute('open')
+                    }
+                    preventScrollReset
+                    replace
+                    to={`/collections/all?sort=${value}`}
+                  >
+                    {option.label}
+                  </Link>
+                ))}
+              </nav>
+            </details>
           </Form>
         </header>
 
