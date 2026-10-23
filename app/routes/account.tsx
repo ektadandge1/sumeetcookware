@@ -3,11 +3,15 @@ import {
   Form,
   NavLink,
   Outlet,
-  redirect,
   useLoaderData,
 } from 'react-router';
 import type {Route} from './+types/account';
 import {CUSTOMER_DETAILS_QUERY} from '~/graphql/customer-account/CustomerDetailsQuery';
+import accountStyles from '~/styles/account.css?url';
+
+export function links() {
+  return [{rel: 'stylesheet', href: accountStyles}];
+}
 
 export function shouldRevalidate() {
   return true;
@@ -15,9 +19,7 @@ export function shouldRevalidate() {
 
 export async function loader({context}: Route.LoaderArgs) {
   const {customerAccount} = context;
-  if (!(await customerAccount.isLoggedIn())) {
-    return redirect('/account/login');
-  }
+  await customerAccount.handleAuthStatus();
 
   const {data, errors} = await customerAccount.query(CUSTOMER_DETAILS_QUERY, {
     variables: {
@@ -42,52 +44,49 @@ export async function loader({context}: Route.LoaderArgs) {
 export default function AccountLayout() {
   const {customer} = useLoaderData<typeof loader>();
 
-  const heading = customer
-    ? customer.firstName
-      ? `Welcome, ${customer.firstName}`
-      : `Welcome to your account.`
-    : 'Account Details';
+  const heading = customer.firstName
+    ? `Welcome back, ${customer.firstName}`
+    : 'Welcome to your account';
 
   return (
     <div className="account">
-      <h1>{heading}</h1>
-      <br />
-      <AccountMenu />
-      <br />
-      <br />
-      <Outlet context={{customer}} />
+      <div className="account-container">
+        <header className="account-heading">
+          <p className="account-eyebrow">MY SUMEET</p>
+          <h1>{heading}</h1>
+          <p>A little less admin. A little more time in the kitchen.</p>
+        </header>
+        <div className="account-layout">
+          <AccountMenu />
+          <div className="account-content">
+            <Outlet context={{customer}} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 function AccountMenu() {
-  function isActiveStyle({
-    isActive,
-    isPending,
-  }: {
-    isActive: boolean;
-    isPending: boolean;
-  }) {
-    return {
-      fontWeight: isActive ? 'bold' : undefined,
-      color: isPending ? 'grey' : 'black',
-    };
-  }
-
   return (
-    <nav role="navigation">
-      <NavLink to="/account/orders" style={isActiveStyle}>
-        Orders &nbsp;
-      </NavLink>
-      &nbsp;|&nbsp;
-      <NavLink to="/account/profile" style={isActiveStyle}>
-        &nbsp; Profile &nbsp;
-      </NavLink>
-      &nbsp;|&nbsp;
-      <NavLink to="/account/addresses" style={isActiveStyle}>
-        &nbsp; Addresses &nbsp;
-      </NavLink>
-      &nbsp;|&nbsp;
+    <nav className="account-menu" aria-label="Account navigation">
+      <p className="account-menu-title">Your account</p>
+      {[
+        ['orders', 'My orders'],
+        ['profile', 'Personal details'],
+        ['addresses', 'Saved addresses'],
+      ].map(([path, label]) => (
+        <NavLink
+          key={path}
+          to={`/account/${path}`}
+          className={({isActive}) =>
+            `account-menu-link${isActive ? ' is-active' : ''}`
+          }
+        >
+          <span>{label}</span>
+          <span aria-hidden="true">→</span>
+        </NavLink>
+      ))}
       <Logout />
     </nav>
   );
@@ -96,7 +95,9 @@ function AccountMenu() {
 function Logout() {
   return (
     <Form className="account-logout" method="POST" action="/account/logout">
-      &nbsp;<button type="submit">Sign out</button>
+      <button type="submit">
+        Sign out <span aria-hidden="true">↗</span>
+      </button>
     </Form>
   );
 }

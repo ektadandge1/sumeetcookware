@@ -1,0 +1,48 @@
+# Run once after checking that these handles do not already exist.
+# Creates empty manual collections only; does not publish or change navigation.
+mutation CreateDropdownCollections {
+  drinkwareSets: collectionCreate(input: {title: "Drinkware Sets", handle: "drinkware-sets"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  casserole: collectionCreate(input: {title: "Casserole", handle: "casserole"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  ladlesSpoon: collectionCreate(input: {title: "Ladles & Spoon", handle: "ladles-spoon"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  fryingPans: collectionCreate(input: {title: "Frying Pans", handle: "frying-pans"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  tawas: collectionCreate(input: {title: "Tawas", handle: "tawas"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  tadkaPans: collectionCreate(input: {title: "Tadka Pans", handle: "tadka-pans"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  braisingCasseroles: collectionCreate(input: {title: "Braising Casseroles", handle: "braising-casseroles"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  cutleryRacks: collectionCreate(input: {title: "Cutlery Racks", handle: "cutlery-racks"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  skimmer: collectionCreate(input: {title: "Skimmer", handle: "skimmer"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  lids: collectionCreate(input: {title: "Lids", handle: "lids"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+  sproutsPaneerMaker: collectionCreate(input: {title: "Sprouts & Paneer Maker", handle: "sprouts-paneer-maker"}) {
+    collection { id title handle }
+    userErrors { field message }
+  }
+}

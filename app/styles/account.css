@@ -1,0 +1,372 @@
+/* Keep account surfaces legible independently of the storefront's dark theme. */
+.account {
+  --foreground: #202020;
+  --card: #fff;
+  --input: #dcd9d5;
+  --ring: #b90909;
+  color-scheme: light;
+  background: #f7f6f3;
+  color: #202020;
+  padding: 48px 24px 72px;
+  min-height: 65vh;
+}
+
+.account *,
+.account *::before,
+.account *::after {
+  box-sizing: border-box;
+}
+
+.account-container {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.account .account-heading {
+  margin-bottom: 32px;
+}
+
+.account .account-eyebrow {
+  color: #ac1414;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  margin: 0 0 12px;
+}
+
+.account h1 {
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.2;
+  margin: 0 0 12px;
+}
+
+.account-heading > p:last-child,
+.orders-heading > p {
+  color: #66615c;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.account-menu {
+  border: 1px solid #e5e1dc;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.account-menu-title {
+  color: #79736d;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px;
+}
+
+.account .account-menu-link,
+.account .account-logout button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  color: #514b46;
+  text-decoration: none;
+}
+
+.account .account-menu-link:hover {
+  background: #f7f6f3;
+}
+
+.account .account-menu-link.is-active {
+  background: #fbeeee;
+  color: #ab1010;
+  font-weight: 600;
+}
+
+.account .account-logout {
+  display: block;
+  border-top: 1px solid #eeeae5;
+  margin-top: 12px;
+  padding-top: 8px;
+}
+
+.account .account-logout button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.account .account-logout button:hover {
+  color: #ab1010;
+  background: #fbeeee;
+}
+
+.account-content {
+  min-width: 0;
+}
+
+.account .orders-heading h2 {
+  font-size: 24px;
+  margin: 0 0 6px;
+}
+
+.orders-heading {
+  margin-bottom: 24px;
+}
+
+.account .order-search-form {
+  max-width: none;
+  margin-bottom: 20px;
+}
+
+.account .order-search-fieldset {
+  min-width: 0;
+  border: 1px solid #e5e1dc;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 20px 20px;
+  margin: 0;
+}
+
+.account .order-search-legend {
+  color: #514b46;
+  font-size: 13px;
+  padding: 0 8px;
+  margin: 0;
+}
+
+.account .order-search-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 0 0 16px;
+}
+
+.account .order-search-inputs label {
+  color: #514b46;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.account .order-search-input {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  margin: 8px 0 0;
+  border: 1px solid #dcd9d5;
+  border-radius: 6px;
+  background: #fff;
+  color: #202020;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.account .order-search-input::placeholder {
+  color: #79736d;
+  opacity: 1;
+}
+
+.account .order-search-buttons {
+  align-items: center;
+  gap: 20px;
+}
+
+.account .account-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 44px;
+  padding: 12px 22px;
+  border: 1px solid #b30909;
+  border-radius: 6px;
+  background: #b30909;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.account .account-button:hover {
+  background: #920707;
+  border-color: #920707;
+}
+
+.account .account-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.account .order-clear-link {
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.orders-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 56px 24px;
+  background: #fff;
+  border: 1px solid #e5e1dc;
+  border-radius: 12px;
+}
+
+.orders-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #f8f1eb;
+  color: #a56e4a;
+  margin-bottom: 24px;
+}
+
+.orders-empty-icon svg {
+  width: 44px;
+  height: 44px;
+}
+
+.account .orders-empty h3 {
+  margin: 0 0 12px;
+  font-size: clamp(21px, 3vw, 27px);
+  line-height: 1.3;
+}
+
+.account .orders-empty > p:not(.account-eyebrow) {
+  max-width: 390px;
+  color: #746d65;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.order-list {
+  display: grid;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.order-card {
+  background: #fff;
+  border: 1px solid #e5e1dc;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.order-card-heading,
+.order-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.account .order-number {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.account .order-card p {
+  font-size: 12px;
+  color: #746d65;
+  margin-top: 6px;
+}
+
+.order-card-heading > div:last-child {
+  font-weight: 600;
+}
+
+.order-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.order-status {
+  font-size: 11px;
+  text-transform: capitalize;
+  border: 1px solid #e5e1dc;
+  background: #f7f6f3;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.order-card-footer {
+  border-top: 1px solid #eeeae5;
+  padding-top: 16px;
+}
+
+.account .order-card-footer a {
+  color: #ab1010;
+  font-size: 13px;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+@media (max-width: 767px) {
+  .account {
+    padding: 28px 16px 48px;
+  }
+
+  .account-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .account-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px;
+  }
+
+  .account-menu-title,
+  .account-menu-link > span:last-child {
+    display: none;
+  }
+
+  .account .account-menu-link,
+  .account .account-logout button {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .account .account-logout {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .account .order-search-inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .orders-empty {
+    padding: 40px 20px;
+  }
+
+  .order-card {
+    padding: 20px;
+  }
+}

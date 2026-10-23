@@ -3399,6 +3399,27 @@ aside.aside-cart .cart-checkout-actions {
   height: auto;
 }
 
+.collection-item-description {
+  color: var(--foreground);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 0.5rem 0 1.5rem;
+  white-space: pre-line;
+}
+
+.collection-summary {
+  color: var(--foreground);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin: 1.5rem 0;
+  max-width: 75ch;
+  white-space: pre-line;
+}
+
+.collection-mobile-summary {
+  padding: 0 1rem;
+}
+
 /*
 * --------------------------------------------------
 * routes/collections.$handle.tsx

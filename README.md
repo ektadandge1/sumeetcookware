@@ -56,4 +56,34 @@ npm run dev
 
 ## Setup for using Customer Account API (`/account` section)
 
-Follow step 1 and 2 of <https://shopify.dev/docs/custom-storefronts/building-with-the-customer-account-api/hydrogen#step-1-set-up-a-public-domain-for-local-development>
+Customer login uses Shopify's hosted, passwordless login. The storefront handles
+the callback at `/account/authorize`, stores the customer session in an HTTP-only
+cookie, and signs out using a POST to `/account/logout` from the account page.
+
+1. Enable **Customer accounts** (not legacy customer accounts) in Shopify Admin
+   under **Settings → Customer accounts**.
+2. Use the **Hydrogen** sales channel for this project. Shopify documents the
+   account settings under **your storefront → Storefront settings → Customer
+   Account API → Application setup**. If editable settings are available,
+   the standard URLs are:
+   - Callback/redirect URI: `https://<storefront-domain>/account/authorize`
+   - JavaScript origin: `https://<storefront-domain>`
+   - Logout URI: `https://<storefront-domain>`
+3. Set `PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID`, `SHOP_ID`, and a stable, private
+   `SESSION_SECRET` in `.env` and in the deployment environment. Use credentials
+   from the same Hydrogen storefront linked to this project.
+4. For local authentication, run `npm run dev` and open the **HTTPS
+   `*.tryhydrogen.dev` tunnel URL** printed by the CLI. The
+   `--customer-account-push` flag registers the tunnel's account URLs. Plain
+   localhost (including `sumeetcookware.localhost`) and `npm run dev:local` are
+   for storefront development only, not customer authentication.
+
+Do not create a separate Headless storefront just to configure authentication.
+For local development, let `--customer-account-push` register the tunnel URLs
+against the linked Hydrogen storefront; manual callback editing isn't required
+for that flow. For deployment, verify that the actual storefront domain is
+allowed for the same Customer Account API client.
+
+To verify: select **Sign in**, complete Shopify's email verification, confirm
+that `/account` opens your orders, reload to check that the session persists,
+then select **Sign out**. Opening `/account` afterwards should require login.

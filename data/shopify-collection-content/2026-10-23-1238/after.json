@@ -1,0 +1,373 @@
+{
+  "collections": {
+    "nodes": [
+      {
+        "id": "gid://shopify/Collection/558624145725",
+        "title": "Home page",
+        "handle": "frontpage",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061153597",
+        "title": "Dinner Ware",
+        "handle": "dinner-ware",
+        "descriptionHtml": "<p>Bring everyday meals together with Sumeet dinnerware. Explore stainless steel dinner sets, plates, bowls and serving essentials for your table.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81m4GaU7Z0L.jpg?v=1792759406"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061186365",
+        "title": "Kitchen Cookwares",
+        "handle": "kitchen-utility",
+        "descriptionHtml": "<p>Explore Sumeet cookware for everyday cooking, from preparing a quick meal to serving family favourites. Discover pots, pans and cooking vessels across the Sumeet range.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71J2KMw1XpL.jpg?v=1792759411"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061219133",
+        "title": "Nonstick",
+        "handle": "nonstick",
+        "descriptionHtml": "<p>Explore Sumeet non-stick cookware for your everyday kitchen routine. Discover frying pans, tawas and other cooking essentials, and choose the size and shape that suits your recipes.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/7107ho1jqmL.jpg?v=1792759415"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061251901",
+        "title": "Stainless Steel",
+        "handle": "stainless-steel",
+        "descriptionHtml": "<p>Discover Sumeet stainless steel essentials for cooking, serving and storage. Explore cookware, tableware and containers in a range of sizes for everyday use.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81iNReOtPYL.jpg?v=1792759419"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061284669",
+        "title": "Dinner Ware Dinner Set",
+        "handle": "dinner-set",
+        "descriptionHtml": "<p>Set your table with Sumeet stainless steel dinner sets. Explore coordinated combinations of plates, bowls, glasses and spoons, with different set sizes to suit your household.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81m4GaU7Z0L_d0742988-a48a-431e-a4fd-b8cf884e03c0.jpg?v=1792759423"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061350205",
+        "title": "Dinner Ware Plates",
+        "handle": "plates",
+        "descriptionHtml": "<p>Serve everyday meals with Sumeet stainless steel plates and thalis. Explore traditional dinner plates and compartment designs in a range of sizes and sets.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/7170IFiwL5L.jpg?v=1792759431"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061382973",
+        "title": "Dinner Ware Wati",
+        "handle": "dinner-ware-wati",
+        "descriptionHtml": "<p>Complete your place setting with Sumeet stainless steel watis and katoris. Explore serving bowls for dal, curries, accompaniments and desserts in a choice of sizes and sets.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81r5_pDM4cL.jpg?v=1792759438"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061415741",
+        "title": "Dinner Ware Fork and Spoon",
+        "handle": "dinner-ware-fork-and-spoon",
+        "descriptionHtml": "<p>Complete your table with Sumeet cutlery. Explore spoons and dining essentials for serving meals and enjoying everyday favourites.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71FhwVqlBhL.jpg?v=1792759443"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061448509",
+        "title": "Water Bottle",
+        "handle": "water-bottle",
+        "descriptionHtml": "<p>Explore Sumeet water bottles and vacuum flasks for drinks at home, at work or on the go. Choose from the available sizes and designs to suit your daily routine.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/613mRHPUfBL.jpg?v=1792759447"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061481277",
+        "title": "Non-Stick Appam Patra",
+        "handle": "non-stick-appam-patra",
+        "descriptionHtml": "<p>Explore Sumeet appam patra and snack-making cookware. Choose the cooking format that suits your favourite appam and small-batch snack recipes, and check individual product details for material and size.</p>",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061514045",
+        "title": "Non-Stick Fry Pan",
+        "handle": "non-stick-fry-pan",
+        "descriptionHtml": "<p>Prepare everyday favourites with Sumeet non-stick frying pans. Explore different sizes and lid options for frying, sautéing and cooking smaller portions.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/7107ho1jqmL_68895e1d-0354-4e88-accf-eb1facb6622c.jpg?v=1792759454"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061546813",
+        "title": "Nonstick Sandwich Toaster",
+        "handle": "nonstick-sandwich-toaster",
+        "descriptionHtml": "<p>Explore Sumeet sandwich toasters for breakfast and snack preparation. Check individual product details for the available design, dimensions and care instructions.</p>",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061612349",
+        "title": "Flat Canister",
+        "handle": "flat-canister",
+        "descriptionHtml": "<p>Organise your kitchen with Sumeet stainless steel flat canisters and puri dabbas. Explore different capacities and set options for storing everyday food essentials.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71C8p441ymL.jpg?v=1792759463"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061645117",
+        "title": "Grater",
+        "handle": "grater",
+        "descriptionHtml": "<p>Make everyday preparation simpler with the Sumeet stainless steel vegetable grater. Explore grating tools with storage-container options for your kitchen prep routine.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81e82bVUY2L.jpg?v=1792759467"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061677885",
+        "title": "Handi",
+        "handle": "handi",
+        "descriptionHtml": "<p>Cook and serve with Sumeet stainless steel handis. Explore lidded vessels, copper-bottom options and hammered-finish designs in a range of capacities and sets.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71SzHXRQgZL.jpg?v=1792759472"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061710653",
+        "title": "Lunch Container",
+        "handle": "lunch-container",
+        "descriptionHtml": "<p>Pack everyday meals with Sumeet stainless steel lunch boxes and containers. Explore different capacities, separator designs and set options for school, work and meals away from home.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71vXqNAhiEL.jpg?v=1792759476"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061743421",
+        "title": "Spice Box",
+        "handle": "spice-box",
+        "descriptionHtml": "<p>Keep your everyday spices together with Sumeet stainless steel masala boxes. Explore organisers with separate containers, see-through lid options and a spoon for convenient kitchen use.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71wb3ry26ZL.jpg?v=1792759481"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061776189",
+        "title": "Stainless Steel Mug",
+        "handle": "mug",
+        "descriptionHtml": "<p>Enjoy your favourite drinks with Sumeet stainless steel mugs. Explore tea and coffee mugs in different capacities and sets, including double-wall designs.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71XdlBEiVsL.jpg?v=1792759485"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061841725",
+        "title": "Ghee And Oil Pots",
+        "handle": "oil-dispenser",
+        "descriptionHtml": "<p>Keep cooking essentials close at hand with Sumeet ghee and oil pots. Explore stainless steel containers with spoon options alongside nozzle dispensers for everyday pouring.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71XYAoRJD3L.jpg?v=1792759489"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061874493",
+        "title": "Tope",
+        "handle": "tope",
+        "descriptionHtml": "<p>Explore Sumeet topes and patilas for boiling and everyday cooking. Choose from different capacities, lidded options and cookware sets to suit your kitchen.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71J2KMw1XpL_98f066a4-7cf7-45bf-88db-e511236eff6f.jpg?v=1792759493"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061907261",
+        "title": "Tasra",
+        "handle": "tasra",
+        "descriptionHtml": "<p>Explore Sumeet tasras for everyday cooking and serving. Discover stainless steel and tri-ply options in a range of capacities, with lids available on selected designs.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/819QCN6jg-L.jpg?v=1792759498"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560061972797",
+        "title": "SaucePan",
+        "handle": "sauce-pan",
+        "descriptionHtml": "<p>Prepare small portions and everyday accompaniments with Sumeet saucepans. Explore compact cooking options and check each product for capacity, dimensions and cooktop compatibility.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/61fDj4pNjvL.jpg?v=1792759502"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062005565",
+        "title": "Fork & Spoon",
+        "handle": "fork-spoon",
+        "descriptionHtml": "<p>Explore Sumeet cutlery for everyday dining. Discover table and dessert spoons in different finishes and set sizes to complement your tableware.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71FhwVqlBhL_dfa79fe2-a22d-46c4-b66d-fdd076c05795.jpg?v=1792759506"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062038333",
+        "title": "Tea & Coffee Mugs",
+        "handle": "tea-coffee-mugs",
+        "descriptionHtml": "<p>Make time for your tea or coffee with Sumeet mugs and cups. Explore stainless steel drinkware, including double-wall designs and sets for sharing your favourite drinks.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71XdlBEiVsL_640a858e-c6e3-4e3b-9b56-a96628ae167b.jpg?v=1792759510"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062071101",
+        "title": "Kadhai",
+        "handle": "kadhai",
+        "descriptionHtml": "<p>Cook everyday favourites with Sumeet kadhais and woks. Explore a choice of capacities and materials for preparing curries, sautéed dishes and family meals.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81eAQqm9pkL.jpg?v=1792759515"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062103869",
+        "title": "DABBA AND CANISTER",
+        "handle": "dabba",
+        "descriptionHtml": "<p>Organise everyday food essentials with Sumeet dabbas, jars and canisters. Explore stainless steel storage containers in different sizes and sets for your kitchen shelves and meal preparation.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81kmXicI1LL.jpg?v=1792759521"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062169405",
+        "title": "Tumbler",
+        "handle": "tumbler",
+        "descriptionHtml": "<p>Explore Sumeet stainless steel tumblers for everyday drinks. Discover different capacities and set options, including tumblers with lids.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/61W6FHwkSdL.jpg?v=1792759524"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062202173",
+        "title": "Kitchen Tools",
+        "handle": "kitchen-tools",
+        "descriptionHtml": "<p>Build your everyday prep and serving toolkit with Sumeet kitchen tools. Explore graters, ladles, turners, skimmers and other utensils for your kitchen routine.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81fgestvlgL.jpg?v=1792759528"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560062234941",
+        "title": "Combo Cookware Set",
+        "handle": "cookware-set",
+        "descriptionHtml": "<p>Bring cooking essentials together with Sumeet cookware sets. Explore combinations of cooking vessels, pans and snack-making cookware, with different sizes and configurations available.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81iNReOtPYL_033b5580-2aa6-4478-910f-1d29804a01c5.jpg?v=1792759536"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916365629",
+        "title": "Drinkware Sets",
+        "handle": "drinkware-sets",
+        "descriptionHtml": "<p>Serve your favourite drinks with Sumeet drinkware sets. Explore stainless steel cups, mugs and glasses in coordinated sets and a range of capacities.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/810H90SKT1L.jpg?v=1792759542"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916398397",
+        "title": "Casserole",
+        "handle": "casserole",
+        "descriptionHtml": "<p>Explore Sumeet casseroles and lidded cooking pots for family meals. Discover different sizes and lid options, including tri-ply vessels for cooking and serving.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/91QEbHgMaXL.jpg?v=1792759553"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916431165",
+        "title": "Ladles & Spoon",
+        "handle": "ladles-spoon",
+        "descriptionHtml": "<p>Prepare and serve your favourites with Sumeet ladles and spoons. Explore stainless steel utensils, including turners and pouring ladles for dosa preparation.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/61ynfINsh8L.jpg?v=1792759563"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916463933",
+        "title": "Frying Pans",
+        "handle": "frying-pans",
+        "descriptionHtml": "<p>Explore Sumeet frying pans for everyday frying and sautéing. Discover non-stick designs in different sizes, with lid options available on selected products.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/7107ho1jqmL_be52b302-9367-478b-89cf-c7a67ce91f8a.jpg?v=1792759574"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916496701",
+        "title": "Tawas",
+        "handle": "tawas",
+        "descriptionHtml": "<p>Prepare rotis, parathas, dosas and more with Sumeet tawas. Explore non-stick and hard-anodised options in a choice of sizes for your everyday recipes.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/91MQnZKB5ZL.jpg?v=1792759579"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916529469",
+        "title": "Tadka Pans",
+        "handle": "tadka-pans",
+        "descriptionHtml": "<p>Add the finishing touch to your meals with Sumeet tadka pans. Explore compact pans for tempering spices and preparing small accompaniments.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71reUAqJ8kL.jpg?v=1792759584"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916562237",
+        "title": "Braising Casseroles",
+        "handle": "braising-casseroles",
+        "descriptionHtml": "<p>Explore Sumeet braising casseroles, biryani pots and stock pots. Discover lidded tri-ply cooking vessels in a range of capacities for family favourites and larger portions.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/91QEbHgMaXL_aba0ea2e-530a-42a3-b46d-98672893b9c2.jpg?v=1792759588"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916595005",
+        "title": "Cutlery Racks",
+        "handle": "cutlery-racks",
+        "descriptionHtml": "<p>Keep everyday utensils together with Sumeet stainless steel cutlery holders. Explore multipurpose spoon-holder stands for organising your kitchen counter or dining area.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81maJiMdpJL.jpg?v=1792759592"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916627773",
+        "title": "Skimmer",
+        "handle": "skimmer",
+        "descriptionHtml": "<p>Explore Sumeet skimmers and cooking utensils for preparing and serving meals. Discover stainless steel utensil sets that include a skimmer alongside other kitchen essentials.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/81fgestvlgL_32f2fc17-87ad-4685-97a2-ddf432a632ff.jpg?v=1792759596"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916660541",
+        "title": "Lids",
+        "handle": "lids",
+        "descriptionHtml": "<p>Find a fit for your cooking vessels with Sumeet stainless steel lids and covers. Explore multi-size lid sets and check the listed diameters against your cookware before choosing.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71Zyxph5L4L.jpg?v=1792759601"
+        }
+      },
+      {
+        "id": "gid://shopify/Collection/560916693309",
+        "title": "Sprouts & Paneer Maker",
+        "handle": "sprouts-paneer-maker",
+        "descriptionHtml": "<p>Explore Sumeet sprout-making containers and kitchen preparation essentials. Discover ventilated stainless steel containers and check each product for its intended use, dimensions and capacity.</p>",
+        "image": {
+          "url": "https://cdn.shopify.com/s/files/1/1022/8596/7677/collections/71qkvqXnt3L.jpg?v=1792759605"
+        }
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "eyJsYXN0X2lkIjo1NjA5MTY2OTMzMDksImxhc3RfdmFsdWUiOiI1NjA5MTY2OTMzMDkifQ=="
+    }
+  }
+}

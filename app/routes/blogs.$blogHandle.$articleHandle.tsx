@@ -1,10 +1,22 @@
-import {useLoaderData} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
 import type {Route} from './+types/blogs.$blogHandle.$articleHandle';
 import {Image} from '@shopify/hydrogen';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import journalStyles from '~/styles/journal.css?url';
+
+export function links() {
+  return [{rel: 'stylesheet', href: journalStyles}];
+}
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.article.title ?? ''} article`}];
+  return [
+    {
+      title: `${data?.article.seo?.title || data?.article.title || 'Article'} | Sumeet Cookware`,
+    },
+    ...(data?.article.seo?.description
+      ? [{name: 'description', content: data.article.seo.description}]
+      : []),
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -53,7 +65,7 @@ async function loadCriticalData({context, request, params}: Route.LoaderArgs) {
 
   const article = blog.articleByHandle;
 
-  return {article};
+  return {article, blog: {handle: blog.handle, title: blog.title}};
 }
 
 /**
@@ -66,30 +78,51 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Article() {
-  const {article} = useLoaderData<typeof loader>();
+  const {article, blog} = useLoaderData<typeof loader>();
   const {title, image, contentHtml, author} = article;
 
   const publishedDate = new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   }).format(new Date(article.publishedAt));
 
   return (
-    <div className="article">
-      <h1>
-        {title}
-        <div>
-          <time dateTime={article.publishedAt}>{publishedDate}</time> &middot;{' '}
-          <address>{author?.name}</address>
-        </div>
-      </h1>
-
-      {image && <Image data={image} sizes="90vw" loading="eager" />}
-      <div
-        dangerouslySetInnerHTML={{__html: contentHtml}}
-        className="article"
-      />
+    <div className="journal-article-page">
+      <article className="journal-container">
+        <nav className="journal-breadcrumb" aria-label="Breadcrumb">
+          <Link to="/">Home</Link>
+          <span aria-hidden="true">/</span>
+          <Link to={`/blogs/${blog.handle}`}>{blog.title}</Link>
+        </nav>
+        <header className="journal-article-header">
+          <p className="journal-eyebrow">THE SUMEET JOURNAL</p>
+          <h1>{title}</h1>
+          <div className="journal-article-meta">
+            <time dateTime={article.publishedAt}>{publishedDate}</time>
+            {author?.name && <span>By {author.name}</span>}
+          </div>
+        </header>
+        {image && (
+          <Image
+            className="journal-article-image"
+            data={image}
+            alt={image.altText || title}
+            sizes="(min-width: 1240px) 1240px, 100vw"
+            loading="eager"
+          />
+        )}
+        <div
+          dangerouslySetInnerHTML={{__html: contentHtml}}
+          className="journal-article-body"
+        />
+        <footer className="journal-article-back">
+          <Link className="journal-read-more" to={`/blogs/${blog.handle}`}>
+            ← Back to {blog.title}
+          </Link>
+        </footer>
+      </article>
     </div>
   );
 }
@@ -104,6 +137,7 @@ const ARTICLE_QUERY = `#graphql
   ) @inContext(language: $language, country: $country) {
     blog(handle: $blogHandle) {
       handle
+      title
       articleByHandle(handle: $articleHandle) {
         handle
         title

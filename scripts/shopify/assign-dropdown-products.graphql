@@ -1,0 +1,119 @@
+# Reviewed against the 439-product catalog on 2026-10-22.
+# Adds memberships only. Does not remove products, publish, or change navigation.
+# Run once: collectionAddProducts rejects products that are already members.
+# No identifiable Cutlery Racks or Skimmer products were found.
+mutation AssignDropdownProducts {
+  drinkwareSets: collectionAddProducts(
+    id: "gid://shopify/Collection/560916365629"
+    productIds: [
+      "gid://shopify/Product/15409434132797"
+      "gid://shopify/Product/15409434657085"
+      "gid://shopify/Product/15409434788157"
+      "gid://shopify/Product/15409434951997"
+      "gid://shopify/Product/15409435115837"
+      "gid://shopify/Product/15409446682941"
+    ]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  casserole: collectionAddProducts(
+    id: "gid://shopify/Collection/560916398397"
+    productIds: [
+      "gid://shopify/Product/15409440391485"
+      "gid://shopify/Product/15409440555325"
+      "gid://shopify/Product/15409440784701"
+      "gid://shopify/Product/15409442652477"
+      "gid://shopify/Product/15409442816317"
+      "gid://shopify/Product/15409443635517"
+      "gid://shopify/Product/15409443799357"
+      "gid://shopify/Product/15409444127037"
+    ]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  ladlesSpoon: collectionAddProducts(
+    id: "gid://shopify/Collection/560916431165"
+    productIds: ["gid://shopify/Product/15409433706813"]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  fryingPans: collectionAddProducts(
+    id: "gid://shopify/Collection/560916463933"
+    productIds: [
+      "gid://shopify/Product/15409432428861"
+      "gid://shopify/Product/15409439703357"
+      "gid://shopify/Product/15409441177917"
+      "gid://shopify/Product/15409441407293"
+      "gid://shopify/Product/15409442783549"
+      "gid://shopify/Product/15409442947389"
+      "gid://shopify/Product/15409444618557"
+      "gid://shopify/Product/15409444880701"
+      "gid://shopify/Product/15409446388029"
+    ]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  tawas: collectionAddProducts(
+    id: "gid://shopify/Collection/560916496701"
+    productIds: [
+      "gid://shopify/Product/15409439506749"
+      "gid://shopify/Product/15409439867197"
+      "gid://shopify/Product/15409442128189"
+      "gid://shopify/Product/15409442554173"
+      "gid://shopify/Product/15409443275069"
+      "gid://shopify/Product/15409443864893"
+      "gid://shopify/Product/15409444028733"
+      "gid://shopify/Product/15409446158653"
+      "gid://shopify/Product/15409446322493"
+      "gid://shopify/Product/15409447108925"
+    ]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  tadkaPans: collectionAddProducts(
+    id: "gid://shopify/Collection/560916529469"
+    productIds: ["gid://shopify/Product/15409446879549"]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  braisingCasseroles: collectionAddProducts(
+    id: "gid://shopify/Collection/560916562237"
+    productIds: [
+      "gid://shopify/Product/15409439277373"
+      "gid://shopify/Product/15409441046845"
+      "gid://shopify/Product/15409443209533"
+      "gid://shopify/Product/15409443406141"
+      "gid://shopify/Product/15409444651325"
+    ]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  lids: collectionAddProducts(
+    id: "gid://shopify/Collection/560916660541"
+    productIds: ["gid://shopify/Product/15409435869501"]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+  sproutsPaneerMaker: collectionAddProducts(
+    id: "gid://shopify/Collection/560916693309"
+    productIds: [
+      "gid://shopify/Product/15409441898813"
+      "gid://shopify/Product/15409442095421"
+      "gid://shopify/Product/15409442292029"
+      "gid://shopify/Product/15409442423101"
+      "gid://shopify/Product/15409442586941"
+      "gid://shopify/Product/15409443963197"
+    ]
+  ) {
+    collection { id title productsCount { count } }
+    userErrors { field message }
+  }
+}

@@ -28,6 +28,7 @@ export class AppSession implements HydrogenSession {
         httpOnly: true,
         path: '/',
         sameSite: 'lax',
+        secure: new URL(request.url).protocol === 'https:',
         secrets,
       },
     });

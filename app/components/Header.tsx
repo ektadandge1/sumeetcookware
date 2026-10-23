@@ -437,9 +437,9 @@ function AccountLink({isLoggedIn}: {isLoggedIn: boolean}) {
     <NavLink
       aria-label={isLoggedIn ? 'Account' : 'Sign in'}
       className="header-icon-button header-account-link"
-      prefetch="intent"
+      reloadDocument
       style={activeLinkStyle}
-      to={isLoggedIn ? '/account' : '/account/login'}
+      to={isLoggedIn ? '/account' : '/account/login?return_to=/account'}
     >
       <UserIcon />
       <span className="header-action-label">

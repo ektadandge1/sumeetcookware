@@ -1,95 +1,173 @@
-import {Link} from 'react-router';
+import {Link, useLoaderData} from 'react-router';
+import {Image, getPaginationVariables} from '@shopify/hydrogen';
 import type {Route} from './+types/blogs.$blogHandle._index';
+import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import journalStyles from '~/styles/journal.css?url';
 
-const FEATURE_IMAGE =
-  'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/middle_banner.jpg?v=1789964765';
+export function links() {
+  return [{rel: 'stylesheet', href: journalStyles}];
+}
 
-const BLOG_STORIES = [
+export const meta: Route.MetaFunction = ({data}) => [
   {
-    handle: 'from-breakfast-to-dinner-easy-indian-recipes-using-everyday-cookware',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_123_8208d3f8-89a7-4c0f-84a0-754377f22107.png?v=1789621673',
+    title: `${data?.blog.seo?.title || data?.blog.title || 'Blog'} | Sumeet Cookware`,
   },
-  {
-    handle: '5-quickest-easiest-food-items-for-breakfast',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_121_60d08e74-8048-46c5-a5ae-ae5282478377.png?v=1789621673',
-  },
-  {
-    handle: 'how-to-choose-the-right-cookware-for-your-kitchen',
-    image:
-      'https://cdn.shopify.com/s/files/1/0358/3511/7703/files/Rectangle_122_df844a95-4d5e-4d75-a599-e6da17ac5601.png?v=1789621673',
-  },
-] as const;
+  ...(data?.blog.seo?.description
+    ? [{name: 'description', content: data.blog.seo.description}]
+    : []),
+];
 
-const STORY_TITLE =
-  'From Breakfast to Dinner: Easy Indian Recipes Using Everyday Cookware';
-const STORY_COPY =
-  "Some days begin with a quick breakfast, move into a rushed lunch, and end with everyone gathering around the dinner table. Through it all, the kitchen keeps working. The good news? Everyday Indian cooking doesn't need complicated recipes or a cupboard full of specialized utensils. With a few dependable cookware essentials, you can prepare comforting meals from morning to night.";
+export async function loader({context, params, request}: Route.LoaderArgs) {
+  const {blog} = await context.storefront.query(JOURNAL_QUERY, {
+    variables: {
+      blogHandle: params.blogHandle,
+      language: context.storefront.i18n.language,
+      ...getPaginationVariables(request, {pageBy: 9}),
+    },
+    cache: context.storefront.CacheShort(),
+  });
 
-export const meta: Route.MetaFunction = () => [{title: 'Sumeet Cookware | Blogs'}];
-
-export function loader() {
-  return null;
+  if (!blog) throw new Response('Blog not found', {status: 404});
+  redirectIfHandleIsLocalized(request, {handle: params.blogHandle, data: blog});
+  return {blog};
 }
 
 export default function Blog() {
+  const {blog} = useLoaderData<typeof loader>();
+
   return (
-    <div className="editorial-blog-page">
-      <h1>Blogs</h1>
-      <section className="editorial-blog-feature">
-        <h2>
-          From Grandma&apos;s Kitchen to Today&apos;s Kitchen:
-          <br />
-          What Has Really Changed?
-        </h2>
-        <div className="editorial-blog-feature-media">
-          <img
-            src={FEATURE_IMAGE}
-            alt="From Grandma's Kitchen to Today's Kitchen"
-          />
-        </div>
-        <div className="editorial-blog-intro">
-          <p>
-            There was a time when the kitchen seemed to have its own rhythm.
-            Spices were measured by instinct, recipes were remembered rather
-            than written down, and the sound of something sizzling in a hot pan
-            could bring everyone to the dining table. Grandmothers rarely needed
-            a recipe book to know how much turmeric belonged in the dal or when
-            the tadka was ready.
-          </p>
-          <p>
-            Today, kitchens look different. Appliances have changed, cooking
-            routines are faster, and cookware has evolved with modern
-            lifestyles. Yet, surprisingly, many of the things that matter most
-            about cooking have stayed the same.
-            <br />
-            So, what really changed between grandma&apos;s kitchen and ours?
-          </p>
-        </div>
-        <div className="editorial-blog-list">
-          {BLOG_STORIES.map((story) => (
-            <article className="editorial-blog-card" key={story.handle}>
-              <Link
-                className="editorial-blog-card-image"
-                to={`/blogs/kitchen/${story.handle}`}
-              >
-                <img src={story.image} alt={STORY_TITLE} loading="lazy" />
-              </Link>
-              <div className="editorial-blog-card-copy">
-                <h3>{STORY_TITLE}</h3>
-                <p>{STORY_COPY}</p>
-                <Link
-                  className="editorial-blog-more"
-                  to={`/blogs/kitchen/${story.handle}`}
+    <div className="journal-page">
+      <div className="journal-container">
+        <nav className="journal-breadcrumb" aria-label="Breadcrumb">
+          <Link to="/">Home</Link>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{blog.title}</span>
+        </nav>
+        <header className="journal-heading">
+          <p className="journal-eyebrow">THE SUMEET JOURNAL</p>
+          <h1>{blog.title}</h1>
+          {blog.seo?.description && <p>{blog.seo.description}</p>}
+        </header>
+
+        {blog.articles.nodes.length ? (
+          <PaginatedResourceSection
+            connection={blog.articles}
+            resourcesClassName="journal-grid"
+            ariaLabel="Blog articles"
+          >
+            {({node: article, index}) => {
+              const url = `/blogs/${blog.handle}/${article.handle}`;
+              const featured = index === 0;
+              return (
+                <article
+                  key={article.id}
+                  className={`journal-card${featured ? ' journal-card-featured' : ''}`}
                 >
-                  See More
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+                  {article.image && (
+                    <Link
+                      to={url}
+                      className="journal-card-image"
+                      tabIndex={-1}
+                      aria-hidden="true"
+                    >
+                      <Image
+                        data={article.image}
+                        alt={article.image.altText || article.title}
+                        sizes={
+                          featured
+                            ? '(min-width: 1024px) 60vw, 100vw'
+                            : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+                        }
+                        loading={featured ? 'eager' : 'lazy'}
+                      />
+                    </Link>
+                  )}
+                  <div className="journal-card-copy">
+                    <p className="journal-card-meta">
+                      {featured && (
+                        <span className="journal-feature-label">
+                          Latest story
+                        </span>
+                      )}
+                      <time dateTime={article.publishedAt}>
+                        {new Date(article.publishedAt).toLocaleDateString(
+                          'en-IN',
+                          {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            timeZone: 'UTC',
+                          },
+                        )}
+                      </time>
+                    </p>
+                    <h2>
+                      <Link to={url}>{article.title}</Link>
+                    </h2>
+                    {(article.excerpt || article.content) && (
+                      <p className="journal-excerpt">
+                        {article.excerpt || article.content}
+                      </p>
+                    )}
+                    <Link
+                      className="journal-read-more"
+                      to={url}
+                      aria-label={`Read ${article.title}`}
+                    >
+                      Read story <span aria-hidden="true">↗</span>
+                    </Link>
+                  </div>
+                </article>
+              );
+            }}
+          </PaginatedResourceSection>
+        ) : (
+          <div className="journal-empty">
+            <h2>No stories published yet</h2>
+            <p>Check back soon for the latest from Sumeet.</p>
+            <Link className="journal-read-more" to="/collections/all">
+              Explore cookware <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+const JOURNAL_QUERY = `#graphql
+  query Journal(
+    $blogHandle: String!
+    $language: LanguageCode
+    $first: Int
+    $last: Int
+    $startCursor: String
+    $endCursor: String
+  ) @inContext(language: $language) {
+    blog(handle: $blogHandle) {
+      handle
+      title
+      seo { title description }
+      articles(
+        first: $first
+        last: $last
+        before: $startCursor
+        after: $endCursor
+        sortKey: PUBLISHED_AT
+        reverse: true
+      ) {
+        nodes {
+          id
+          handle
+          title
+          excerpt(truncateAt: 220)
+          content(truncateAt: 220)
+          publishedAt
+          image { id altText url width height }
+        }
+        pageInfo { hasPreviousPage hasNextPage startCursor endCursor }
+      }
+    }
+  }
+` as const;

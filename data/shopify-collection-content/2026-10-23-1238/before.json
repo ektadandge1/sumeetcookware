@@ -1,0 +1,297 @@
+{
+  "collections": {
+    "nodes": [
+      {
+        "id": "gid://shopify/Collection/558624145725",
+        "title": "Home page",
+        "handle": "frontpage",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061153597",
+        "title": "Dinner Ware",
+        "handle": "dinner-ware",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061186365",
+        "title": "Kitchen Cookwares",
+        "handle": "kitchen-utility",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061219133",
+        "title": "Nonstick",
+        "handle": "nonstick",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061251901",
+        "title": "Stainless Steel",
+        "handle": "stainless-steel",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061284669",
+        "title": "Dinner Ware Dinner Set",
+        "handle": "dinner-set",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061350205",
+        "title": "Dinner Ware Plates",
+        "handle": "plates",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061382973",
+        "title": "Dinner Ware Wati",
+        "handle": "dinner-ware-wati",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061415741",
+        "title": "Dinner Ware Fork and Spoon",
+        "handle": "dinner-ware-fork-and-spoon",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061448509",
+        "title": "Water Bottle",
+        "handle": "water-bottle",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061481277",
+        "title": "Non-Stick Appam Patra",
+        "handle": "non-stick-appam-patra",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061514045",
+        "title": "Non-Stick Fry Pan",
+        "handle": "non-stick-fry-pan",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061546813",
+        "title": "Nonstick Sandwich Toaster",
+        "handle": "nonstick-sandwich-toaster",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061612349",
+        "title": "Flat Canister",
+        "handle": "flat-canister",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061645117",
+        "title": "Grater",
+        "handle": "grater",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061677885",
+        "title": "Handi",
+        "handle": "handi",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061710653",
+        "title": "Lunch Container",
+        "handle": "lunch-container",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061743421",
+        "title": "Spice Box",
+        "handle": "spice-box",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061776189",
+        "title": "Stainless Steel Mug",
+        "handle": "mug",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061841725",
+        "title": "Ghee And Oil Pots",
+        "handle": "oil-dispenser",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061874493",
+        "title": "Tope",
+        "handle": "tope",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061907261",
+        "title": "Tasra",
+        "handle": "tasra",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560061972797",
+        "title": "SaucePan",
+        "handle": "sauce-pan",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062005565",
+        "title": "Fork & Spoon",
+        "handle": "fork-spoon",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062038333",
+        "title": "Tea & Coffee Mugs",
+        "handle": "tea-coffee-mugs",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062071101",
+        "title": "Kadhai",
+        "handle": "kadhai",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062103869",
+        "title": "DABBA AND CANISTER",
+        "handle": "dabba",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062169405",
+        "title": "Tumbler",
+        "handle": "tumbler",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062202173",
+        "title": "Kitchen Tools",
+        "handle": "kitchen-tools",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560062234941",
+        "title": "Combo Cookware Set",
+        "handle": "cookware-set",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916365629",
+        "title": "Drinkware Sets",
+        "handle": "drinkware-sets",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916398397",
+        "title": "Casserole",
+        "handle": "casserole",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916431165",
+        "title": "Ladles & Spoon",
+        "handle": "ladles-spoon",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916463933",
+        "title": "Frying Pans",
+        "handle": "frying-pans",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916496701",
+        "title": "Tawas",
+        "handle": "tawas",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916529469",
+        "title": "Tadka Pans",
+        "handle": "tadka-pans",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916562237",
+        "title": "Braising Casseroles",
+        "handle": "braising-casseroles",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916595005",
+        "title": "Cutlery Racks",
+        "handle": "cutlery-racks",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916627773",
+        "title": "Skimmer",
+        "handle": "skimmer",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916660541",
+        "title": "Lids",
+        "handle": "lids",
+        "descriptionHtml": "",
+        "image": null
+      },
+      {
+        "id": "gid://shopify/Collection/560916693309",
+        "title": "Sprouts & Paneer Maker",
+        "handle": "sprouts-paneer-maker",
+        "descriptionHtml": "",
+        "image": null
+      }
+    ],
+    "pageInfo": {
+      "hasNextPage": false,
+      "endCursor": "eyJsYXN0X2lkIjo1NjA5MTY2OTMzMDksImxhc3RfdmFsdWUiOiI1NjA5MTY2OTMzMDkifQ=="
+    }
+  }
+}

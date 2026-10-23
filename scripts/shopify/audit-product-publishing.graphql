@@ -1,0 +1,36 @@
+# Read-only audit. Repeat with endCursor until hasNextPage is false.
+# Variant connections must also be complete before eligibility is decided.
+query AuditProductPublishing($after: String) {
+  publications(first: 50) {
+    nodes {
+      id
+      name
+      catalog { id title }
+    }
+    pageInfo { hasNextPage endCursor }
+  }
+  products(first: 100, after: $after) {
+    nodes {
+      id
+      title
+      status
+      resourcePublications(first: 50) {
+        nodes {
+          isPublished
+          publication { id }
+        }
+        pageInfo { hasNextPage endCursor }
+      }
+      variants(first: 100) {
+        nodes {
+          id
+          sku
+          inventoryQuantity
+          inventoryItem { tracked }
+        }
+        pageInfo { hasNextPage endCursor }
+      }
+    }
+    pageInfo { hasNextPage endCursor }
+  }
+}

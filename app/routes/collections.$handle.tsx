@@ -17,7 +17,12 @@ import {categories as defaultCollectionImages} from '~/components/blocks/homeAss
 import {loadProductRatingMap} from '~/lib/judgeme.server';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  return [
+    {title: `${data?.collection.title ?? 'Collection'} | Sumeet Cookware`},
+    ...(data?.collection.description
+      ? [{name: 'description', content: data.collection.description}]
+      : []),
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
@@ -60,8 +65,8 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
       variables: {query: fallback.query, ...paginationVariables},
     });
     const image =
-      getDefaultCollectionImage(handle, fallback.title) ??
       products.nodes[0]?.featuredImage ??
+      getDefaultCollectionImage(handle, fallback.title) ??
       null;
 
     return {
@@ -84,8 +89,8 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
       ...collection,
       image:
         collection.image ??
-        getDefaultCollectionImage(collection.handle, collection.title) ??
         collection.products.nodes[0]?.featuredImage ??
+        getDefaultCollectionImage(collection.handle, collection.title) ??
         null,
     },
   };
@@ -200,14 +205,15 @@ export default function Collection() {
           ) : null}
           <h1>{collection.title}</h1>
         </section>
+        {collection.description.trim() && (
+          <p className="collection-summary">{collection.description}</p>
+        )}
         {!collection.products.nodes.length ? (
           <p>No products in this collection.</p>
         ) : null}
         <CollectionDesktopCatalog
-          description={collection.description}
           key={collection.id}
           products={collection.products.nodes}
-          title={collection.title}
         />
       </div>
 

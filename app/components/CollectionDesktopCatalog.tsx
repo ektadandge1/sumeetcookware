@@ -24,13 +24,9 @@ type CollectionProduct = CollectionItemFragment & {
 const MATERIALS = ['Stainless Steel', 'Cast Iron'] as const;
 
 export function CollectionDesktopCatalog({
-  description,
   products,
-  title,
 }: {
-  description: string;
   products: CollectionProduct[];
-  title: string;
 }) {
   const availableSizes = Array.from(
     new Map(
@@ -310,12 +306,6 @@ export function CollectionDesktopCatalog({
               </div>
             </details>
           </div>
-          {description.trim() ? (
-            <div className="collection-about">
-              <h2>{title}</h2>
-              <p>{description}</p>
-            </div>
-          ) : null}
         </div>
 
         {visibleProducts.length ? (

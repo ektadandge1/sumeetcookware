@@ -69,6 +69,8 @@ function CollectionItem({
   collection: CollectionFragment;
   index: number;
 }) {
+  const image = collection.image ?? collection.products.nodes[0]?.featuredImage;
+
   return (
     <Link
       className="collection-item"
@@ -76,16 +78,19 @@ function CollectionItem({
       to={`/collections/${collection.handle}`}
       prefetch="intent"
     >
-      {collection?.image && (
+      {image && (
         <Image
-          alt={collection.image.altText || collection.title}
+          alt={image.altText || collection.title}
           aspectRatio="1/1"
-          data={collection.image}
+          data={image}
           loading={index < 3 ? 'eager' : 'lazy'}
           sizes="(min-width: 45em) 400px, 100vw"
         />
       )}
       <h5>{collection.title}</h5>
+      {collection.description.trim() && (
+        <p className="collection-item-description">{collection.description}</p>
+      )}
     </Link>
   );
 }
@@ -95,12 +100,24 @@ const COLLECTIONS_QUERY = `#graphql
     id
     title
     handle
+    description
     image {
       id
       url
       altText
       width
       height
+    }
+    products(first: 1) {
+      nodes {
+        featuredImage {
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
     }
   }
   query StoreCollections(
